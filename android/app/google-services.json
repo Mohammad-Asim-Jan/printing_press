@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "919826134900",
+    "project_id": "printing-press-app",
+    "storage_bucket": "printing-press-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919826134900:android:448e9db9dde474add21e21",
+        "android_client_info": {
+          "package_name": "com.example.printing_press"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrywRZuE0-oco91P3wGP6rUKezJfE_v70"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
