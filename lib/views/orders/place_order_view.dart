@@ -1,11 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:printing_press/firebase_options.dart';
 import 'package:printing_press/firebase_services/firebase_firestore_services.dart';
 import '../../colors/color_palette.dart';
 import '../../components/round_button.dart';
@@ -32,21 +28,15 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
   late int selectedDesignIndex;
 
   // paper
-  List<int> paperSizeIndex = [];
+  List<int> selectedPaperSizeIndexes = [];
 
   // paper size
   List<String> paperSizes = [];
   late String selectedPaperSize;
-  late int selectedPaperSizeIndex;
 
   // paper quality
   List<String> paperQualities = [];
   late String selectedPaperQuality;
-
-  // this index is same for both paper size and paper quality, it refers to the paper object
-  int selectedPaperQualityIndex = 0;
-
-
 
   @override
   void initState() {
@@ -92,29 +82,33 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
     }
     debugPrint('Paper Sizes : $paperSizes}');
     selectedPaperSize = paperSizes[0];
-    selectedPaperSizeIndex = 0;
 
-    // paper quality
+    // paper qualities
     /// todo: change the list when select any other. use set state
-
+    int index = 0;
     for (var paper in rateList.paper) {
       debugPrint('\nselected Paper size : $selectedPaperSize');
       debugPrint(
           'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
       if (selectedPaperSize == '${paper.size.width} x ${paper.size.height}') {
         paperQualities.add('${paper.quality}');
-        paperSizeIndex.add(selectedPaperQualityIndex);
-        debugPrint('paper quality added, index no: $selectedPaperQualityIndex');
-        selectedPaperQualityIndex++;
+        selectedPaperSizeIndexes.add(index);
+        debugPrint('paper quality added, index no: $index');
+        index++;
       }
     }
     debugPrint(paperQualities.toString());
     selectedPaperQuality = paperQualities[0];
 
-    ///todo: remove the index as it might not be the correct one
+    // selected paper quality index ? selectedPaperSizeIndexes[paperQualities.indexOf(selectedPaperQuality)]
+
+    // rate of the selected paper size, selected paper quality
+    int rate = rateList
+        .paper[selectedPaperSizeIndexes[
+            paperQualities.indexOf(selectedPaperQuality)]]
+        .rate;
+    debugPrint('Rate of the selected paper quality is : $rate');
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -242,34 +236,44 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                   hint: Text(selectedPaperSize),
                                   onChanged: (newVal) {
                                     selectedPaperSize = newVal!;
-                                    selectedPaperSizeIndex =
-                                        paperSizes.indexOf(selectedPaperSize);
                                     paperQualities.clear();
+                                    selectedPaperSizeIndexes.clear();
 
-                                    setState(() {
-                                      // change the next dropdown according to the selected
-                                      selectedPaperQualityIndex = 0;
-                                      for (var paper in rateList.paper) {
-                                        // debugPrint(
-                                        //     '\nselected Paper size : $selectedPaperSize');
-                                        // debugPrint(
-                                        //     'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
-                                        if (selectedPaperSize ==
-                                            '${paper.size.width} x ${paper.size.height}') {
-                                          paperQualities
-                                              .add('${paper.quality}');
-                                          paperSizeIndex
-                                              .add(selectedPaperQualityIndex);
-                                          debugPrint(
-                                              'paper quality added of index $selectedPaperQualityIndex');
-                                          selectedPaperQualityIndex++;
-                                        }
+                                    // change the next dropdown according to the selected paper size
+                                    int index = 0;
+                                    for (var paper in rateList.paper) {
+                                      // debugPrint(
+                                      //     '\n selected Paper size : $selectedPaperSize');
+                                      // debugPrint(
+                                      //     'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
+                                      if (selectedPaperSize ==
+                                          '${paper.size.width} x ${paper.size.height}') {
+                                        paperQualities.add('${paper.quality}');
+                                        selectedPaperSizeIndexes.add(index);
+                                        debugPrint(
+                                            'paper quality added of index $index');
+                                        index++;
                                       }
+                                      index++;
+                                    }
 
-                                      debugPrint('Paper size indexes : $paperSizeIndex');
-                                      debugPrint('Paper Qualities: $paperQualities');
-                                      selectedPaperQuality = paperQualities[0];
-                                    });
+                                    debugPrint(
+                                        'Paper size indexes : $selectedPaperSizeIndexes');
+                                    debugPrint(
+                                        'Paper Qualities: $paperQualities');
+                                    selectedPaperQuality = paperQualities[0];
+                                    debugPrint(
+                                        'Selected Paper Quality: $selectedPaperQuality');
+
+                                    // rate of the selected paper size, selected paper quality
+                                    int rate = rateList
+                                        .paper[selectedPaperSizeIndexes[
+                                            paperQualities
+                                                .indexOf(selectedPaperQuality)]]
+                                        .rate;
+                                    debugPrint(
+                                        'Rate of the selected paper quality is : $rate');
+                                    setState(() {});
                                   }),
                             ),
                           ],
@@ -310,7 +314,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                   //   return [];
                                   // },
                                   // style: ,
-
+                                  value: selectedPaperQuality,
                                   items: paperQualities.map((String val) {
                                     return DropdownMenuItem<String>(
                                       alignment: Alignment.center,
@@ -323,7 +327,18 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                   hint: Text(selectedPaperQuality),
                                   onChanged: (newVal) {
                                     selectedPaperQuality = newVal!;
-                                    setState(() {});
+                                    setState(() {
+                                      debugPrint(
+                                          "All Paper Qualities: ${paperQualities.toString()}");
+                                      // rate of the selected paper size, selected paper quality
+                                      int rate = rateList
+                                          .paper[selectedPaperSizeIndexes[
+                                              paperQualities.indexOf(
+                                                  selectedPaperQuality)]]
+                                          .rate;
+                                      debugPrint(
+                                          'Rate of the selected paper quality is : $rate');
+                                    });
                                   }),
                             ),
                           ],
@@ -451,12 +466,23 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                     RoundButton(
                       title: 'Log In',
                       onPress: () {
+                        print('add a paper');
+                        // todo: remove it
                         Map<String, dynamic> data = {
                           "name": "paper3",
                           "quality": 100,
                           "size": {"width": 17, "height": 27},
                           "rate": 1540
                         };
+
+                        /// todo:
+                        // Updating data to the firebase, but you have to fetch the data first, then you alter the data, and then update that data to the firebase firestore
+                        // FirebaseFirestore.instance
+                        //     .collection(auth.currentUser!.uid)
+                        //     .doc("RateList")
+                        //     .update({
+                        //   "paper": [data]
+                        // });
 
                         // debugPrint(
                         //     'The rate of the standard is : ${rateList.designs[selectedDesignIndex].rate}');
@@ -482,7 +508,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
 
 // Add the amount in cash book
 // Add the order in all orders
-// Decrement from allProduct if selected product
+// Decrement from allProduct or stock if selected a product
 // Order date and time plus order completion time
 // Pages or anything we may need for this
 
@@ -525,7 +551,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
 // ),
 
 /// todo: paper sized or any other rate list things must not be same as available in the firebase
-/// if design with name standard is available, then user can't add a design with name standard
+/// if design with name "standard" is available, then user can't add a design with name "standard"
 /// anything that is in the dropdown menu has to be different as it would give you errors
 /// design name must not be same
 /// paper size are only some... they are hard coded, can't have any other size
