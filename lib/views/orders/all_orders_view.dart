@@ -1,10 +1,10 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:printing_press/colors/color_palette.dart';
-import 'package:printing_press/firebase_services/auth_services.dart';
 import 'package:printing_press/views/orders/place_order_view.dart';
+
+import '../../view_model/auth/sign_out.dart';
 
 class AllOrdersView extends StatefulWidget {
   const AllOrdersView({super.key});
@@ -17,7 +17,6 @@ class _AllOrdersViewState extends State<AllOrdersView> {
   bool data = false;
 
   FirebaseAuth auth = FirebaseAuth.instance;
-  AuthServices authServices = AuthServices();
 
   @override
   Widget build(BuildContext context) {
@@ -25,20 +24,19 @@ class _AllOrdersViewState extends State<AllOrdersView> {
     debugPrint(auth.currentUser!.email.toString());
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        backgroundColor: kSecColor,
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => const PlaceOrderView()));
         },
-        child: const Text('Add +'),
+        child: Text('Add +', style: TextStyle(color: kThirdColor),),
       ),
       appBar: AppBar(
         title: const Text('All Orders'),
         actions: [
           IconButton(
             onPressed: () async {
-              await authServices.signOut()
-                  ? authServices.navigate(context)
-                  : Fluttertoast.showToast(msg: 'Error occurred!');
+              SignOut().signOut(context);
             },
             icon: const Icon(Icons.logout_rounded),
           ),

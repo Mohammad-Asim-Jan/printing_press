@@ -11,7 +11,9 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
+
   SplashServices splashServices = SplashServices();
+
   late Map<String, dynamic>? data;
 
   @override
@@ -32,10 +34,12 @@ class _SplashViewState extends State<SplashView> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
-      children: [
-        const Spacer(flex: 5),
-        const Text(
-          /// designing the app name here
+          children: [
+
+            const Spacer(flex: 5),
+            const Text(
+
+          /// todo: designing the app name here
           'Printing Press',
           style: TextStyle(
             fontSize: 40,

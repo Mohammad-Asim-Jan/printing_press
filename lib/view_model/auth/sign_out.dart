@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../utils/toast_message.dart';
-import '../views/auth/log_in.dart';
+
+import '../../utils/toast_message.dart';
+import '../../views/auth/log_in.dart';
 
 class SignOut {
   FirebaseAuth auth = FirebaseAuth.instance;

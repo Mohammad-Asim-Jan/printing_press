@@ -1,13 +1,11 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:printing_press/colors/color_palette.dart';
+import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
-import 'package:printing_press/firebase_services/auth_services.dart';
 import 'package:printing_press/views/auth/log_in.dart';
-import '../../firebase_services/firebase_firestore_services.dart';
+import 'package:provider/provider.dart';
+
+import '../../view_model/auth/sign_up_view_model.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -18,40 +16,11 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
 
-  final _formKey = GlobalKey<FormState>();
-  var emailC = TextEditingController();
-  var passwordC = TextEditingController();
-
-
-  setSignUp() {
-    if (_formKey.currentState!.validate()) {
-      try {
-        /// todo: firebase sign up
-        AuthServices authServices = AuthServices();
-        authServices.signUp(emailC.text.toString(), passwordC.text.toString(), context);
-        debugPrint('Sign Up Page User Created!');
-
-        /// todo: firestore
-        final FirebaseAuth auth = authServices.auth;
-        Timer(const Duration(seconds: 2), () {
-          FirebaseFirestoreServices firestoreServices = FirebaseFirestoreServices(auth: auth);
-          firestoreServices.initialData();
-          authServices.signOut();
-        });
-
-      } on FirebaseException catch (e) {
-
-        Fluttertoast.showToast(msg: e.toString());
-      }
-    } else {
-      return;
-    }
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+
   }
 
   @override
@@ -73,119 +42,75 @@ class _SignUpState extends State<SignUp> {
             const SizedBox(
               height: 70,
             ),
-            SizedBox(
-              height: 230,
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextFormField(
-                      controller: emailC,
-                      keyboardType: TextInputType.emailAddress,
-                      cursorColor: kPrimeColor,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.email_outlined,
-                        ),
-                        hintText: 'Email',
-                        filled: true,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
-                            width: 2,
-                            color: kPrimeColor,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: kSecColor,
-                          ),
-                        ),
+            Consumer<SignUpViewModel>(
+              builder: (context, value, child) => SizedBox(
+                height: 230,
+                child: Form(
+                  key: value.formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CustomTextField(
+                        controller: value.emailC,
+                        textInputType: TextInputType.emailAddress,
+                        iconData: Icons.email_outlined,
+                        hint: 'Email',
+                        validatorText: 'Please provide email',
                       ),
-                      validator: (text) {
-                        if (text == '' || text == null) {
-                          return 'Please provide email';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: passwordC,
-                      keyboardType: TextInputType.emailAddress,
-                      cursorColor: kPrimeColor,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.lock_outline_rounded,
-                          size: 24,
-                        ),
-                        hintText: 'Password',
-                        filled: true,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
-                            width: 2,
-                            color: kPrimeColor,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: kSecColor,
-                          ),
-                        ),
+                      CustomTextField(
+                        controller: value.passwordC,
+                        textInputType: TextInputType.text,
+                        iconData: Icons.lock_outline_rounded,
+                        hint: 'Password',
+                        validatorText: 'Please provide password',
                       ),
-                      validator: (text) {
-                        if (text == '' || text == null) {
-                          return 'Please provide password';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      cursorColor: kPrimeColor,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.lock_outline_rounded,
-                          size: 24,
-                        ),
-                        hintText: 'Confirm password',
-                        filled: true,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
-                            width: 2,
-                            color: kPrimeColor,
+                      TextFormField(
+                        keyboardType: TextInputType.text,
+                        cursorColor: kPrimeColor,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(
+                            Icons.lock_outline_rounded,
+                            size: 24,
+                          ),
+                          hintText: 'Confirm password',
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              width: 2,
+                              color: kPrimeColor,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: kSecColor,
+                            ),
                           ),
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: kSecColor,
-                          ),
-                        ),
+                        validator: (text) {
+                          if (text == '' || text == null) {
+                            return 'Please provide password';
+                          } else if (value.passwordC.text != text) {
+                            return 'Passwords don\'t match';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (text) {
-                        if (text == '' || text == null) {
-                          return 'Please provide password';
-                        } else if (passwordC.text != text) {
-                          return 'Passwords don\'t match';
-                        }
-                        return null;
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
             const Spacer(),
-            RoundButton(
-              title: 'Create Account',
-              onPress: () {
-                setSignUp();
-              },
+            Consumer<SignUpViewModel>(
+              builder: (context, value, child) => RoundButton(
+                title: 'Create Account',
+                loading: value.loading,
+                onPress: () {
+                  value.signUp(context);
+                },
+              ),
             ),
             const SizedBox(
               height: 10,

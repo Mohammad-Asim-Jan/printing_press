@@ -1,21 +1,27 @@
 import 'dart:core';
 ///todo: from-json and to-json
 
+/// todo: list of copy type
+/// for news, there is no printing, while for others there are
+///
+
 class RateList {
-  List<Standard> bending;
+  List<Standard> binding;
   List<Standard> numbering;
   List<int> profit;
   List<Standard> designs;
   List<Standard> paperCutting;
   List<Paper> paper;
+  List<Paper> news;
   List<Machine> machines;
 
   RateList({
     required this.designs,
     required this.paper,
+    required this.news,
     required this.paperCutting,
     required this.machines,
-    required this.bending,
+    required this.binding,
     required this.numbering,
     required this.profit,
   });
@@ -25,10 +31,11 @@ class RateList {
       designs:
           (json['designs'] as List).map((e) => Standard.fromJson(e)).toList(),
       paper: (json['paper'] as List).map((e) => Paper.fromJson(e)).toList(),
+      news: (json['news'] as List).map((e) => Paper.fromJson(e)).toList(),
       paperCutting:
           (json['paperCutting'] as List).map((e) => Standard.fromJson(e)).toList(),
       machines: (json['machines'] as List).map((e) => Machine.fromJson(e)).toList(),
-      bending: (json['bending'] as List).map((e) => Standard.fromJson(e)).toList(),
+      binding: (json['binding'] as List).map((e) => Standard.fromJson(e)).toList(),
       numbering: (json['numbering'] as List).map((e) => Standard.fromJson(e)).toList(),
       profit: (json['profit'] as List).map((e) => e as int).toList(),
     );
