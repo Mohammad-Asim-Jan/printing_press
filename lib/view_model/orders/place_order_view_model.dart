@@ -117,6 +117,7 @@ class PlaceOrderViewModel with ChangeNotifier {
 
 
 
+
   checkData() {
     getFirestoreData();
     Timer.periodic(const Duration(milliseconds: 1000), (timer) {

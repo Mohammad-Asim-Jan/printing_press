@@ -8,6 +8,7 @@
 // Plate XXX : Machine? then rate
 // Printing : Machine? then rate
 // Labour : 50
+// carriage to office
 // Profit : 30%
 
 

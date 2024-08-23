@@ -5,6 +5,8 @@ import 'package:printing_press/firebase_options.dart';
 import 'package:printing_press/view_model/auth/log_in_view_model.dart';
 import 'package:printing_press/view_model/auth/sign_up_view_model.dart';
 import 'package:printing_press/view_model/orders/place_order_view_model.dart';
+import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';
+import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
 import 'package:provider/provider.dart';
 import 'views/splash/splash_view.dart';
 
@@ -27,7 +29,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LogInViewModel()),
         ChangeNotifierProvider(create: (_) => SignUpViewModel()),
         ChangeNotifierProvider(create: (_) => PlaceOrderViewModel()),
-
+        ChangeNotifierProvider(create: (_) => AddSupplierViewModel()),
+        ChangeNotifierProvider(create: (_) => AllSuppliersViewModel()),
       ],
       child: MaterialApp(
         theme: ThemeData(

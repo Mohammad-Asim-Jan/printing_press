@@ -1,8 +1,8 @@
 import 'dart:core';
-///todo: from-json and to-json
+///todo: to-json
 
 /// todo: list of copy type
-/// for news, there is no printing, while for others there are
+/// for news, there is no printing, while for others there is
 ///
 
 class RateList {

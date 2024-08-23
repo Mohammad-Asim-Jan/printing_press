@@ -17,9 +17,9 @@ class LogInViewModel with ChangeNotifier {
 
   get auth => _auth;
 
-  final _formKey2 = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
-  get formKey => _formKey2;
+  get formKey => _formKey;
 
   TextEditingController emailC = TextEditingController();
   TextEditingController passwordC = TextEditingController();
@@ -27,8 +27,8 @@ class LogInViewModel with ChangeNotifier {
   logIn(BuildContext context) async {
     setLoading(true);
 
-    if (_formKey2.currentState != null) {
-      if (_formKey2.currentState!.validate()) {
+    if (_formKey.currentState != null) {
+      if (_formKey.currentState!.validate()) {
         debugPrint('loading became true.');
         try {
           await _auth
