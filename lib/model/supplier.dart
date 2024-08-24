@@ -23,6 +23,15 @@ class Supplier {
   }
 
 
+  Map<String, dynamic> toMap () {
+    return {
+      'supplierId': supplierId,
+      'supplierName': supplierName,
+      'supplierPhoneNo': supplierPhoneNo,
+      'supplierAddress': supplierAddress,
+      'accountNumber': accountNumber
+    };
+  }
 
 
 }

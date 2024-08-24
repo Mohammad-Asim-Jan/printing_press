@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';
 import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
@@ -9,7 +10,7 @@ class AllSuppliersView extends StatefulWidget {
 
   late AllSuppliersViewModel allSuppliersViewModel;
 
-  @override
+   @override
   State<AllSuppliersView> createState() => _AllSuppliersViewState();
 }
 
@@ -18,7 +19,9 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // widget.allSuppliersViewModel =
+    widget.allSuppliersViewModel =
+        Provider.of<AllSuppliersViewModel>(context, listen: false);
+   // widget.allSuppliersViewModel =
     //     Provider.of<AllSuppliersViewModel>(context, listen: false);
     // widget.allSuppliersViewModel.getFirestoreData();
   }
@@ -27,39 +30,78 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
   Widget build(BuildContext context) {
     widget.allSuppliersViewModel =
         Provider.of<AllSuppliersViewModel>(context, listen: false);
-    widget.allSuppliersViewModel.getFirestoreData();
+
+    widget.allSuppliersViewModel.getDataFromFirestore();
+
+
+
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: kSecColor,
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const AddSupplierView(
-                    id: 0,
-                  )));
-        },
-        child: Text(
-          'Add +',
-          style: TextStyle(color: kThirdColor),
+      floatingActionButton: Consumer<AllSuppliersViewModel>(
+        builder: (context, value, child) => FloatingActionButton(
+          backgroundColor: kSecColor,
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AddSupplierView()));
+          },
+          child: Text(
+            'Add +',
+            style: TextStyle(color: kThirdColor),
+          ),
         ),
       ),
       appBar: AppBar(
         title: const Text('All Suppliers'),
       ),
-      body: Consumer<AllSuppliersViewModel>(
-        builder: (context, value, child) => value.dataFetched
-            ? Column(
-                children: [
-                  value.data == null
-                      ? const Center(
-                          child: Text(
-                          'No record found!',
-                        ))
-                      : Text('To do implementations.'),
-                  Text('To do implementations.'),
-
-                ],
-              )
-            : const Center(child: CircularProgressIndicator()),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer<AllSuppliersViewModel>(
+          builder: (context, value, child) => value.dataFetched
+              ? value.allSuppliersModel.isEmpty
+              ? const Center(
+            child: Text('No record found!'),
+          )
+              : ListView.builder(
+            itemCount: value.allSuppliersModel.length,
+            itemBuilder: (BuildContext context, int index) {
+              /// todo: change the list tile to custom design
+              return ListTile(
+                trailing: SizedBox(
+                  width: 100,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
+                shape: Border.all(width: 2, color: kPrimeColor),
+                // titleAlignment: ListTileTitleAlignment.threeLine,
+                titleTextStyle: TextStyle(
+                    color: kThirdColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+                title:
+                Text(value.allSuppliersModel[index].supplierName),
+                tileColor: kTwo,
+                subtitleTextStyle: const TextStyle(
+                    color: Colors.black, fontStyle: FontStyle.italic),
+                subtitle: Text(
+                  'Phone No: ${value.allSuppliersModel[index].supplierPhoneNo}\nAddress: ${value.allSuppliersModel[index].supplierAddress}\nAccount no: ${value.allSuppliersModel[index].accountNumber}',
+                ),
+                leading: Text(value
+                    .allSuppliersModel[index].supplierId
+                    .toString()),
+              );
+            },
+          )
+              : const Center(child: CircularProgressIndicator()),
+        ),
       ),
     );
   }

@@ -5,10 +5,8 @@ import 'package:provider/provider.dart';
 import '../../components/round_button.dart';
 
 class AddSupplierView extends StatefulWidget {
-  final int id;
-  const AddSupplierView({super.key, required this.id,});
+  const AddSupplierView({super.key});
 
-  // late final AddSupplierViewModel addSupplierViewModel;
 
   @override
   State<AddSupplierView> createState() => _AddSupplierViewState();
@@ -47,7 +45,7 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                 Consumer<AddSupplierViewModel>(
                   builder: (context, val2, child) {
                     return CustomTextField(
-                        controller: val2.supplierPhoneC,
+                        controller: val2.supplierPhoneNoC,
                         iconData: Icons.call,
                         hint: 'Supplier phone',
                         validatorText: 'Provide supplier phone');
@@ -65,7 +63,7 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                 Consumer<AddSupplierViewModel>(
                   builder: (context, val4, child) {
                     return CustomTextField(
-                        controller: val4.supplierAccountNoC,
+                        controller: val4.accountNumberC,
                         iconData: Icons.account_balance_rounded,
                         hint: 'Supplier account no.',
                         validatorText: 'Provide supplier account no');
@@ -85,8 +83,9 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                   title: 'Add',
                   loading: value.loading,
                   onPress: () {
+                    ///todo: validations
                     value.addSupplierInFirebase();
-                    debugPrint(widget.id.toString());
+                    debugPrint(value.newSupplierId.toString());
                   },
                 ),)
               ],

@@ -6,23 +6,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:printing_press/model/supplier.dart';
 
 class AllSuppliersViewModel with ChangeNotifier {
-  bool dataFetched = false;
-  late Map<String, dynamic>? data;
+  late bool dataFetched;
+  late List<Supplier> allSuppliersModel;
 
-  getFirestoreData() async {
-    data = await fetchData();
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (data == null) {
+  getDataFromFirestore() async {
+    dataFetched = false;
+    allSuppliersModel = [];
+    await fetchData();
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (allSuppliersModel.isEmpty) {
         debugPrint("Data is null");
         updateListener();
       } else {
         dataFetched = true;
-        debugPrint("Data fetched from all suppliers : ${data.toString()}");
         timer.cancel();
         updateListener();
       }
     });
-    Timer(const Duration(seconds: 5), () {
+    Timer(const Duration(seconds: 1), () {
       dataFetched = true;
       updateListener();
     });
@@ -33,26 +34,28 @@ class AllSuppliersViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Map<String, dynamic>?> fetchData() async {
-    final docRef = FirebaseFirestore.instance
-        .collection(FirebaseAuth.instance.currentUser!.uid)
-        .doc('AllSuppliers');
-    final docSnapshot = await docRef.get();
-    List<Supplier> allSuppliersModel = [];
-    Map<String, dynamic>? data = docSnapshot.data();
+  fetchData() async {
 
-    if (data == null) {
+    final collectionReference = FirebaseFirestore.instance
+        .collection(FirebaseAuth.instance.currentUser!.uid)
+        .doc('AllSuppliers')
+        .collection('AllSuppliers');
+
+    final querySnapshot = await collectionReference.get();
+
+    final listQueryDocumentSnapshot = querySnapshot.docs;
+
+    if(listQueryDocumentSnapshot.isEmpty) {
       debugPrint('No records found !');
     } else {
-      data.forEach((key, value) {
-        debugPrint('Key of the supplier is : $key');
-        allSuppliersModel.add(Supplier.fromJson(value));
-
-        debugPrint(
-            '\n\n\n\n\n\nThis is the first suppliers in the data : ${allSuppliersModel[0].supplierName.toString()}');
-      });
+      for(var queryDocSnapshot in listQueryDocumentSnapshot) {
+        var data = queryDocSnapshot.data();
+        data.forEach((key, value) {
+          allSuppliersModel.add(Supplier.fromJson(value));
+        });
+      }
     }
-
-    return data;
   }
 }
+
+

@@ -2,10 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
 import 'package:printing_press/views/auth/log_in.dart';
-import 'package:printing_press/views/stock/all_stock_view.dart';
-
 import '../views/suppliers/all_suppliers_view.dart';
 
 class SplashServices {
