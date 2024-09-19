@@ -8,7 +8,7 @@ import 'dart:core';
 class RateList {
   List<Standard> binding;
   List<Standard> numbering;
-  List<int> profit;
+  List<int> profit; // 0 - 100%
   List<Standard> designs;
   List<Standard> paperCutting;
   List<Paper> paper;

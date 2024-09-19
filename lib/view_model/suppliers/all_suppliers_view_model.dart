@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +34,6 @@ class AllSuppliersViewModel with ChangeNotifier {
   }
 
   fetchData() async {
-
     final collectionReference = FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('AllSuppliers')
@@ -45,10 +43,10 @@ class AllSuppliersViewModel with ChangeNotifier {
 
     final listQueryDocumentSnapshot = querySnapshot.docs;
 
-    if(listQueryDocumentSnapshot.isEmpty) {
+    if (listQueryDocumentSnapshot.isEmpty) {
       debugPrint('No records found !');
     } else {
-      for(var queryDocSnapshot in listQueryDocumentSnapshot) {
+      for (var queryDocSnapshot in listQueryDocumentSnapshot) {
         var data = queryDocSnapshot.data();
         data.forEach((key, value) {
           allSuppliersModel.add(Supplier.fromJson(value));
@@ -57,5 +55,3 @@ class AllSuppliersViewModel with ChangeNotifier {
     }
   }
 }
-
-

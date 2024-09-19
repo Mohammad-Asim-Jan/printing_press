@@ -30,11 +30,11 @@ class AddSupplierViewModel with ChangeNotifier {
         if (_formKey.currentState!.validate()) {
           getSupplierId();
           Supplier newSupplier = Supplier(
-              supplierId: newSupplierId,
+              supplierId: newSupplierId.toString(),
               supplierName: supplierNameC.text.trim(),
-              supplierPhoneNo: supplierPhoneNoC.text.trim(),
+              supplierPhoneNo: int.tryParse(supplierPhoneNoC.text.trim())!,
               supplierAddress: supplierAddressC.text.trim(),
-              accountNumber: accountNumberC.text.trim());
+              bankAccount: );
           fireStore
               .collection(uid)
               .doc("AllSuppliers")
