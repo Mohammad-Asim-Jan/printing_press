@@ -7,7 +7,6 @@ import 'add_supplier_view.dart';
 class AllSuppliersView extends StatefulWidget {
   const AllSuppliersView({super.key});
 
-
   @override
   State<AllSuppliersView> createState() => _AllSuppliersViewState();
 }
@@ -21,6 +20,8 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
     super.initState();
     allSuppliersViewModel =
         Provider.of<AllSuppliersViewModel>(context, listen: false);
+
+    allSuppliersViewModel.fetchAllSuppliersData();
     // widget.allSuppliersViewModel =
     //     Provider.of<AllSuppliersViewModel>(context, listen: false);
     // widget.allSuppliersViewModel.getFirestoreData();
@@ -28,23 +29,19 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
 
   @override
   Widget build(BuildContext context) {
-   allSuppliersViewModel =
+    allSuppliersViewModel =
         Provider.of<AllSuppliersViewModel>(context, listen: false);
 
-   allSuppliersViewModel.getDataFromFirestore();
-
     return Scaffold(
-      floatingActionButton: Consumer<AllSuppliersViewModel>(
-        builder: (context, value, child) => FloatingActionButton(
-          backgroundColor: kSecColor,
-          onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AddSupplierView()));
-          },
-          child: Text(
-            'Add +',
-            style: TextStyle(color: kThirdColor),
-          ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: kSecColor,
+        onPressed: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AddSupplierView()));
+        },
+        child: Text(
+          'Add +',
+          style: TextStyle(color: kThirdColor),
         ),
       ),
       appBar: AppBar(
@@ -58,6 +55,8 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                   ? const Center(
                       child: Text('No record found!'),
                     )
+
+                  ///todo: change listview.builder to streams builder
                   : ListView.builder(
                       itemCount: value.allSuppliersModel.length,
                       itemBuilder: (BuildContext context, int index) {
@@ -90,7 +89,7 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                           subtitleTextStyle: const TextStyle(
                               color: Colors.black, fontStyle: FontStyle.italic),
                           subtitle: Text(
-                            'Phone No: ${value.allSuppliersModel[index].supplierPhoneNo}\nAddress: ${value.allSuppliersModel[index].supplierAddress}\nAccount no: ${value.allSuppliersModel[index].accountNumber}',
+                            'Phone No: ${value.allSuppliersModel[index].supplierPhoneNo}\nAddress: ${value.allSuppliersModel[index].supplierAddress}}',
                           ),
                           leading: Text(value
                               .allSuppliersModel[index].supplierId

@@ -7,7 +7,6 @@ import '../../components/round_button.dart';
 class AddSupplierView extends StatefulWidget {
   const AddSupplierView({super.key});
 
-
   @override
   State<AddSupplierView> createState() => _AddSupplierViewState();
 }
@@ -45,6 +44,8 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                 Consumer<AddSupplierViewModel>(
                   builder: (context, val2, child) {
                     return CustomTextField(
+                        maxLength: 11,
+                        textInputType: TextInputType.number,
                         controller: val2.supplierPhoneNoC,
                         iconData: Icons.call,
                         hint: 'Supplier phone',
@@ -63,31 +64,42 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                 Consumer<AddSupplierViewModel>(
                   builder: (context, val4, child) {
                     return CustomTextField(
-                        controller: val4.accountNumberC,
-                        iconData: Icons.account_balance_rounded,
-                        hint: 'Supplier account no.',
-                        validatorText: 'Provide supplier account no');
-                  },
-                ),
-                Consumer<AddSupplierViewModel>(
-                  builder: (context, val5, child) {
-                    return CustomTextField(
-                        controller: val5.supplierAddressC,
+                        controller: val4.supplierAddressC,
                         iconData: Icons.home_filled,
                         hint: 'Supplier address',
                         validatorText: 'Provide supplier address');
                   },
                 ),
-                const Spacer(),
-                Consumer<AddSupplierViewModel>(builder: (context, value, child) => RoundButton(
-                  title: 'Add',
-                  loading: value.loading,
-                  onPress: () {
-                    ///todo: validations
-                    value.addSupplierInFirebase();
-                    debugPrint(value.newSupplierId.toString());
+                Consumer<AddSupplierViewModel>(
+                  builder: (context, val5, child) {
+                    return CustomTextField(
+                        controller: val5.accountTypeC,
+                        iconData: Icons.account_balance_rounded,
+                        hint: 'Supplier bank type',
+                        validatorText: 'Provide supplier bank type');
                   },
-                ),)
+                ),
+                Consumer<AddSupplierViewModel>(
+                  builder: (context, val6, child) {
+                    return CustomTextField(
+                        controller: val6.bankAccountNumberC,
+                        iconData: Icons.numbers,
+                        hint: 'Supplier Account no.',
+                        validatorText: 'Provide supplier bank account no.');
+                  },
+                ),
+                const Spacer(),
+                Consumer<AddSupplierViewModel>(
+                  builder: (context, value, child) => RoundButton(
+                    title: 'Add',
+                    loading: value.loading,
+                    onPress: () {
+                      ///todo: validations
+                      value.addSupplierInFirebase();
+                      debugPrint(value.newSupplierId.toString());
+                    },
+                  ),
+                )
               ],
             ),
           ),

@@ -7,11 +7,13 @@ class CustomTextField extends StatefulWidget {
   final String hint;
   final TextInputType textInputType;
   final String validatorText;
+  final int? maxLength;
 
   const CustomTextField({
     super.key,
     required this.controller,
     required this.iconData,
+    this.maxLength,
     required this.hint,
     required this.validatorText,
     this.textInputType = TextInputType.text,
@@ -25,6 +27,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLength: widget.maxLength,
       controller: widget.controller,
       keyboardType: widget.textInputType,
       cursorColor: kPrimeColor,

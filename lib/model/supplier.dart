@@ -4,38 +4,42 @@ import 'package:printing_press/model/bank_account.dart';
 
 class Supplier {
   final String supplierId; // auto-generated
-  final String supplierName;
-  final int supplierPhoneNo;
-  final String supplierAddress;
-  final List<BankAccount>? bankAccount;
-  final int? totalAmount;
-  final int? totalPaidAmount;
-  final int? amountRemaining;
+  final String supplierName; //
+  final int supplierPhoneNo; //
+  final String supplierEmail; //
+  final String supplierAddress; //
 
+  // final List<BankAccount>? bankAccount;
+  final int totalAmount; //
+  final int totalPaidAmount; //
+  final int amountRemaining; //
 
   Supplier({
     required this.supplierId,
     required this.supplierName,
     required this.supplierPhoneNo,
+    required this.supplierEmail,
     required this.supplierAddress,
-    this.totalPaidAmount,
-    this.amountRemaining,
-    this.totalAmount,
-    this.bankAccount,
+    required this.totalAmount,
+    required this.totalPaidAmount,
+    required this.amountRemaining,
+    // required this.bankAccount,
   });
 
   factory Supplier.fromJson(Map<String, dynamic> jsonData) {
     return Supplier(
-        supplierId: jsonData['supplierId'],
-        supplierName: jsonData['supplierName'],
-        supplierPhoneNo: jsonData['supplierPhoneNo'],
-        supplierAddress: jsonData['supplierAddress'],
-        totalPaidAmount: jsonData['totalPaidAmount'],
-        amountRemaining: jsonData['amountRemaining'],
-        totalAmount: jsonData['totalAmount'],
-        bankAccount: (jsonData['bankAccount'] as List)
-            .map((e) => BankAccount.fromJson(e))
-            .toList());
+      supplierId: jsonData['supplierId'],
+      supplierName: jsonData['supplierName'],
+      supplierPhoneNo: jsonData['supplierPhoneNo'],
+      supplierAddress: jsonData['supplierAddress'],
+      supplierEmail: jsonData['supplierEmail'],
+      totalPaidAmount: jsonData['totalPaidAmount'],
+      amountRemaining: jsonData['amountRemaining'],
+      totalAmount: jsonData['totalAmount'],
+      //bankAccount: (jsonData['bankAccount'] as List)
+      //             .map((e) => BankAccount.fromJson(e))
+      //             .toList()
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -44,10 +48,11 @@ class Supplier {
       'supplierName': supplierName,
       'supplierPhoneNo': supplierPhoneNo,
       'supplierAddress': supplierAddress,
+      'supplierEmail': supplierEmail,
       'totalPaidAmount': totalPaidAmount,
       'amountRemaining': amountRemaining,
       'totalAmount': totalAmount,
-      'bankAccount': bankAccount
+      // 'bankAccount': bankAccount
     };
   }
 }
