@@ -96,7 +96,6 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                     onPress: () {
                       ///todo: validations
                       value.addSupplierInFirebase();
-                      debugPrint(value.newSupplierId.toString());
                     },
                   ),
                 )

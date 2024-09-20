@@ -3,7 +3,7 @@ import 'package:printing_press/model/bank_account.dart';
 /// todo: there will be a field named key that is supposed to be the key of the new supplier or the last supplier added to the database
 
 class Supplier {
-  final String supplierId; // auto-generated
+  final int supplierId; // auto-generated
   final String supplierName; //
   final int supplierPhoneNo; //
   final String supplierEmail; //
