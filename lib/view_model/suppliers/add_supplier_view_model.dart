@@ -26,8 +26,27 @@ class AddSupplierViewModel with ChangeNotifier {
     updateListeners(true);
 
     if (_formKey.currentState != null) {
-      try {
-        if (_formKey.currentState!.validate()) {
+      if (_formKey.currentState!.validate()) {
+        QuerySnapshot querySnapshot = await fireStore
+            .collection(uid)
+            .doc('SuppliersData')
+            .collection('Suppliers')
+            .where('supplierName', isEqualTo: supplierNameC.text.trim())
+            .limit(1)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          ///todo: update the supplier
+          debugPrint(
+              'Supplier Already exists!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+          DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+          newSupplierId = documentSnapshot.get('supplierId');
+
+          debugPrint('xxxxxxxxxxxxxxxxxxxxxxxxxx \n\n\n\n\n\n\n\n\n\n\n\n');
+          debugPrint('Supplier id: (Supplier already exists) $newSupplierId');
+          debugPrint('xxxxxxxxxxxxxxxxxxxxxxxxxx \n\n\n\n\n\n\n\n\n\n\n\n');
+          updateListeners(false);
+        } else {
           await getSupplierId();
           await getBankId();
 
@@ -77,9 +96,6 @@ class AddSupplierViewModel with ChangeNotifier {
             updateListeners(false);
           });
         }
-      } on FirebaseException catch (e) {
-        Utils.showMessage(e.message.toString());
-        updateListeners(false);
       }
     } else {
       updateListeners(false);
