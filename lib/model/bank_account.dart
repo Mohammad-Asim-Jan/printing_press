@@ -8,7 +8,7 @@ class BankAccount {
     // required this.supplierDocRef,
   });
 
-  final String bankAccountNumberId;
+  final int bankAccountNumberId;
   final String bankAccountNumber;
   final String accountType;
   // final DocumentReference supplierDocRef;
@@ -16,7 +16,7 @@ class BankAccount {
   factory BankAccount.fromJson(Map<String, dynamic> jsonData) {
     return BankAccount(
       bankAccountNumberId: jsonData['bankAccountNumberId'],
-      bankAccountNumber: jsonData['accountNumber'],
+      bankAccountNumber: jsonData['bankAccountNumber'],
       accountType: jsonData['accountType'],
       // supplierDocRef: jsonData['supplierDocRef'],
     );

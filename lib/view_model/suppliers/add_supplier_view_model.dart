@@ -50,140 +50,181 @@ class AddSupplierViewModel with ChangeNotifier {
           /// update the supplier and add the bank account
           DocumentSnapshot supplierDocumentSnapshot =
               supplierQuerySnapshot.docs.first;
-
           newSupplierId = supplierDocumentSnapshot.get('supplierId');
-          try {
-            DocumentReference supplierDocRef = fireStore
+          // try {
+          DocumentReference supplierDocRef = fireStore
+              .collection(uid)
+              .doc('SuppliersData')
+              .collection('Suppliers')
+              .doc('SUP-$newSupplierId');
+          await supplierDocRef.update({
+            'supplierPhoneNo':
+                int.tryParse(supplierPhoneNoC.text.trim()) ?? 00000000000,
+            'supplierEmail': supplierEmailC.text.trim(),
+            'supplierAddress': supplierAddressC.text.trim(),
+          }).then((value) async {
+            debugPrint('\n\n\n\n\n\n\n\n Supplier data updated !!\n\n\n\n\n\n');
+
+            /// updating existing bank account data
+            DocumentSnapshot documentSnapshot = await fireStore
                 .collection(uid)
                 .doc('SuppliersData')
-                .collection('Suppliers')
-                .doc('SUP-$newSupplierId');
+                .collection('BankAccounts')
+                .doc('SUP-BANK-$newSupplierId')
+                .get();
 
-            /// updating the existing supplier data
-            await supplierDocRef.update({
-              'supplierPhoneNo':
-                  int.tryParse(supplierPhoneNoC.text.trim()) ?? 00000000000,
-              'supplierEmail': supplierEmailC.text.trim(),
-              'supplierAddress': supplierAddressC.text.trim(),
-            }).then((value) async {
-              /// updating existing bank account data
-              DocumentSnapshot documentSnapshot = await fireStore
-                  .collection(uid)
-                  .doc('SuppliersData')
-                  .collection('BankAccounts')
-                  .doc('SUP-BANK-$newSupplierId')
-                  .get();
+            List<BankAccount> bankAccounts = [];
+            List<dynamic> bankAccountNumbersObj =
+                documentSnapshot.get('bankAccounts');
 
-              List<BankAccount> bankAccounts = [];
-              List bankAccountNumbersObj = documentSnapshot.get('bankAccounts');
-              for (var i in bankAccountNumbersObj) {
+            int index = 0;
+            for (var i in bankAccountNumbersObj) {
+              if (i is Map<String, dynamic>) {
                 bankAccounts.add(BankAccount.fromJson(i));
+                debugPrint(
+                    '\n\n\n\n\n Bank account added: ${bankAccounts[index].bankAccountNumber}\n\n\n\n\n\n\n\n');
+              } else {
+                debugPrint(
+                    '\n\n\n\n\n IT is not a map of string, dynamic: $i \n\n\n\n\n\n\n\n');
               }
 
-              int index = 0;
-              int selectedIndex = -1;
+              index++;
+            }
 
-              for (var i in bankAccountNumbersObj) {
-                if (bankAccounts[index].bankAccountNumber.toLowerCase() ==
+            index = 0;
+            int selectedIndex = -1;
+
+            if (bankAccounts.isNotEmpty) {
+              for (var i in bankAccounts) {
+                if (i.bankAccountNumber.toLowerCase() ==
                     bankAccountNumberC.text.trim().toLowerCase()) {
                   selectedIndex = index;
                 }
                 index++;
               }
-              if (selectedIndex == -1) {
-                fireStore
-                    .collection(uid)
-                    .doc('SuppliersData')
-                    .collection('BankAccounts')
-                    .doc('SUP-BANK-$newSupplierId')
-                    .update({
-                  'bankAccounts': FieldValue.arrayUnion([
-                    {
-                      'bankAccountNumberId': newBankAccountNumberId,
-                      'bankAccountNumber': bankAccountNumberC.text.trim(),
-                      'accountType': accountTypeC.text.trim(),
-                    }
-                  ])
-                });
-              } else {
-                fireStore
-                    .collection(uid)
-                    .doc('SuppliersData')
-                    .collection('BankAccounts')
-                    .doc('SUP-BANK-$newSupplierId')
-                    .update({
-                  'bankAccounts': bankAccounts.map((e) => e.toMap()).toList()
-                });
-              }
+            }
+            if (selectedIndex == -1) {
+              debugPrint(
+                  '\n\n\n\n\n NO SAME ACCOUNT OF BANK FOUND!!! \n\n\n\n\n\n\n\n');
+              await setNewBankId();
+              await fireStore
+                  .collection(uid)
+                  .doc('SuppliersData')
+                  .collection('BankAccounts')
+                  .doc('SUP-BANK-$newSupplierId')
+                  .update({
+                'bankAccounts': FieldValue.arrayUnion([
+                  {
+                    'bankAccountNumberId': newBankAccountNumberId,
+                    'bankAccountNumber': bankAccountNumberC.text.trim(),
+                    'accountType': accountTypeC.text.trim(),
+                  }
+                ])
+              });
+            } else {
+              debugPrint(
+                  '\n\n\n\n\n SAME ACCOUNT OF BANK FOUND... \n\n\n\n\n\n\n\n');
+              bankAccounts[selectedIndex] = BankAccount(
+                  bankAccountNumberId:
+                      bankAccounts[selectedIndex].bankAccountNumberId,
+                  bankAccountNumber: bankAccountNumberC.text.trim(),
+                  accountType: accountTypeC.text.trim());
 
-              // String bankAccountNumberId = bankAccountDocumentSnapshot.get(
-              //     'bankAccountNumberId').toString();
-              // newBankAccountNumberId =
-              // int.tryParse(bankAccountNumberId.substring(9))!;
+              fireStore
+                  .collection(uid)
+                  .doc('SuppliersData')
+                  .collection('BankAccounts')
+                  .doc('SUP-BANK-$newSupplierId')
+                  .update({
+                'bankAccounts': bankAccounts.map((e) => e.toMap()).toList()
+              }).then(
+                (value) {
+                  debugPrint(
+                      "\n\n\n\n\n\nSuccessfully Bank accounts undated !!!\n\n\n\n\n");
+                },
+              ).onError(
+                (error, stackTrace) {
+                  debugPrint(
+                      "\n\n\n\n\n\n While updating the bank accounts list, error: $error\n\n\n\n\n");
+                },
+              );
+            }
 
-              Utils.showMessage(
-                  'Successfully supplier data and bank account added.');
-              updateListeners(false);
-            }).onError((error, stackTrace) {
-              Utils.showMessage(error.toString());
-              updateListeners(false);
-            });
-          } catch (e, s) {
-            Utils.showMessage(s.toString());
-          }
-          updateListeners(false);
-        } else {
-          await getSupplierId();
-          await getBankId();
-
-          /// Adding a new supplier
-          await fireStore
-              .collection(uid)
-              .doc('SuppliersData')
-              .collection('Suppliers')
-              .doc('SUP-$newSupplierId')
-              .set({
-            'supplierId': newSupplierId,
-            'supplierName': supplierNameC.text.trim(),
-            'supplierPhoneNo':
-                int.tryParse(supplierPhoneNoC.text.trim()) ?? 00000000000,
-            'supplierEmail': supplierEmailC.text.trim(),
-            'supplierAddress': supplierAddressC.text.trim(),
-            'totalAmount': 0,
-            'amountRemaining': 0,
-            'totalPaidAmount': 0,
-          }).then((value) {
-            /// Adding a bank account
-            // DocumentReference supplierDocRef = fireStore
-            //     .collection(uid)
-            //     .doc('SuppliersData')
-            //     .collection('Suppliers')
-            //     .doc('SUP-$newSupplierId');
-
-            fireStore
-                .collection(uid)
-                .doc('SuppliersData')
-                .collection('BankAccounts')
-                .doc('SUP-BANK-$newSupplierId')
-                .set({
-              'supplierId': newSupplierId,
-              'bankAccounts': [
-                {
-                  'bankAccountNumberId': newBankAccountNumberId,
-                  'bankAccountNumber': bankAccountNumberC.text.trim(),
-                  'accountType': accountTypeC.text.trim(),
-                }
-              ]
-            });
+            // String bankAccountNumberId = bankAccountDocumentSnapshot.get(
+            //     'bankAccountNumberId').toString();
+            // newBankAccountNumberId =
+            // int.tryParse(bankAccountNumberId.substring(9))!;
 
             Utils.showMessage(
                 'Successfully supplier data and bank account added.');
             updateListeners(false);
           }).onError((error, stackTrace) {
+            debugPrint(
+                '\n\n\n\n\n\n\n some thing not worked. errorrrrrr!!!!!!!!!!!!! ERROR : $error}');
             Utils.showMessage(error.toString());
             updateListeners(false);
           });
+          // } catch (e, s) {
+          //   debugPrint(
+          //       '\n\n\n\n\n\n\n some thing not worked. errorrrrrr 222222222222!!!!!!!!!!!!!');
+          // }
+          updateListeners(false);
         }
+
+        ///todo: uncomment it
+        // else {
+        //   /// supplier doesn't exist
+        //   await getSupplierId();
+        //   await getBankId();
+        //
+        //   /// Adding a new supplier
+        //   await fireStore
+        //       .collection(uid)
+        //       .doc('SuppliersData')
+        //       .collection('Suppliers')
+        //       .doc('SUP-$newSupplierId')
+        //       .set({
+        //     'supplierId': newSupplierId,
+        //     'supplierName': supplierNameC.text.trim(),
+        //     'supplierPhoneNo':
+        //         int.tryParse(supplierPhoneNoC.text.trim()) ?? 00000000000,
+        //     'supplierEmail': supplierEmailC.text.trim(),
+        //     'supplierAddress': supplierAddressC.text.trim(),
+        //     'totalAmount': 0,
+        //     'amountRemaining': 0,
+        //     'totalPaidAmount': 0,
+        //   }).then((value) {
+        //     /// Adding a bank account
+        //     // DocumentReference supplierDocRef = fireStore
+        //     //     .collection(uid)
+        //     //     .doc('SuppliersData')
+        //     //     .collection('Suppliers')
+        //     //     .doc('SUP-$newSupplierId');
+        //
+        //     fireStore
+        //         .collection(uid)
+        //         .doc('SuppliersData')
+        //         .collection('BankAccounts')
+        //         .doc('SUP-BANK-$newSupplierId')
+        //         .set({
+        //       'supplierId': newSupplierId,
+        //       'bankAccounts': [
+        //         {
+        //           'bankAccountNumberId': newBankAccountNumberId,
+        //           'bankAccountNumber': bankAccountNumberC.text.trim(),
+        //           'accountType': accountTypeC.text.trim(),
+        //         }
+        //       ]
+        //     });
+        //
+        //     Utils.showMessage(
+        //         'Successfully supplier data and bank account added.');
+        //     updateListeners(false);
+        //   }).onError((error, stackTrace) {
+        //     Utils.showMessage(error.toString());
+        //     updateListeners(false);
+        //   });
+        // }
       }
     } else {
       updateListeners(false);
@@ -195,10 +236,8 @@ class AddSupplierViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-
-
   /// when you want to add data of supplier or any bank account, you need to set the supplier id and bank id
-  getSupplierId() async {
+  setNewSupplierId() async {
     newSupplierId = 1;
     final documentRef = FirebaseFirestore.instance
         .collection(uid)
@@ -221,7 +260,7 @@ class AddSupplierViewModel with ChangeNotifier {
     }
   }
 
-  getBankId() async {
+  setNewBankId() async {
     newBankAccountNumberId = 1;
 
     final documentRef = FirebaseFirestore.instance

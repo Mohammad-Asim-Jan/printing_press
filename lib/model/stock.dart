@@ -1,0 +1,58 @@
+import 'package:printing_press/model/rate_list.dart';
+import 'package:printing_press/model/supplier.dart';
+
+class Stock {
+  final int stockId;
+  final String stockName;
+  final String stockCategory;
+  final String stockDescription;
+  final int stockUnitBuyPrice;
+  final int stockUnitSellPrice;
+  final int stockQuantity;
+  final Size stockSize;
+  final String stockColor;
+  final String manufacturedBy;
+  final Supplier stockSupplier;
+  final DateTime? stockDateAdded;
+
+  Stock({
+    required this.stockId,
+    required this.stockName,
+    required this.stockQuantity,
+    required this.stockDescription,
+    required this.stockCategory,
+    required this.stockUnitBuyPrice,
+    required this.stockUnitSellPrice,
+    required this.stockSize,
+    required this.stockColor,
+    required this.manufacturedBy,
+    required this.stockSupplier,
+    stockDateAdded,
+  }) : stockDateAdded = stockDateAdded ?? DateTime.now();
+
+  factory Stock.fromJson(Map<String, dynamic> jsonData) {
+    return Stock(
+      stockId: jsonData['stockId'],
+      stockName: jsonData['stockName'],
+      stockQuantity: jsonData['stockQuantity'],
+      stockDescription: jsonData['stockDescription'],
+      stockCategory: jsonData['stockCategory'],
+      stockUnitBuyPrice: jsonData['stockUnitBuyPrice'],
+      stockUnitSellPrice: jsonData['stockUnitSellPrice'],
+      stockSize: Size.fromJson(jsonData['stockSize']),
+      stockColor: jsonData['stockColor'],
+      manufacturedBy: jsonData['manufacturedBy'],
+      stockSupplier: Supplier.fromJson(jsonData['stockSupplier']),
+    );
+  }
+
+  ///todo: Create a function that convert the DateTime to TimeStamp and returns it
+  /// todo: intl.dart package for date time formatting
+// import 'package:intl/intl.dart';
+//
+// void main() {
+//   DateTime now = DateTime.now();
+//   String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
+//   print(formattedDate); // Example output: "2024-08-23 – 14:30"
+// }
+}
