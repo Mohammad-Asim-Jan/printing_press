@@ -172,59 +172,59 @@ class AddSupplierViewModel with ChangeNotifier {
         }
 
         ///todo: uncomment it
-        // else {
-        //   /// supplier doesn't exist
-        //   await getSupplierId();
-        //   await getBankId();
-        //
-        //   /// Adding a new supplier
-        //   await fireStore
-        //       .collection(uid)
-        //       .doc('SuppliersData')
-        //       .collection('Suppliers')
-        //       .doc('SUP-$newSupplierId')
-        //       .set({
-        //     'supplierId': newSupplierId,
-        //     'supplierName': supplierNameC.text.trim(),
-        //     'supplierPhoneNo':
-        //         int.tryParse(supplierPhoneNoC.text.trim()) ?? 00000000000,
-        //     'supplierEmail': supplierEmailC.text.trim(),
-        //     'supplierAddress': supplierAddressC.text.trim(),
-        //     'totalAmount': 0,
-        //     'amountRemaining': 0,
-        //     'totalPaidAmount': 0,
-        //   }).then((value) {
-        //     /// Adding a bank account
-        //     // DocumentReference supplierDocRef = fireStore
-        //     //     .collection(uid)
-        //     //     .doc('SuppliersData')
-        //     //     .collection('Suppliers')
-        //     //     .doc('SUP-$newSupplierId');
-        //
-        //     fireStore
-        //         .collection(uid)
-        //         .doc('SuppliersData')
-        //         .collection('BankAccounts')
-        //         .doc('SUP-BANK-$newSupplierId')
-        //         .set({
-        //       'supplierId': newSupplierId,
-        //       'bankAccounts': [
-        //         {
-        //           'bankAccountNumberId': newBankAccountNumberId,
-        //           'bankAccountNumber': bankAccountNumberC.text.trim(),
-        //           'accountType': accountTypeC.text.trim(),
-        //         }
-        //       ]
-        //     });
-        //
-        //     Utils.showMessage(
-        //         'Successfully supplier data and bank account added.');
-        //     updateListeners(false);
-        //   }).onError((error, stackTrace) {
-        //     Utils.showMessage(error.toString());
-        //     updateListeners(false);
-        //   });
-        // }
+        else {
+          /// supplier doesn't exist
+          await setNewSupplierId();
+          await setNewBankId();
+
+          /// Adding a new supplier
+          await fireStore
+              .collection(uid)
+              .doc('SuppliersData')
+              .collection('Suppliers')
+              .doc('SUP-$newSupplierId')
+              .set({
+            'supplierId': newSupplierId,
+            'supplierName': supplierNameC.text.trim(),
+            'supplierPhoneNo':
+                int.tryParse(supplierPhoneNoC.text.trim()) ?? 00000000000,
+            'supplierEmail': supplierEmailC.text.trim(),
+            'supplierAddress': supplierAddressC.text.trim(),
+            'totalAmount': 0,
+            'amountRemaining': 0,
+            'totalPaidAmount': 0,
+          }).then((value) {
+            /// Adding a bank account
+            // DocumentReference supplierDocRef = fireStore
+            //     .collection(uid)
+            //     .doc('SuppliersData')
+            //     .collection('Suppliers')
+            //     .doc('SUP-$newSupplierId');
+
+            fireStore
+                .collection(uid)
+                .doc('SuppliersData')
+                .collection('BankAccounts')
+                .doc('SUP-BANK-$newSupplierId')
+                .set({
+              'supplierId': newSupplierId,
+              'bankAccounts': [
+                {
+                  'bankAccountNumberId': newBankAccountNumberId,
+                  'bankAccountNumber': bankAccountNumberC.text.trim(),
+                  'accountType': accountTypeC.text.trim(),
+                }
+              ]
+            });
+
+            Utils.showMessage(
+                'Successfully supplier data and bank account added.');
+            updateListeners(false);
+          }).onError((error, stackTrace) {
+            Utils.showMessage(error.toString());
+            updateListeners(false);
+          });
+        }
       }
     } else {
       updateListeners(false);

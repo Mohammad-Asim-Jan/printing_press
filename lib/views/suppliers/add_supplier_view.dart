@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +47,7 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                     return CustomTextField(
                         maxLength: 11,
                         textInputType: TextInputType.number,
+                        inputFormatter: FilteringTextInputFormatter.digitsOnly,
                         controller: val2.supplierPhoneNoC,
                         iconData: Icons.call,
                         hint: 'Supplier phone',

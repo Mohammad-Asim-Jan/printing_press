@@ -28,7 +28,7 @@ class _AllStockViewState extends State<AllStockView> {
       appBar: AppBar(
         title: const Text('All Stock'),
       ),
-      body: const Center(child: Text('No Order Found')),
+      body: const Center(child: Text('No stock Found')),
     );
   }
 }

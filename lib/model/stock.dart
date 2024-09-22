@@ -1,4 +1,4 @@
-import 'package:printing_press/model/rate_list.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:printing_press/model/supplier.dart';
 
 class Stock {
@@ -9,11 +9,11 @@ class Stock {
   final int stockUnitBuyPrice;
   final int stockUnitSellPrice;
   final int stockQuantity;
-  final Size stockSize;
+  // final Size stockSize;
   final String stockColor;
   final String manufacturedBy;
   final Supplier stockSupplier;
-  final DateTime? stockDateAdded;
+  final Timestamp? stockDateAdded;
 
   Stock({
     required this.stockId,
@@ -23,12 +23,12 @@ class Stock {
     required this.stockCategory,
     required this.stockUnitBuyPrice,
     required this.stockUnitSellPrice,
-    required this.stockSize,
+    // required this.stockSize,
     required this.stockColor,
     required this.manufacturedBy,
     required this.stockSupplier,
     stockDateAdded,
-  }) : stockDateAdded = stockDateAdded ?? DateTime.now();
+  }) : stockDateAdded = stockDateAdded ?? Timestamp.now();
 
   factory Stock.fromJson(Map<String, dynamic> jsonData) {
     return Stock(
@@ -39,7 +39,7 @@ class Stock {
       stockCategory: jsonData['stockCategory'],
       stockUnitBuyPrice: jsonData['stockUnitBuyPrice'],
       stockUnitSellPrice: jsonData['stockUnitSellPrice'],
-      stockSize: Size.fromJson(jsonData['stockSize']),
+      // stockSize: Size.fromJson(jsonData['stockSize']),
       stockColor: jsonData['stockColor'],
       manufacturedBy: jsonData['manufacturedBy'],
       stockSupplier: Supplier.fromJson(jsonData['stockSupplier']),
