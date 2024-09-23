@@ -29,6 +29,8 @@ class AddStockViewModel with ChangeNotifier {
   TextEditingController stockManufacturedByC = TextEditingController();
   TextEditingController stockSupplierC = TextEditingController();
 
+
+
   addStockInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
@@ -42,6 +44,7 @@ class AddStockViewModel with ChangeNotifier {
             .collection('AvailableStock')
 
             /// todo: create a method which will find the supplier id by using supplier name
+            /// todo: store the supplierId instead of supplier name
             .where('stockName', isEqualTo: stockNameC.text.trim())
             .where('stockCategory', isEqualTo: stockCategoryC.text.trim())
             .where('stockDescription', isEqualTo: stockDescriptionC.text.trim())

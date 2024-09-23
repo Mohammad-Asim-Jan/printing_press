@@ -12,7 +12,7 @@ class Stock {
   // final Size stockSize;
   final String stockColor;
   final String manufacturedBy;
-  final Supplier stockSupplier;
+  final String stockSupplier; ///todo: change it into supplierId
   final Timestamp? stockDateAdded;
 
   Stock({
@@ -42,7 +42,7 @@ class Stock {
       // stockSize: Size.fromJson(jsonData['stockSize']),
       stockColor: jsonData['stockColor'],
       manufacturedBy: jsonData['manufacturedBy'],
-      stockSupplier: Supplier.fromJson(jsonData['stockSupplier']),
+      stockSupplier: jsonData['stockSupplier'],
     );
   }
 
