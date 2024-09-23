@@ -8,11 +8,12 @@ class Stock {
   final int stockUnitBuyPrice;
   final int stockUnitSellPrice;
   final int stockQuantity;
+
   // final Size stockSize;
   final String stockColor;
   final String manufacturedBy;
-  final String stockSupplier; ///todo: change it into supplierId
-  final Timestamp? stockDateAdded;
+  final int supplierId;
+  final Timestamp stockDateAdded;
 
   Stock({
     required this.stockId,
@@ -25,9 +26,9 @@ class Stock {
     // required this.stockSize,
     required this.stockColor,
     required this.manufacturedBy,
-    required this.stockSupplier,
-    stockDateAdded,
-  }) : stockDateAdded = stockDateAdded ?? Timestamp.now();
+    required this.supplierId,
+    required this.stockDateAdded,
+  });
 
   factory Stock.fromJson(Map<String, dynamic> jsonData) {
     return Stock(
@@ -41,7 +42,8 @@ class Stock {
       // stockSize: Size.fromJson(jsonData['stockSize']),
       stockColor: jsonData['stockColor'],
       manufacturedBy: jsonData['manufacturedBy'],
-      stockSupplier: jsonData['stockSupplier'],
+      supplierId: jsonData['supplierId'],
+      stockDateAdded: jsonData['stockDateAdded'],
     );
   }
 

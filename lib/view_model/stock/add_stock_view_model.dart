@@ -28,7 +28,7 @@ class AddStockViewModel with ChangeNotifier {
   TextEditingController stockSizeHeightC = TextEditingController();
   TextEditingController stockColorC = TextEditingController();
   TextEditingController stockManufacturedByC = TextEditingController();
-  TextEditingController stockSupplierC = TextEditingController();
+  TextEditingController supplierIdC = TextEditingController();
 
   addStockInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
@@ -56,7 +56,7 @@ class AddStockViewModel with ChangeNotifier {
             .where('stockColor', isEqualTo: stockColorC.text.trim())
             .where('manufacturedBy',
                 isEqualTo: stockManufacturedByC.text.trim())
-            .where('stockSupplier', isEqualTo: stockSupplierC.text.trim())
+            .where('supplierId', isEqualTo: supplierIdC.text.trim())
             .limit(1)
             .get();
 
@@ -80,108 +80,34 @@ class AddStockViewModel with ChangeNotifier {
               .doc('STOCK-$newStockId');
 
           await stockDocRef.update({
+            'stockDateAdded': Timestamp.now(),
             'stockQuantity': int.tryParse(stockQuantityC.text.trim()) == null
                 ? previousStockQuantity
                 : int.tryParse(stockQuantityC.text.trim())! +
                     previousStockQuantity,
           }).then((value) async {
+            ///todo: add a order history
             debugPrint('\n\n\n\n\n\n\n\n Supplier data updated !!\n\n\n\n\n\n');
             Utils.showMessage('Supplier data updated !!');
+
+            /// adding a stock ordered
+            await fireStore
+                .collection(uid)
+                .doc('StockData')
+                .collection('StockOrdered')
+                .doc('SUP-ORDER-$newStockId')
+                .set({
+              'stockOrderId': newStockOrderedId,
+              'stockId': newStockId,
+              'stockName': stockNameC.text.trim(),
+              'stockCategory': stockCategoryC.text.trim(),
+              'stockUnitBuyPrice':
+              int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
+              'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
+              'supplierId': supplierIdC.text.trim(),
+              'stockDateAdded': Timestamp.now(),
+            });
             updateListeners(false);
-
-            /// updating existing bank account data
-            /// todo: unnecessary code, remove it
-            // DocumentSnapshot documentSnapshot = await fireStore
-            //     .collection(uid)
-            //     .doc('SuppliersData')
-            //     .collection('BankAccounts')
-            //     .doc('SUP-BANK-$newSupplierId')
-            //     .get();
-            //
-            // List<BankAccount> bankAccounts = [];
-            // List<dynamic> bankAccountNumbersObj =
-            //     documentSnapshot.get('bankAccounts');
-            //
-            // int index = 0;
-            // for (var i in bankAccountNumbersObj) {
-            //   if (i is Map<String, dynamic>) {
-            //     bankAccounts.add(BankAccount.fromJson(i));
-            //     debugPrint(
-            //         '\n\n\n\n\n Bank account added: ${bankAccounts[index].bankAccountNumber}\n\n\n\n\n\n\n\n');
-            //   } else {
-            //     debugPrint(
-            //         '\n\n\n\n\n IT is not a map of string, dynamic: $i \n\n\n\n\n\n\n\n');
-            //   }
-            //
-            //   index++;
-            // }
-
-            // index = 0;
-            // int selectedIndex = -1;
-
-            // if (bankAccounts.isNotEmpty) {
-            //   for (var i in bankAccounts) {
-            //     if (i.bankAccountNumber.toLowerCase() ==
-            //         bankAccountNumberC.text.trim().toLowerCase()) {
-            //       selectedIndex = index;
-            //     }
-            //     index++;
-            //   }
-            // }
-            // if (selectedIndex == -1) {
-            //   debugPrint(
-            //       '\n\n\n\n\n NO SAME ACCOUNT OF BANK FOUND!!! \n\n\n\n\n\n\n\n');
-            //   await setNewBankId();
-            //   await fireStore
-            //       .collection(uid)
-            //       .doc('SuppliersData')
-            //       .collection('BankAccounts')
-            //       .doc('SUP-BANK-$newSupplierId')
-            //       .update({
-            //     'bankAccounts': FieldValue.arrayUnion([
-            //       {
-            //         'bankAccountNumberId': newBankAccountNumberId,
-            //         'bankAccountNumber': bankAccountNumberC.text.trim(),
-            //         'accountType': accountTypeC.text.trim(),
-            //       }
-            //     ])
-            //   });
-            // } else {
-            //   debugPrint(
-            //       '\n\n\n\n\n SAME ACCOUNT OF BANK FOUND... \n\n\n\n\n\n\n\n');
-            //   bankAccounts[selectedIndex] = BankAccount(
-            //       bankAccountNumberId:
-            //           bankAccounts[selectedIndex].bankAccountNumberId,
-            //       bankAccountNumber: bankAccountNumberC.text.trim(),
-            //       accountType: accountTypeC.text.trim());
-            //
-            //   fireStore
-            //       .collection(uid)
-            //       .doc('SuppliersData')
-            //       .collection('BankAccounts')
-            //       .doc('SUP-BANK-$newSupplierId')
-            //       .update({
-            //     'bankAccounts': bankAccounts.map((e) => e.toMap()).toList()
-            //   }).then(
-            //     (value) {
-            //       debugPrint(
-            //           "\n\n\n\n\n\nSuccessfully Bank accounts undated !!!\n\n\n\n\n");
-            //     },
-            //   ).onError(
-            //     (error, stackTrace) {
-            //       debugPrint(
-            //           "\n\n\n\n\n\n While updating the bank accounts list, error: $error\n\n\n\n\n");
-            //     },
-            //   );
-            // }
-
-            // String bankAccountNumberId = bankAccountDocumentSnapshot.get(
-            //     'bankAccountNumberId').toString();
-            // newBankAccountNumberId =
-            // int.tryParse(bankAccountNumberId.substring(9))!;
-
-            // Utils.showMessage(
-            //     'Successfully supplier data and bank account added.');
           }).onError((error, stackTrace) {
             debugPrint(
                 '\n\n\n\n\n\n\n some thing not worked. error!!!!!!!!!!!!! ERROR : $error}');
@@ -218,13 +144,30 @@ class AddStockViewModel with ChangeNotifier {
             'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
             'stockColor': stockColorC.text.trim(),
             'manufacturedBy': stockManufacturedByC.text.trim(),
-            'stockSupplier': stockSupplierC.text.trim(),
-          }).then((value) {
+            'supplierId': int.tryParse(supplierIdC.text.trim()) ?? 0,
+            'stockDateAdded': Timestamp.now()
+          }).then((value) async {
+            /// Adding the history of the stock
+            await fireStore
+                .collection(uid)
+                .doc('StockData')
+                .collection('StockOrdered')
+                .doc('SUP-ORDER-$newStockId')
+                .set({
+              'stockOrderId': newStockOrderedId,
+              'stockId': newStockId,
+              'stockName': stockNameC.text.trim(),
+              'stockCategory': stockCategoryC.text.trim(),
+              'stockUnitBuyPrice':
+                  int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
+              'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
+              'supplierId': supplierIdC.text.trim(),
+              'stockDateAdded': Timestamp.now(),
+            });
 
             Utils.showMessage('Successfully stock added');
+            Utils.showMessage('Successfully stock order Added');
             debugPrint('New stock added!!!!!!!!!!!!!!!!!');
-            /// adding a stock ordered
-            ///
 
             updateListeners(false);
           }).onError((error, stackTrace) {
@@ -261,6 +204,7 @@ class AddStockViewModel with ChangeNotifier {
       await documentRef.set({'stockId': newStockId});
     }
   }
+
   ///todo:
   setNewStockOrderedId() async {
     newStockOrderedId = 1;
@@ -275,7 +219,8 @@ class AddStockViewModel with ChangeNotifier {
     var data = documentSnapshot.data();
 
     if (data?['LastStockOrderedId'] == null) {
-      debugPrint('Stock ordered id found to be null --------- ${data?['LastStockOrderedId']}');
+      debugPrint(
+          'Stock ordered id found to be null --------- ${data?['LastStockOrderedId']}');
       await documentRef.set({'LastStockOrderedId': newStockOrderedId});
     } else {
       debugPrint(

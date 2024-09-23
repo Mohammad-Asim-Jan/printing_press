@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StockOrderByCustomer {
+  ///todo: implement it in the add order view model (customer)
   final int stockOrderId;
   final int stockId; // ref to the stock
   final String stockName;
   final String stockCategory;
   final int stockUnitSellPrice;
   final int stockQuantity;
-  final Timestamp? stockDateAdded;
+  final Timestamp stockDateAdded;
 
   StockOrderByCustomer({
     required this.stockOrderId,
@@ -16,8 +17,8 @@ class StockOrderByCustomer {
     required this.stockCategory,
     required this.stockUnitSellPrice,
     required this.stockQuantity,
-    stockDateAdded,
-  }) : stockDateAdded = stockDateAdded ?? Timestamp.now();
+    required this.stockDateAdded,
+  }) ;
 
   factory StockOrderByCustomer.fromJson(Map<String, dynamic> json) {
     return StockOrderByCustomer(

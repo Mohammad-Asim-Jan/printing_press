@@ -113,10 +113,10 @@ class _AddStockViewState extends State<AddStockView> {
                 Consumer<AddStockViewModel>(
                   builder: (context, val9, child) {
                     return CustomTextField(
-                        controller: val9.stockSupplierC,
+                        controller: val9.supplierIdC,
                         iconData: Icons.business,
-                        hint: 'Stock supplier',
-                        validatorText: 'Provide stock supplier');
+                        hint: 'Stock supplier id',
+                        validatorText: 'Provide stock supplier id');
                   },
                 ),
                 // const Spacer(),
