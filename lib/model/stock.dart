@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:printing_press/model/supplier.dart';
 
 class Stock {
   final int stockId;

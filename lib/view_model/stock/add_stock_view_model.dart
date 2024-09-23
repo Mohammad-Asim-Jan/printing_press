@@ -12,6 +12,7 @@ class AddStockViewModel with ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
 
   late int newStockId;
+  late int newStockOrderedId;
   late int supplierId;
   late int previousStockQuantity;
 
@@ -28,8 +29,6 @@ class AddStockViewModel with ChangeNotifier {
   TextEditingController stockColorC = TextEditingController();
   TextEditingController stockManufacturedByC = TextEditingController();
   TextEditingController stockSupplierC = TextEditingController();
-
-
 
   addStockInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
@@ -197,6 +196,7 @@ class AddStockViewModel with ChangeNotifier {
         } else {
           /// stock doesn't exist
           await setNewStockId();
+          await setNewStockOrderedId();
 
           /// Adding a new supplier
           await fireStore
@@ -220,30 +220,12 @@ class AddStockViewModel with ChangeNotifier {
             'manufacturedBy': stockManufacturedByC.text.trim(),
             'stockSupplier': stockSupplierC.text.trim(),
           }).then((value) {
-            // DocumentReference supplierDocRef = fireStore
-            //     .collection(uid)
-            //     .doc('SuppliersData')
-            //     .collection('Suppliers')
-            //     .doc('SUP-$newSupplierId');
 
-            // fireStore
-            //     .collection(uid)
-            //     .doc('SuppliersData')
-            //     .collection('BankAccounts')
-            //     .doc('SUP-BANK-$newSupplierId')
-            //     .set({
-            // 'supplierId': newSupplierId,
-            // 'bankAccounts': [
-            // {
-            // 'bankAccountNumberId': newBankAccountNumberId,
-            // 'bankAccountNumber': bankAccountNumberC.text.trim(),
-            // 'accountType': accountTypeC.text.trim(),
-            // }
-            // ]
-            // });
-            //
             Utils.showMessage('Successfully stock added');
             debugPrint('New stock added!!!!!!!!!!!!!!!!!');
+            /// adding a stock ordered
+            ///
+
             updateListeners(false);
           }).onError((error, stackTrace) {
             Utils.showMessage(error.toString());
@@ -277,6 +259,29 @@ class AddStockViewModel with ChangeNotifier {
           '\n\n\nStock id is found to be available. \nStock id: ${data?['stockId']}');
       newStockId = data?['stockId'] + 1;
       await documentRef.set({'stockId': newStockId});
+    }
+  }
+  ///todo:
+  setNewStockOrderedId() async {
+    newStockOrderedId = 1;
+    final documentRef = FirebaseFirestore.instance
+        .collection(uid)
+        .doc('StockData')
+        .collection('StockOrdered')
+        .doc('LastStockOrderedId');
+
+    final documentSnapshot = await documentRef.get();
+
+    var data = documentSnapshot.data();
+
+    if (data?['LastStockOrderedId'] == null) {
+      debugPrint('Stock ordered id found to be null --------- ${data?['LastStockOrderedId']}');
+      await documentRef.set({'LastStockOrderedId': newStockOrderedId});
+    } else {
+      debugPrint(
+          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderedId']}');
+      newStockOrderedId = data?['LastStockOrderedId'] + 1;
+      await documentRef.set({'LastStockOrderedId': newStockOrderedId});
     }
   }
 
