@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:printing_press/views/home/home_view.dart';
 import '../../utils/toast_message.dart';
 import '../../views/orders/all_orders_view.dart';
 
@@ -40,7 +41,7 @@ class LogInViewModel with ChangeNotifier {
             setLoading(false);
             debugPrint('loading became false 1.');
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const AllOrdersView()));
+                MaterialPageRoute(builder: (context) => const HomeView()));
           }).onError((error, stackTrace) {
             setLoading(false);
             Utils.showMessage(error.toString());

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/model/stock.dart';
+
 class AllStockViewModel with ChangeNotifier  {
   late bool dataFetched;
   late List<Stock> allStockList;

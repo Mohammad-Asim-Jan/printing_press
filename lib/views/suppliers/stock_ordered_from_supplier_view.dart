@@ -1,76 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
-import 'package:printing_press/views/suppliers/stock_ordered_from_supplier_view.dart';
+import 'package:printing_press/view_model/suppliers/stock_ordered_from_supplier_view_model.dart';
 import 'package:provider/provider.dart';
-import '../../colors/color_palette.dart';
-import 'add_supplier_view.dart';
 
-class AllSuppliersView extends StatefulWidget {
-  const AllSuppliersView({super.key});
+import '../../colors/color_palette.dart';
+
+class StockOrderedFromSupplierView extends StatefulWidget {
+  const StockOrderedFromSupplierView({super.key, required this.supplierId});
+
+  final int supplierId;
 
   @override
-  State<AllSuppliersView> createState() => _AllSuppliersViewState();
+  State<StockOrderedFromSupplierView> createState() =>
+      _StockOrderedFromSupplierViewState();
 }
 
-class _AllSuppliersViewState extends State<AllSuppliersView> {
-  late AllSuppliersViewModel allSuppliersViewModel;
+class _StockOrderedFromSupplierViewState
+    extends State<StockOrderedFromSupplierView> {
+  late StockOrderedFromSupplierViewModel stockOrderedFromSupplierViewModel;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    allSuppliersViewModel =
-        Provider.of<AllSuppliersViewModel>(context, listen: false);
+    debugPrint('Supplier Id: ${widget.supplierId}');
+    stockOrderedFromSupplierViewModel =
+        Provider.of<StockOrderedFromSupplierViewModel>(context, listen: false);
 
-    allSuppliersViewModel.fetchAllSuppliersData();
-    // widget.allSuppliersViewModel =
-    //     Provider.of<AllSuppliersViewModel>(context, listen: false);
-    // widget.allSuppliersViewModel.getFirestoreData();
+    stockOrderedFromSupplierViewModel
+        .fetchAllSuppliersOrdersHistory(widget.supplierId);
   }
 
   @override
   Widget build(BuildContext context) {
-    allSuppliersViewModel =
-        Provider.of<AllSuppliersViewModel>(context, listen: false);
+    stockOrderedFromSupplierViewModel =
+        Provider.of<StockOrderedFromSupplierViewModel>(context, listen: false);
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: kSecColor,
-        onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const AddSupplierView()));
-        },
-        child: Text(
-          'Add +',
-          style: TextStyle(color: kThirdColor),
-        ),
-      ),
       appBar: AppBar(
-        title: const Text('All Suppliers'),
+        title: const Text('Stock ordered history!'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<AllSuppliersViewModel>(
+        child: Consumer<StockOrderedFromSupplierViewModel>(
           builder: (context, value, child) => value.dataFetched
-              ? value.allSuppliersModel.isEmpty
+              ? value.allStockOrderHistoryList.isEmpty
                   ? const Center(
                       child: Text('No record found!'),
                     )
 
                   ///todo: change listview.builder to streams builder
                   : ListView.builder(
-                      itemCount: value.allSuppliersModel.length,
+                      itemCount: value.allStockOrderHistoryList.length,
                       itemBuilder: (BuildContext context, int index) {
                         /// todo: change the list tile to custom design
                         return ListTile(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => StockOrderedFromSupplierView(
-                                supplierId:
-                                    value.allSuppliersModel[index].supplierId,
-                              ),
-                            ));
-                          },
                           trailing: SizedBox(
                             width: 100,
                             child: Row(
@@ -92,16 +75,16 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                               color: kThirdColor,
                               fontSize: 18,
                               fontWeight: FontWeight.w500),
-                          title:
-                              Text(value.allSuppliersModel[index].supplierName),
+                          title: Text(
+                              value.allStockOrderHistoryList[index].stockName),
                           tileColor: kTwo,
                           subtitleTextStyle: const TextStyle(
                               color: Colors.black, fontStyle: FontStyle.italic),
                           subtitle: Text(
-                            'Phone No: ${value.allSuppliersModel[index].supplierPhoneNo}\nAddress: ${value.allSuppliersModel[index].supplierAddress}}',
+                            'Stock Category: ${value.allStockOrderHistoryList[index].stockCategory}\nTotal: ${value.allStockOrderHistoryList[index].totalAmount}',
                           ),
                           leading: Text(value
-                              .allSuppliersModel[index].supplierId
+                              .allStockOrderHistoryList[index].stockQuantity
                               .toString()),
                         );
                       },

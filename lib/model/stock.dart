@@ -8,7 +8,6 @@ class Stock {
   final int stockUnitBuyPrice;
   final int stockUnitSellPrice;
   final int stockQuantity;
-
   // final Size stockSize;
   final String stockColor;
   final String manufacturedBy;

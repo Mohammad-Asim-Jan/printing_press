@@ -7,6 +7,7 @@ class StockOrderToSupplier {
   final String stockCategory;
   final int stockUnitBuyPrice;
   final int stockQuantity;
+  final int totalAmount;
   final int supplierId;
   final Timestamp stockDateAdded;
 
@@ -17,6 +18,7 @@ class StockOrderToSupplier {
     required this.stockCategory,
     required this.stockUnitBuyPrice,
     required this.stockQuantity,
+    required this.totalAmount,
     required this.supplierId,
     required this.stockDateAdded,
   });
@@ -29,6 +31,7 @@ class StockOrderToSupplier {
       stockCategory: json['stockCategory'],
       stockUnitBuyPrice: json['stockUnitBuyPrice'],
       stockQuantity: json['stockQuantity'],
+      totalAmount: json['totalAmount'],
       supplierId: json['supplierId'],
       stockDateAdded: json['stockDateAdded'],
     );

@@ -10,11 +10,12 @@ class AddStockViewModel with ChangeNotifier {
   bool loading = false;
 
   final _formKey = GlobalKey<FormState>();
-
   late int newStockId;
   late int newStockOrderedId;
   late int supplierId;
   late int previousStockQuantity;
+  late int previousTotalAmount;
+  late int totalAmount;
 
   get formKey => _formKey;
 
@@ -56,7 +57,8 @@ class AddStockViewModel with ChangeNotifier {
             .where('stockColor', isEqualTo: stockColorC.text.trim())
             .where('manufacturedBy',
                 isEqualTo: stockManufacturedByC.text.trim())
-            .where('supplierId', isEqualTo: supplierIdC.text.trim())
+            .where('supplierId',
+                isEqualTo: int.tryParse(supplierIdC.text.trim()))
             .limit(1)
             .get();
 
@@ -69,7 +71,10 @@ class AddStockViewModel with ChangeNotifier {
               stockQuerySnapshot.docs.first;
           newStockId = stockDocumentSnapshot.get('stockId');
           previousStockQuantity = stockDocumentSnapshot.get('stockQuantity');
-
+          previousTotalAmount = stockDocumentSnapshot.get('totalAmount');
+          totalAmount = previousTotalAmount +
+              (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
+                  (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
           // try {
           DocumentReference stockDocRef = fireStore
               .collection(uid)
@@ -102,9 +107,10 @@ class AddStockViewModel with ChangeNotifier {
               'stockName': stockNameC.text.trim(),
               'stockCategory': stockCategoryC.text.trim(),
               'stockUnitBuyPrice':
-              int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
-              'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-              'supplierId': supplierIdC.text.trim(),
+                  int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 1,
+              'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 1,
+              'totalAmount': totalAmount,
+              'supplierId': int.tryParse(supplierIdC.text.trim()),
               'stockDateAdded': Timestamp.now(),
             });
             updateListeners(false);
@@ -123,6 +129,9 @@ class AddStockViewModel with ChangeNotifier {
           /// stock doesn't exist
           await setNewStockId();
           await setNewStockOrderedId();
+
+          totalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
+              (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
 
           /// Adding a new supplier
           await fireStore
@@ -161,7 +170,8 @@ class AddStockViewModel with ChangeNotifier {
               'stockUnitBuyPrice':
                   int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
               'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-              'supplierId': supplierIdC.text.trim(),
+              'totalAmount': totalAmount,
+              'supplierId': int.tryParse(supplierIdC.text.trim()),
               'stockDateAdded': Timestamp.now(),
             });
 

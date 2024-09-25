@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/views/auth/log_in.dart';
-import 'package:printing_press/views/stock/all_stock_view.dart';
-import '../views/suppliers/all_suppliers_view.dart';
+import 'package:printing_press/views/home/home_view.dart';
 
 class SplashServices {
   void isLogin(BuildContext context) async {
@@ -21,7 +20,7 @@ class SplashServices {
     } else {
       Timer(const Duration(seconds: 1), () {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => AllStockView()));
+            MaterialPageRoute(builder: (context) => const HomeView()));
       });
     }
   }

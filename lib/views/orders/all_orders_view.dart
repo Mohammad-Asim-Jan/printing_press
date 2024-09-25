@@ -1,5 +1,3 @@
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/colors/color_palette.dart';
@@ -27,10 +25,13 @@ class _AllOrdersViewState extends State<AllOrdersView> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: kSecColor,
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const PlaceOrderView()));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const PlaceOrderView()));
         },
-        child: Text('Add +', style: TextStyle(color: kThirdColor),),
+        child: Text(
+          'Add +',
+          style: TextStyle(color: kThirdColor),
+        ),
       ),
       appBar: AppBar(
         title: const Text('All Orders'),
