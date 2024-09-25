@@ -13,9 +13,11 @@ class AddStockViewModel with ChangeNotifier {
   late int newStockId;
   late int newStockOrderedId;
   late int supplierId;
+  late int supplierPreviousTotalAmount;
   late int previousStockQuantity;
   late int previousTotalAmount;
   late int totalAmount;
+  late int newTotalAmount;
 
   get formKey => _formKey;
 
@@ -38,6 +40,7 @@ class AddStockViewModel with ChangeNotifier {
 
       if (_formKey.currentState!.validate()) {
         /// check if stock is already available
+        await setNewStockOrderedId();
         QuerySnapshot stockQuerySnapshot = await fireStore
             .collection(uid)
             .doc('StockData')
@@ -66,15 +69,16 @@ class AddStockViewModel with ChangeNotifier {
           debugPrint('\n\n\n\n\n\n\n\n\n\nIt means stock exists.'
               '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
 
+          newTotalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
+              (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
+
           /// update the Stock
           DocumentSnapshot stockDocumentSnapshot =
               stockQuerySnapshot.docs.first;
           newStockId = stockDocumentSnapshot.get('stockId');
           previousStockQuantity = stockDocumentSnapshot.get('stockQuantity');
           previousTotalAmount = stockDocumentSnapshot.get('totalAmount');
-          totalAmount = previousTotalAmount +
-              (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
-                  (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
+          totalAmount = previousTotalAmount + newTotalAmount;
           // try {
           DocumentReference stockDocRef = fireStore
               .collection(uid)
@@ -90,17 +94,18 @@ class AddStockViewModel with ChangeNotifier {
                 ? previousStockQuantity
                 : int.tryParse(stockQuantityC.text.trim())! +
                     previousStockQuantity,
+            'totalAmount': totalAmount,
           }).then((value) async {
-            ///todo: add a order history
-            debugPrint('\n\n\n\n\n\n\n\n Supplier data updated !!\n\n\n\n\n\n');
-            Utils.showMessage('Supplier data updated !!');
+            ///todo: add an order history
+            debugPrint('\n\n\n\n\n\n\n\n Stock data updated !!\n\n\n\n\n\n');
+            Utils.showMessage('Stock data updated !!');
 
             /// adding a stock ordered
             await fireStore
                 .collection(uid)
                 .doc('StockData')
                 .collection('StockOrdered')
-                .doc('SUP-ORDER-$newStockId')
+                .doc('SUP-ORDER-$newStockOrderedId')
                 .set({
               'stockOrderId': newStockOrderedId,
               'stockId': newStockId,
@@ -109,10 +114,30 @@ class AddStockViewModel with ChangeNotifier {
               'stockUnitBuyPrice':
                   int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 1,
               'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 1,
-              'totalAmount': totalAmount,
+              'totalAmount': newTotalAmount,
               'supplierId': int.tryParse(supplierIdC.text.trim()),
               'stockDateAdded': Timestamp.now(),
             });
+
+            /// update the supplier total amount etc
+            supplierId = int.tryParse(supplierIdC.text.trim())!;
+
+            DocumentReference supplierRef = fireStore
+                .collection(uid)
+                .doc('SuppliersData')
+                .collection('Suppliers')
+
+                /// todo: create a method which will find the supplier id by using supplier name
+                .doc('SUP-$supplierId');
+
+            DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
+
+            supplierPreviousTotalAmount =
+                supplierDocSnapshot.get({'totalAmount'});
+            supplierRef.update({
+              'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
+            });
+
             updateListeners(false);
           }).onError((error, stackTrace) {
             debugPrint(
@@ -128,12 +153,11 @@ class AddStockViewModel with ChangeNotifier {
         } else {
           /// stock doesn't exist
           await setNewStockId();
-          await setNewStockOrderedId();
 
-          totalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
+          newTotalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
               (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
 
-          /// Adding a new supplier
+          /// Adding a new stock
           await fireStore
               .collection(uid)
               .doc('StockData')
@@ -153,6 +177,7 @@ class AddStockViewModel with ChangeNotifier {
             'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
             'stockColor': stockColorC.text.trim(),
             'manufacturedBy': stockManufacturedByC.text.trim(),
+            'totalAmount': newTotalAmount,
             'supplierId': int.tryParse(supplierIdC.text.trim()) ?? 0,
             'stockDateAdded': Timestamp.now()
           }).then((value) async {
@@ -170,9 +195,28 @@ class AddStockViewModel with ChangeNotifier {
               'stockUnitBuyPrice':
                   int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
               'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-              'totalAmount': totalAmount,
+              'totalAmount': newTotalAmount,
               'supplierId': int.tryParse(supplierIdC.text.trim()),
               'stockDateAdded': Timestamp.now(),
+            });
+
+            /// update the supplier total amount
+            supplierId = int.tryParse(supplierIdC.text.trim())!;
+
+            DocumentReference supplierRef = fireStore
+                .collection(uid)
+                .doc('SuppliersData')
+                .collection('Suppliers')
+
+                /// todo: create a method which will find the supplier id by using supplier name
+                .doc('SUP-$supplierId');
+
+            DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
+
+            supplierPreviousTotalAmount =
+                supplierDocSnapshot.get({'totalAmount'});
+            supplierRef.update({
+              'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
             });
 
             Utils.showMessage('Successfully stock added');

@@ -81,7 +81,7 @@ class _AllStockViewState extends State<AllStockView> {
                           subtitleTextStyle: const TextStyle(
                               color: Colors.black, fontStyle: FontStyle.italic),
                           subtitle: Text(
-                            'Category: ${value.allStockList[index].stockCategory}\nColor: ${value.allStockList[index].stockColor}}',
+                            'Category: ${value.allStockList[index].stockCategory}\nColor: ${value.allStockList[index].stockColor}',
                           ),
                           leading: Text(
                               value.allStockList[index].stockId.toString()),

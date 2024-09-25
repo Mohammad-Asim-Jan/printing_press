@@ -65,9 +65,16 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                         return ListTile(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => StockOrderedFromSupplierView(
+                              builder: (context) =>
+                                  StockOrderedFromSupplierView(
                                 supplierId:
                                     value.allSuppliersModel[index].supplierId,
+                                // totalAmount:
+                                //     value.allSuppliersModel[index].totalAmount,
+                                // remainingAmount: value
+                                //     .allSuppliersModel[index].amountRemaining,
+                                // paidAmount: value
+                                //     .allSuppliersModel[index].totalPaidAmount,
                               ),
                             ));
                           },
