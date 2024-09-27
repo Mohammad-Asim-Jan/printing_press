@@ -10,6 +10,6 @@ class DesignView extends StatefulWidget {
 class _DesignViewState extends State<DesignView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Design'),),);
+    return Scaffold(appBar: AppBar(title: const Text('Design'),),);
   }
 }

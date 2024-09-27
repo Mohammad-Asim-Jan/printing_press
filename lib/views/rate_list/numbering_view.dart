@@ -10,6 +10,6 @@ class NumberingView extends StatefulWidget {
 class _NumberingViewState extends State<NumberingView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Numbering'),),);
+    return Scaffold(appBar: AppBar(title: const Text('Numbering'),),);
   }
 }

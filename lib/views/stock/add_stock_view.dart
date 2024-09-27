@@ -5,7 +5,6 @@ import 'package:printing_press/components/round_button.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../colors/color_palette.dart';
 
 class AddStockView extends StatefulWidget {
   const AddStockView({super.key});

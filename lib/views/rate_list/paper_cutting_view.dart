@@ -12,7 +12,7 @@ class _PaperCuttingViewState extends State<PaperCuttingView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Paper Cutting'),
+        title: const Text('Paper Cutting'),
       ),
     );
   }

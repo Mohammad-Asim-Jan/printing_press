@@ -18,7 +18,6 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     placeOrderViewModel =
         Provider.of<PlaceOrderViewModel>(context, listen: false);
@@ -65,7 +64,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                               child: Form(
                                 key: placeOrderViewModel.formKey2,
                                 child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
                                   child: Column(
                                     children: [
                                       Row(
@@ -97,10 +96,10 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 100,),
+                                      const SizedBox(height: 100,),
                                       Row(
                                         children: [
-                                          Text('Quantity'),
+                                          const Text('Quantity'),
                                           Container(
                                             height: 50,
                                             width: 300,
@@ -131,7 +130,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                   : const Center(child: CircularProgressIndicator());
             },
           ),
-          Text('todo')
+          const Text('todo')
           // Consumer<PlaceOrderViewModel>(
           //   builder: (context, val, child) {
           //     return val.customOrderDataFetched

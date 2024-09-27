@@ -11,10 +11,11 @@ class AddStockViewModel with ChangeNotifier {
 
   final _formKey = GlobalKey<FormState>();
   late int newStockId;
-  late int newStockOrderedId;
+  late int newStockOrderId;
   late int supplierId;
   late int supplierPreviousTotalAmount;
   late int previousStockQuantity;
+  late int previousAvailableStockQuantity;
   late int previousTotalAmount;
   late int totalAmount;
   late int newTotalAmount;
@@ -40,7 +41,7 @@ class AddStockViewModel with ChangeNotifier {
       {
         if (_formKey.currentState!.validate()) {
           /// check if stock is already available
-          await setNewStockOrderedId();
+          await setNewStockOrderId();
           QuerySnapshot stockQuerySnapshot = await fireStore
               .collection(uid)
               .doc('StockData')
@@ -78,6 +79,9 @@ class AddStockViewModel with ChangeNotifier {
                 stockQuerySnapshot.docs.first;
             newStockId = stockDocumentSnapshot.get('stockId');
             previousStockQuantity = stockDocumentSnapshot.get('stockQuantity');
+            previousAvailableStockQuantity =
+                stockDocumentSnapshot.get('availableStock');
+
             previousTotalAmount = stockDocumentSnapshot.get('totalAmount');
             totalAmount = previousTotalAmount + newTotalAmount;
             // try {
@@ -91,6 +95,7 @@ class AddStockViewModel with ChangeNotifier {
 
             await stockDocRef.update({
               'stockDateAdded': Timestamp.now(),
+              'availableStock': previousAvailableStockQuantity + newTotalAmount,
               'stockQuantity': int.tryParse(stockQuantityC.text.trim()) == null
                   ? previousStockQuantity
                   : int.tryParse(stockQuantityC.text.trim())! +
@@ -101,14 +106,14 @@ class AddStockViewModel with ChangeNotifier {
               debugPrint('\n\n\n\n\n\n\n\n Stock data updated !!\n\n\n\n\n\n');
               Utils.showMessage('Stock data updated !!');
 
-              /// adding a stock ordered
+              /// adding a stock order
               await fireStore
                   .collection(uid)
                   .doc('StockData')
-                  .collection('StockOrdered')
-                  .doc('SUP-ORDER-$newStockOrderedId')
+                  .collection('StockOrderHistory')
+                  .doc('SUP-ORDER-$newStockOrderId')
                   .set({
-                'stockOrderId': newStockOrderedId,
+                'stockOrderId': newStockOrderId,
                 'stockId': newStockId,
                 'stockName': stockNameC.text.trim(),
                 'stockCategory': stockCategoryC.text.trim(),
@@ -166,6 +171,7 @@ class AddStockViewModel with ChangeNotifier {
                 .doc('STOCK-$newStockId')
                 .set({
               'stockId': newStockId,
+              'availableStock':newTotalAmount,
               'stockName': stockNameC.text.trim(),
               'stockCategory': stockCategoryC.text.trim(),
               'stockDescription': stockDescriptionC.text.trim(),
@@ -181,15 +187,16 @@ class AddStockViewModel with ChangeNotifier {
               'totalAmount': newTotalAmount,
               'supplierId': int.tryParse(supplierIdC.text.trim()) ?? 0,
               'stockDateAdded': Timestamp.now()
-            }).then((value) async {
+            }).then((value) async
+            {
               /// Adding the history of the stock
               await fireStore
                   .collection(uid)
                   .doc('StockData')
-                  .collection('StockOrdered')
-                  .doc('SUP-ORDER-$newStockId')
+                  .collection('StockOrderHistory')
+                  .doc('SUP-ORDER-$newStockOrderId')
                   .set({
-                'stockOrderId': newStockOrderedId,
+                'stockOrderId': newStockOrderId,
                 'stockId': newStockId,
                 'stockName': stockNameC.text.trim(),
                 'stockCategory': stockCategoryC.text.trim(),
@@ -271,27 +278,27 @@ class AddStockViewModel with ChangeNotifier {
   }
 
   ///todo:
-  setNewStockOrderedId() async {
-    newStockOrderedId = 1;
+  setNewStockOrderId() async {
+    newStockOrderId = 1;
     final documentRef = FirebaseFirestore.instance
         .collection(uid)
         .doc('StockData')
-        .collection('StockOrdered')
-        .doc('LastStockOrderedId');
+        .collection('StockOrderHistory')
+        .doc('LastStockOrderId');
 
     final documentSnapshot = await documentRef.get();
 
     var data = documentSnapshot.data();
 
-    if (data?['LastStockOrderedId'] == null) {
+    if (data?['LastStockOrderId'] == null) {
       debugPrint(
-          'Stock ordered id found to be null --------- ${data?['LastStockOrderedId']}');
-      await documentRef.set({'LastStockOrderedId': newStockOrderedId});
+          'Stock ordered id found to be null --------- ${data?['LastStockOrderId']}');
+      await documentRef.set({'LastStockOrderId': newStockOrderId});
     } else {
       debugPrint(
-          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderedId']}');
-      newStockOrderedId = data?['LastStockOrderedId'] + 1;
-      await documentRef.set({'LastStockOrderedId': newStockOrderedId});
+          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderId']}');
+      newStockOrderId = data?['LastStockOrderId'] + 1;
+      await documentRef.set({'LastStockOrderId': newStockOrderId});
     }
   }
 

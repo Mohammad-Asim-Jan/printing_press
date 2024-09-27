@@ -11,6 +11,6 @@ class MachineView extends StatefulWidget {
 class _MachineViewState extends State<MachineView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('Machine'),),);
+    return Scaffold(appBar: AppBar(title: const Text('Machine'),),);
   }
 }

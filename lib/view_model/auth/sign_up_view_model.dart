@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:printing_press/view_model/auth/sign_out.dart';
 import '../../firebase_services/firebase_firestore_services.dart';
 import '../../utils/toast_message.dart';
-import '../../views/auth/log_in.dart';
 
 class SignUpViewModel with ChangeNotifier {
   bool _loading = false;

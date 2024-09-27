@@ -12,7 +12,7 @@ class _ProfitViewState extends State<ProfitView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profit'),
+        title: const Text('Profit'),
       ),
     );
   }

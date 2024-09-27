@@ -10,6 +10,6 @@ class NewsPaperView extends StatefulWidget {
 class _NewsPaperViewState extends State<NewsPaperView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text('News Paper'),),);
+    return Scaffold(appBar: AppBar(title: const Text('News Paper'),),);
   }
 }

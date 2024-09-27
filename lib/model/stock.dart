@@ -8,6 +8,7 @@ class Stock {
   final int stockUnitBuyPrice;
   final int stockUnitSellPrice;
   final int stockQuantity;
+  final int availableStock;
   // final Size stockSize;
   final String stockColor;
   final String manufacturedBy;
@@ -22,6 +23,7 @@ class Stock {
     required this.stockCategory,
     required this.stockUnitBuyPrice,
     required this.stockUnitSellPrice,
+    required this.availableStock,
     // required this.stockSize,
     required this.stockColor,
     required this.manufacturedBy,
@@ -38,6 +40,7 @@ class Stock {
       stockCategory: jsonData['stockCategory'],
       stockUnitBuyPrice: jsonData['stockUnitBuyPrice'],
       stockUnitSellPrice: jsonData['stockUnitSellPrice'],
+      availableStock: jsonData['availableStock'],
       // stockSize: Size.fromJson(jsonData['stockSize']),
       stockColor: jsonData['stockColor'],
       manufacturedBy: jsonData['manufacturedBy'],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
-import 'package:printing_press/views/suppliers/stock_ordered_from_supplier_view.dart';
+import 'package:printing_press/views/suppliers/supplier_orders_history_view.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
 import 'add_supplier_view.dart';
@@ -66,7 +66,7 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
-                                  StockOrderedFromSupplierView(
+                                  SupplierOrdersHistoryView(
                                 supplierId:
                                     value.allSuppliersModel[index].supplierId,
                                 totalAmount:

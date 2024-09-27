@@ -121,7 +121,8 @@ class AddSupplierViewModel with ChangeNotifier {
                   }
                 ])
               });
-            } else {
+            } else
+            {
               debugPrint(
                   '\n\n\n\n\n SAME ACCOUNT OF BANK FOUND... \n\n\n\n\n\n\n\n');
               bankAccounts[selectedIndex] = BankAccount(

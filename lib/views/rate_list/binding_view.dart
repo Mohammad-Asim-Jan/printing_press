@@ -13,7 +13,7 @@ class _BindingViewState extends State<BindingView> {
     return Scaffold(
       appBar:
       AppBar(
-        title: Text('Binding'),
+        title: const Text('Binding'),
       ),
     );
   }
