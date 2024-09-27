@@ -133,7 +133,7 @@ class AddStockViewModel with ChangeNotifier {
             DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
 
             supplierPreviousTotalAmount =
-                supplierDocSnapshot.get({'totalAmount'});
+                supplierDocSnapshot.get('totalAmount');
             supplierRef.update({
               'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
             });
@@ -203,6 +203,8 @@ class AddStockViewModel with ChangeNotifier {
             /// update the supplier total amount
             supplierId = int.tryParse(supplierIdC.text.trim())!;
 
+            debugPrint(
+                '\n\n\n\n\nSupplier id while updating the total amount: $supplierId \n\n\n\n\n');
             DocumentReference supplierRef = fireStore
                 .collection(uid)
                 .doc('SuppliersData')
@@ -214,7 +216,13 @@ class AddStockViewModel with ChangeNotifier {
             DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
 
             supplierPreviousTotalAmount =
-                supplierDocSnapshot.get({'totalAmount'});
+                supplierDocSnapshot.get('totalAmount');
+
+            debugPrint(
+                '\n\n\n\n\nSupplier previous total amount: $supplierPreviousTotalAmount \n\n\n\n\n');
+            debugPrint(
+                '\n\n\n\n\nSupplier new total amount: $newTotalAmount \n\n\n\n\n');
+
             supplierRef.update({
               'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
             });

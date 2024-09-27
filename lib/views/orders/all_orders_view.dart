@@ -21,64 +21,79 @@ class _AllOrdersViewState extends State<AllOrdersView> {
   Widget build(BuildContext context) {
     debugPrint(auth.currentUser!.uid.toString());
     debugPrint(auth.currentUser!.email.toString());
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: kSecColor,
-        onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const PlaceOrderView()));
-        },
-        child: Text(
-          'Add +',
-          style: TextStyle(color: kThirdColor),
-        ),
-      ),
-      appBar: AppBar(
-        title: const Text('All Orders'),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              SignOut().signOut(context);
-            },
-            icon: const Icon(Icons.logout_rounded),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: kSecColor,
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const PlaceOrderView()));
+          },
+          child: Text(
+            'Add +',
+            style: TextStyle(color: kThirdColor),
           ),
-        ],
-      ),
-      body: data
-          ? ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 2,
-                  margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
-                  // margin: EdgeInsets.all(10),
-                  color: kOne,
-                  child: ListTile(
-                    // enabled: true, true for all except cancelled
-                    // tileColor: ,
-                    isThreeLine: true,
-                    onTap: () {
-                      /// todo: goto that specific order along with the details
-                    },
-                    contentPadding: const EdgeInsets.all(5),
-                    iconColor: kSecColor,
-                    // minVerticalPadding: 1,
-                    minLeadingWidth: 10,
-                    horizontalTitleGap: 15,
-                    leading: const Text(
-                      '1',
-                      style: TextStyle(
-                        fontSize: 16,
+        ),
+        appBar: AppBar(
+          title: const Text('All Orders'),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                SignOut().signOut(context);
+              },
+              icon: const Icon(Icons.logout_rounded),
+            ),
+          ],
+          bottom: const TabBar(tabs: [
+            Tab(
+              icon: Icon(
+                Icons.home,
+              ),
+            ),
+            Tab(
+              icon: Icon(
+                Icons.logout,
+              ),
+            ),
+          ]),
+        ),
+        body: data
+            ? ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return Card(
+                    elevation: 2,
+                    margin: const EdgeInsets.only(left: 5, right: 5, top: 10),
+                    // margin: EdgeInsets.all(10),
+                    color: kOne,
+                    child: ListTile(
+                      // enabled: true, true for all except cancelled
+                      // tileColor: ,
+                      isThreeLine: true,
+                      onTap: () {
+                        /// todo: goto that specific order along with the details
+                      },
+                      contentPadding: const EdgeInsets.all(5),
+                      iconColor: kSecColor,
+                      // minVerticalPadding: 1,
+                      minLeadingWidth: 10,
+                      horizontalTitleGap: 15,
+                      leading: const Text(
+                        '1',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
+                      trailing: const Icon(Icons.pending),
+                      title: const Text('Business Title'),
+                      subtitle: const Text(
+                          'Click on it to get into more details, it will show you the descriptions about the order being placed'),
                     ),
-                    trailing: const Icon(Icons.pending),
-                    title: const Text('Business Title'),
-                    subtitle: const Text(
-                        'Click on it to get into more details, it will show you the descriptions about the order being placed'),
-                  ),
-                );
-              })
-          : const Center(child: Text('No Order Found')),
+                  );
+                })
+            : const Center(child: Text('No Order Found')),
+      ),
     );
   }
 }
