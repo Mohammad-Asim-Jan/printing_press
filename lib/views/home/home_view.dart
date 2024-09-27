@@ -5,6 +5,7 @@ import 'package:printing_press/views/cashbook/cash_book_view.dart';
 import 'package:printing_press/views/employees/all_employees_view.dart';
 import 'package:printing_press/views/khata/khata_view.dart';
 import 'package:printing_press/views/orders/all_orders_view.dart';
+import 'package:printing_press/views/rate_list/rate_list_view.dart';
 import 'package:printing_press/views/stock/all_stock_view.dart';
 import 'package:printing_press/views/suppliers/all_suppliers_view.dart';
 
@@ -83,7 +84,8 @@ class _HomeViewState extends State<HomeView> {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const AllStockView(),
                   ));
-                }),const SizedBox(
+                }),
+            const SizedBox(
               height: 10,
             ),
             RoundButton(
@@ -91,6 +93,15 @@ class _HomeViewState extends State<HomeView> {
                 onPress: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const KhataView(),
+                  ));
+                }),const SizedBox(
+              height: 10,
+            ),
+            RoundButton(
+                title: 'Rate list',
+                onPress: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const RateListView(),
                   ));
                 }),
           ],

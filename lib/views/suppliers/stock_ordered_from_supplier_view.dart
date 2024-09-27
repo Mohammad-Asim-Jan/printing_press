@@ -8,15 +8,15 @@ class StockOrderedFromSupplierView extends StatefulWidget {
   const StockOrderedFromSupplierView({
     super.key,
     required this.supplierId,
-    // required this.totalAmount,
-    // required this.remainingAmount,
-    // required this.paidAmount,
+    required this.totalAmount,
+    required this.remainingAmount,
+    required this.paidAmount,
   });
 
   final int supplierId;
-  // final int totalAmount;
-  // final int remainingAmount;
-  // final int paidAmount;
+  final int totalAmount;
+  final int remainingAmount;
+  final int paidAmount;
 
   @override
   State<StockOrderedFromSupplierView> createState() =>
@@ -69,9 +69,9 @@ class _StockOrderedFromSupplierViewState
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // Text('${widget.totalAmount}'),
-                            // Text('${widget.paidAmount}'),
-                            // Text('${widget.remainingAmount}'),
+                            Text('${widget.totalAmount}'),
+                            Text('${widget.paidAmount}'),
+                            Text('${widget.remainingAmount}'),
                           ],
                         ),
                         ListView.builder(

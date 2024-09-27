@@ -69,12 +69,12 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                                   StockOrderedFromSupplierView(
                                 supplierId:
                                     value.allSuppliersModel[index].supplierId,
-                                // totalAmount:
-                                //     value.allSuppliersModel[index].totalAmount,
-                                // remainingAmount: value
-                                //     .allSuppliersModel[index].amountRemaining,
-                                // paidAmount: value
-                                //     .allSuppliersModel[index].totalPaidAmount,
+                                totalAmount:
+                                    value.allSuppliersModel[index].totalAmount,
+                                remainingAmount: value
+                                    .allSuppliersModel[index].amountRemaining,
+                                paidAmount: value
+                                    .allSuppliersModel[index].totalPaidAmount,
                               ),
                             ));
                           },

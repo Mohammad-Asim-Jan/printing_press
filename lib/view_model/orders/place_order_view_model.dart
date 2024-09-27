@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../firebase_services/firebase_firestore_services.dart';
@@ -10,6 +11,9 @@ class PlaceOrderViewModel with ChangeNotifier {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   get formKey => _formKey;
+  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
+
+  get formKey2 => _formKey2;
 
   final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -17,9 +21,19 @@ class PlaceOrderViewModel with ChangeNotifier {
 
   Map<String, dynamic>? data;
 
-  bool _dataFetched = false;
+  bool _customOrderDataFetched = false;
 
-  get dataFetched => _dataFetched;
+  get customOrderDataFetched => _customOrderDataFetched;
+
+  late bool _inStockOrderDataFetched;
+
+  get inStockOrderDataFetched => _inStockOrderDataFetched;
+
+  // all stock
+  List<String> allStockList = [];
+  late String selectedStock;
+  late int selectedStockIndex;
+  TextEditingController stockQuantityC = TextEditingController();
 
   // design
   List<String> designNames = [];
@@ -60,7 +74,6 @@ class PlaceOrderViewModel with ChangeNotifier {
   List<String> printNames = ['1C', '2C', '3C', '4C'];
   String selectedPrint = '1C';
 
-
   // copy printing
   List<String> copyPrint = ['none', 'printed'];
   String selectedCopyPrint = 'none';
@@ -90,14 +103,12 @@ class PlaceOrderViewModel with ChangeNotifier {
   late String selectedNumbering;
   late int selectedNumberingIndex;
 
-
   // back side printing
   List<String> backSide = ['yes', 'no'];
   late String selectedBackSide;
 
   // other expenses
   TextEditingController otherExpensesC = TextEditingController();
-
 
   /// paper + extra sheet
   // binding yes or no -- binding rate * paper quantity / 1000 ?? maybe...
@@ -115,8 +126,27 @@ class PlaceOrderViewModel with ChangeNotifier {
   // carriage to hangu
   // result = paper quantity depends on cutting + carriage +
 
-
-
+  getAllStock() async {
+    allStockList= [];
+    _inStockOrderDataFetched = false;
+    debugPrint('Get all stock called!');
+    allStockList.add('None');
+    selectedStockIndex = 0;
+    selectedStock = allStockList[0];
+    var querySnapshot = await FirebaseFirestore.instance
+        .collection(FirebaseAuth.instance.currentUser!.uid)
+        .doc('StockData')
+        .collection('AvailableStock')
+        .get();
+    var docs = querySnapshot.docs;
+    if (docs.length >= 2) {
+      for (int index = 1; index < docs.length; index++) {
+        allStockList.add(docs[index].get('stockName'));
+      }
+    }
+    _inStockOrderDataFetched = true;
+    updateListener();
+  }
 
   checkData() {
     getFirestoreData();
@@ -124,7 +154,7 @@ class PlaceOrderViewModel with ChangeNotifier {
       if (data != null) {
         debugPrint('data is not null anymore...');
         setFirebaseDataLocally();
-        _dataFetched = true;
+        _customOrderDataFetched = true;
         timer.cancel();
         updateListener();
       } else {
