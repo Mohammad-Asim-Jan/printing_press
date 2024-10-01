@@ -6,6 +6,7 @@ import 'package:printing_press/view_model/home/home_view_model.dart';
 import 'package:printing_press/view_model/auth/log_in_view_model.dart';
 import 'package:printing_press/view_model/auth/sign_up_view_model.dart';
 import 'package:printing_press/view_model/orders/place_order_view_model.dart';
+import 'package:printing_press/view_model/payment/payment_view_model.dart';
 import 'package:printing_press/view_model/rate_list/rate_list_view_model.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:printing_press/view_model/stock/all_stock_view_model.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AddStockViewModel()),
         ChangeNotifierProvider(create: (_) => SupplierOrdersHistoryViewModel()),
         ChangeNotifierProvider(create: (_) => RateListViewModel()),
+        ChangeNotifierProvider(create: (_) => PaymentViewModel()),
       ],
       child: MaterialApp(
         theme: ThemeData(

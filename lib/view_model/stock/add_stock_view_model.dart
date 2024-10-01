@@ -40,6 +40,7 @@ class AddStockViewModel with ChangeNotifier {
       updateListeners(true);
       {
         if (_formKey.currentState!.validate()) {
+          ///todo: check if the quantity is null or zero, then don't update
           /// check if stock is already available
           await setNewStockOrderId();
           QuerySnapshot stockQuerySnapshot = await fireStore
@@ -74,13 +75,15 @@ class AddStockViewModel with ChangeNotifier {
             newTotalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
                 (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
 
+            debugPrint('\n\nNew Total Amount: $newTotalAmount\n\n');
+
             /// update the Stock
             DocumentSnapshot stockDocumentSnapshot =
                 stockQuerySnapshot.docs.first;
             newStockId = stockDocumentSnapshot.get('stockId');
             previousStockQuantity = stockDocumentSnapshot.get('stockQuantity');
             previousAvailableStockQuantity =
-                stockDocumentSnapshot.get('availableStock');
+                stockDocumentSnapshot.get('availableStock') ?? 0;
 
             previousTotalAmount = stockDocumentSnapshot.get('totalAmount');
             totalAmount = previousTotalAmount + newTotalAmount;
@@ -95,7 +98,8 @@ class AddStockViewModel with ChangeNotifier {
 
             await stockDocRef.update({
               'stockDateAdded': Timestamp.now(),
-              'availableStock': previousAvailableStockQuantity + newTotalAmount,
+              'availableStock': previousAvailableStockQuantity +
+                  (int.tryParse(stockQuantityC.text.trim()) ?? 0),
               'stockQuantity': int.tryParse(stockQuantityC.text.trim()) == null
                   ? previousStockQuantity
                   : int.tryParse(stockQuantityC.text.trim())! +
@@ -118,8 +122,8 @@ class AddStockViewModel with ChangeNotifier {
                 'stockName': stockNameC.text.trim(),
                 'stockCategory': stockCategoryC.text.trim(),
                 'stockUnitBuyPrice':
-                    int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 1,
-                'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 1,
+                    int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
+                'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
                 'totalAmount': newTotalAmount,
                 'supplierId': int.tryParse(supplierIdC.text.trim()),
                 'stockDateAdded': Timestamp.now(),
@@ -171,7 +175,7 @@ class AddStockViewModel with ChangeNotifier {
                 .doc('STOCK-$newStockId')
                 .set({
               'stockId': newStockId,
-              'availableStock':newTotalAmount,
+              'availableStock': int.tryParse(stockQuantityC.text.trim()) ?? 0,
               'stockName': stockNameC.text.trim(),
               'stockCategory': stockCategoryC.text.trim(),
               'stockDescription': stockDescriptionC.text.trim(),
@@ -187,8 +191,7 @@ class AddStockViewModel with ChangeNotifier {
               'totalAmount': newTotalAmount,
               'supplierId': int.tryParse(supplierIdC.text.trim()) ?? 0,
               'stockDateAdded': Timestamp.now()
-            }).then((value) async
-            {
+            }).then((value) async {
               /// Adding the history of the stock
               await fireStore
                   .collection(uid)

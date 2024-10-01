@@ -7,7 +7,7 @@ class Payment {
   final int supplierId;
 
   /// only for customer order, for supplier this will be null or even it won't exist
-  final int orderId;
+   int? orderId;
 
   /// this is either cash-in or cash-out
   final String paymentType;
@@ -19,7 +19,7 @@ class Payment {
 
   Payment({
     required this.paymentId,
-    required this.orderId,
+    this.orderId = 0,
     required this.paymentDateTime,
     required this.amount,
     required this.supplierId,
