@@ -32,8 +32,8 @@ class _RateListViewState extends State<RateListView> {
             RoundButton(
                 title: 'Binding',
                 onPress: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const BindingView()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const BindingView()));
                 }),
             const SizedBox(
               height: 10,
@@ -41,8 +41,8 @@ class _RateListViewState extends State<RateListView> {
             RoundButton(
                 title: 'Design',
                 onPress: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const DesignView()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const DesignView()));
                 }),
             const SizedBox(
               height: 10,
@@ -50,8 +50,8 @@ class _RateListViewState extends State<RateListView> {
             RoundButton(
                 title: 'Machine',
                 onPress: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const MachineView()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const MachineView()));
                 }),
             const SizedBox(
               height: 10,
@@ -59,8 +59,8 @@ class _RateListViewState extends State<RateListView> {
             RoundButton(
                 title: 'News Paper',
                 onPress: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const NewsPaperView()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const NewsPaperView()));
                 }),
             const SizedBox(
               height: 10,
@@ -68,8 +68,8 @@ class _RateListViewState extends State<RateListView> {
             RoundButton(
                 title: 'Numbering',
                 onPress: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const NumberingView()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const NumberingView()));
                 }),
             const SizedBox(
               height: 10,
@@ -77,8 +77,8 @@ class _RateListViewState extends State<RateListView> {
             RoundButton(
                 title: 'Paper',
                 onPress: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const PaperView()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const PaperView()));
                 }),
             const SizedBox(
               height: 10,
@@ -95,8 +95,8 @@ class _RateListViewState extends State<RateListView> {
             RoundButton(
                 title: 'Profit',
                 onPress: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const ProfitView()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ProfitView()));
                 }),
             const SizedBox(
               height: 10,

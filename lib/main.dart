@@ -9,6 +9,7 @@ import 'package:printing_press/view_model/auth/sign_up_view_model.dart';
 import 'package:printing_press/view_model/orders/place_order_view_model.dart';
 import 'package:printing_press/view_model/payment/payment_view_model.dart';
 import 'package:printing_press/view_model/rate_list/binding/binding_view_model.dart';
+import 'package:printing_press/view_model/rate_list/paper_cutting/add_paper_cutting_view_model.dart';
 import 'package:printing_press/view_model/rate_list/rate_list_view_model.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:printing_press/view_model/stock/all_stock_view_model.dart';
@@ -17,6 +18,11 @@ import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dar
 import 'package:printing_press/view_model/suppliers/supplier_orders_history_view_model.dart';
 import 'package:provider/provider.dart';
 import 'view_model/rate_list/binding/add_binding_view_model.dart';
+import 'view_model/rate_list/design/add_design_view_model.dart';
+import 'view_model/rate_list/design/design_view_model.dart';
+import 'view_model/rate_list/numbering/add_numbering_view_model.dart';
+import 'view_model/rate_list/numbering/numbering_view_model.dart';
+import 'view_model/rate_list/paper_cutting/paper_cutting_view_model.dart';
 import 'views/splash/splash_view.dart';
 
 void main() async {
@@ -49,6 +55,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CashbookViewModel()),
         ChangeNotifierProvider(create: (_) => AddBindingViewModel()),
         ChangeNotifierProvider(create: (_) => BindingViewModel()),
+        ChangeNotifierProvider(create: (_) => DesignViewModel()),
+        ChangeNotifierProvider(create: (_) => AddDesignViewModel()),
+        ChangeNotifierProvider(create: (_) => AddNumberingViewModel()),
+        ChangeNotifierProvider(create: (_) => NumberingViewModel()),
+        ChangeNotifierProvider(create: (_) => AddPaperCuttingViewModel()),
+        ChangeNotifierProvider(create: (_) => PaperCuttingViewModel()),
       ],
       child: MaterialApp(
         theme: ThemeData(
