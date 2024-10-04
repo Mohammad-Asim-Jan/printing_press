@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:printing_press/components/round_button.dart';
-import 'package:printing_press/views/rate_list/binding_view.dart';
-import 'package:printing_press/views/rate_list/design_view.dart';
-import 'package:printing_press/views/rate_list/machine_view.dart';
-import 'package:printing_press/views/rate_list/news_paper_view.dart';
-import 'package:printing_press/views/rate_list/numbering_view.dart';
-import 'package:printing_press/views/rate_list/paper_cutting_view.dart';
-import 'package:printing_press/views/rate_list/paper_view.dart';
-import 'package:printing_press/views/rate_list/profit_view.dart';
+import 'package:printing_press/views/rate_list/binding/binding_view.dart';
+import 'package:printing_press/views/rate_list/design/design_view.dart';
+import 'package:printing_press/views/rate_list/machine/machine_view.dart';
+import 'package:printing_press/views/rate_list/news_paper/news_paper_view.dart';
+import 'package:printing_press/views/rate_list/numbering/numbering_view.dart';
+import 'package:printing_press/views/rate_list/paper_cutting/paper_cutting_view.dart';
+import 'package:printing_press/views/rate_list/paper/paper_view.dart';
+import 'package:printing_press/views/rate_list/profit/profit_view.dart';
 
 class RateListView extends StatefulWidget {
   const RateListView({super.key});

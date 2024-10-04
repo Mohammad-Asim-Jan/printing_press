@@ -51,6 +51,7 @@ class PaymentViewModel with ChangeNotifier {
         }).then((value) async {
           Utils.showMessage('Supplier payment added !');
 
+          /// adding the payment history to cashbook
           await FirebaseFirestore.instance
               .collection(uid)
               .doc('CashbookData')

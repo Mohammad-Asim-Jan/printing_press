@@ -96,13 +96,12 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 100,),
+                                      // const SizedBox(height: 100,),
                                       Row(
                                         children: [
                                           const Text('Quantity'),
-                                          Container(
-                                            height: 50,
-                                            width: 300,
+                                          SizedBox(width: 10,),
+                                          Expanded(
                                             child: CustomTextField(
                                                 controller: val.stockQuantityC,
                                                 iconData: Icons.list,

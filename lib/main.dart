@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/firebase_options.dart';
+import 'package:printing_press/view_model/cashbook/cashbook_view_model.dart';
 import 'package:printing_press/view_model/home/home_view_model.dart';
 import 'package:printing_press/view_model/auth/log_in_view_model.dart';
 import 'package:printing_press/view_model/auth/sign_up_view_model.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SupplierOrdersHistoryViewModel()),
         ChangeNotifierProvider(create: (_) => RateListViewModel()),
         ChangeNotifierProvider(create: (_) => PaymentViewModel()),
+        ChangeNotifierProvider(create: (_) => CashbookViewModel()),
       ],
       child: MaterialApp(
         theme: ThemeData(
