@@ -28,6 +28,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
       width: 140,
       child: DropdownButtonFormField<String>(
           dropdownColor: kSecColor,
+          style: const TextStyle(fontSize: 14, color: Colors.black),
           decoration: InputDecoration(
             // prefixIcon: const Icon(
             //   Icons.design_services_outlined,
@@ -67,8 +68,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
             );
           }).toList(),
           hint: Text(widget.hint),
-          onChanged: widget.onChanged
-      ),
+          onChanged: widget.onChanged),
     );
   }
 }

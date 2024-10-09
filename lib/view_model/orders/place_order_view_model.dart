@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:printing_press/model/stock.dart';
 import '../../firebase_services/firebase_firestore_services.dart';
 import '../../model/rate_list.dart';
 
@@ -19,7 +20,6 @@ class PlaceOrderViewModel with ChangeNotifier {
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-
   late final RateList rateList;
 
   Map<String, dynamic>? data;
@@ -34,6 +34,7 @@ class PlaceOrderViewModel with ChangeNotifier {
 
   // all stock
   List<String> allStockList = [];
+  List<Stock> stockList = [];
   late String selectedStock;
   late int selectedStockIndex;
   TextEditingController stockQuantityC = TextEditingController();
@@ -138,10 +139,23 @@ class PlaceOrderViewModel with ChangeNotifier {
   // result = paper quantity depends on cutting + carriage +
 
   getAllStock() async {
-    allStockList= [];
+    allStockList = [];
     _inStockOrderDataFetched = false;
     debugPrint('Get all stock called!');
     allStockList.add('None');
+    stockList.add(Stock(
+        stockId: 0,
+        stockName: 'None',
+        stockQuantity: 0,
+        stockDescription: 'None',
+        stockCategory: 'None',
+        stockUnitBuyPrice: 0,
+        stockUnitSellPrice: 0,
+        availableStock: 0,
+        stockColor: 'None',
+        manufacturedBy: 'None',
+        supplierId: 0,
+        stockDateAdded: Timestamp.now()));
     selectedStockIndex = 0;
     selectedStock = allStockList[0];
     var querySnapshot = await FirebaseFirestore.instance
@@ -152,6 +166,7 @@ class PlaceOrderViewModel with ChangeNotifier {
     var docs = querySnapshot.docs;
     if (docs.length >= 2) {
       for (int index = 1; index < docs.length; index++) {
+        stockList.add(Stock.fromJson(docs[index].data()));
         allStockList.add(docs[index].get('stockName'));
       }
     }
@@ -251,6 +266,22 @@ class PlaceOrderViewModel with ChangeNotifier {
     FirebaseFirestoreServices firestore = FirebaseFirestoreServices(auth: auth);
     data = await firestore.fetchData();
     rateList = RateList.fromJson(data!);
+  }
+
+  changeStockDropDown(String? newVal) {
+    if (newVal != null) {
+      selectedStock = newVal;
+      selectedStockIndex = allStockList.indexOf(selectedStock);
+      updateListener();
+
+      if (newVal == 'None') {
+        debugPrint("No stock selected");
+      } else {
+        debugPrint('Stock Rate: ');
+      }
+    } else {
+      notifyListeners();
+    }
   }
 
   setFirebaseDataLocally() {

@@ -1,0 +1,111 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import '../../../utils/toast_message.dart';
+
+class AddMachineViewModel with ChangeNotifier {
+  FirebaseFirestore fireStore = FirebaseFirestore.instance;
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+
+  bool loading = false;
+
+  final _formKey = GlobalKey<FormState>();
+  late int newMachineId;
+
+  get formKey => _formKey;
+
+  TextEditingController machineNameC = TextEditingController();
+  TextEditingController sizeWidthC = TextEditingController();
+  TextEditingController sizeHeightC = TextEditingController();
+  TextEditingController plateRateC = TextEditingController();
+  TextEditingController printingRateC = TextEditingController();
+
+  addMachineInFirebase() async {
+    // two scenarios: 1. already exists 2. Not exists
+    if (_formKey.currentState != null) {
+      updateListeners(true);
+
+      if (_formKey.currentState!.validate()) {
+        ///todo: check if the quantity is null or zero, then don't update
+        /// check if machine is already available
+
+        QuerySnapshot machineQuerySnapshot = await fireStore
+            .collection(uid)
+            .doc('RateList')
+            .collection('Machine')
+            .where('name', isEqualTo: machineNameC.text.trim())
+            .limit(1)
+            .get();
+
+        if (machineQuerySnapshot.docs.isNotEmpty) {
+          debugPrint('\n\n\n\n\n\n\n\n\n\nIt means machine exist.'
+              '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
+          Utils.showMessage('Machine already exists!!');
+          updateListeners(false);
+        } else {
+          /// Machine doesn't exist
+          await setNewMachineId();
+
+          /// Adding a new machine
+          await fireStore
+              .collection(uid)
+              .doc('RateList')
+              .collection('Machine')
+              .doc('MAC-$newMachineId')
+              .set({
+            'machineId': newMachineId,
+            'name': machineNameC.text.trim(),
+            'size': {
+              'width': int.tryParse(sizeWidthC.text.trim()),
+              'height': int.tryParse(sizeHeightC.text.trim())
+            },
+            'plateRate': int.tryParse(plateRateC.text.trim()),
+            'printingRate': int.tryParse(printingRateC.text.trim())
+          }).then((value) async {
+            Utils.showMessage('New Machine added');
+            debugPrint('New Machine added!!!!!!!!!!!!!!!!!');
+            updateListeners(false);
+          }).onError((error, stackTrace) {
+            Utils.showMessage(error.toString());
+            updateListeners(false);
+          });
+        }
+      }
+      updateListeners(false);
+    } else {
+      updateListeners(false);
+    }
+  }
+
+  setNewMachineId() async {
+    final documentRef = FirebaseFirestore.instance
+        .collection(uid)
+        .doc('RateList')
+        .collection('Machine')
+
+        /// 0 is added so that the last machine id document appears to the top
+        /// because when we are getting the data, we ignore the first doc because it is always of id
+        .doc('0LastMachineId');
+
+    final documentSnapshot = await documentRef.get();
+
+    var data = documentSnapshot.data();
+
+    if (data?['machineId'] == null) {
+      newMachineId = 1;
+      debugPrint('Machine id found to be null --------- ${data?['machineId']}');
+      await documentRef.set({'machineId': newMachineId});
+    } else {
+      debugPrint(
+          '\n\n\nMachine id is found to be available. \nMachine id: ${data?['machineId']}');
+      newMachineId = data?['machineId'] + 1;
+      await documentRef.set({'machineId': newMachineId});
+    }
+  }
+
+  updateListeners(bool val) {
+    loading = val;
+    notifyListeners();
+  }
+}

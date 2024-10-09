@@ -38,32 +38,32 @@ class AddDesignViewModel with ChangeNotifier {
           debugPrint('\n\n\n\n\n\n\n\n\n\nIt means design exist.'
               '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
 
-          /// update the design
-          DocumentSnapshot designDocumentSnapshot =
-              designQuerySnapshot.docs.first;
-
-          newDesignId = designDocumentSnapshot.get('designId');
-          debugPrint('Design id found is : $newDesignId');
-          // try {
-          DocumentReference designDocRef = fireStore
-              .collection(uid)
-              .doc('RateList')
-              .collection('Design')
-              .doc('DES-$newDesignId');
-
-          await designDocRef.update({
-            'rate': int.tryParse(rateC.text.trim()) ?? 0,
-          }).then((value) async {
-            debugPrint('\n\n\n\n\n\n\n\n Design data updated !!\n\n\n\n\n\n');
-            Utils.showMessage('Design data updated !!');
-
-            updateListeners(false);
-          }).onError((error, stackTrace) {
-            debugPrint(
-                '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
-            Utils.showMessage(error.toString());
-            updateListeners(false);
-          });
+          // /// update the design
+          // DocumentSnapshot designDocumentSnapshot =
+          //     designQuerySnapshot.docs.first;
+          //
+          // newDesignId = designDocumentSnapshot.get('designId');
+          // debugPrint('Design id found is : $newDesignId');
+          // // try {
+          // DocumentReference designDocRef = fireStore
+          //     .collection(uid)
+          //     .doc('RateList')
+          //     .collection('Design')
+          //     .doc('DES-$newDesignId');
+          //
+          // await designDocRef.update({
+          //   'rate': int.tryParse(rateC.text.trim()) ?? 0,
+          // }).then((value) async {
+          //   debugPrint('\n\n\n\n\n\n\n\n Design data updated !!\n\n\n\n\n\n');
+          //   Utils.showMessage('Design data updated !!');
+          //
+          //   updateListeners(false);
+          // }).onError((error, stackTrace) {
+          //   debugPrint(
+          //       '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
+          //   Utils.showMessage(error.toString());
+          //   updateListeners(false);
+          // });
           updateListeners(false);
         } else {
           /// design doesn't exist

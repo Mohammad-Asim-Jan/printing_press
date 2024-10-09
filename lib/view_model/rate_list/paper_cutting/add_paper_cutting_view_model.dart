@@ -38,34 +38,34 @@ class AddPaperCuttingViewModel with ChangeNotifier {
           debugPrint('\n\n\n\n\n\n\n\n\n\nIt means PaperCutting exist.'
               '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
 
-          /// update the PaperCutting
-          DocumentSnapshot paperCuttingDocumentSnapshot =
-              bindingQuerySnapshot.docs.first;
-
-          newPaperCuttingId =
-              paperCuttingDocumentSnapshot.get('paperCuttingId');
-          debugPrint('PaperCutting id found : $newPaperCuttingId');
-          // try {
-          DocumentReference paperCuttingDocRef = fireStore
-              .collection(uid)
-              .doc('RateList')
-              .collection('PaperCutting')
-              .doc('PAP-CUT-$newPaperCuttingId');
-
-          await paperCuttingDocRef.update({
-            'rate': int.tryParse(rateC.text.trim()) ?? 0,
-          }).then((value) async {
-            debugPrint(
-                '\n\n\n\n\n\n\n\nPaperCutting data updated !!\n\n\n\n\n\n');
-            Utils.showMessage('PaperCutting data updated !!');
-
-            updateListeners(false);
-          }).onError((error, stackTrace) {
-            debugPrint(
-                '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
-            Utils.showMessage(error.toString());
-            updateListeners(false);
-          });
+          // /// update the PaperCutting
+          // DocumentSnapshot paperCuttingDocumentSnapshot =
+          //     bindingQuerySnapshot.docs.first;
+          //
+          // newPaperCuttingId =
+          //     paperCuttingDocumentSnapshot.get('paperCuttingId');
+          // debugPrint('PaperCutting id found : $newPaperCuttingId');
+          // // try {
+          // DocumentReference paperCuttingDocRef = fireStore
+          //     .collection(uid)
+          //     .doc('RateList')
+          //     .collection('PaperCutting')
+          //     .doc('PAP-CUT-$newPaperCuttingId');
+          //
+          // await paperCuttingDocRef.update({
+          //   'rate': int.tryParse(rateC.text.trim()) ?? 0,
+          // }).then((value) async {
+          //   debugPrint(
+          //       '\n\n\n\n\n\n\n\nPaperCutting data updated !!\n\n\n\n\n\n');
+          //   Utils.showMessage('PaperCutting data updated !!');
+          //
+          //   updateListeners(false);
+          // }).onError((error, stackTrace) {
+          //   debugPrint(
+          //       '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
+          //   Utils.showMessage(error.toString());
+          //   updateListeners(false);
+          // });
           updateListeners(false);
         } else {
           /// PaperCutting doesn't exist

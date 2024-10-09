@@ -38,32 +38,35 @@ class AddBindingViewModel with ChangeNotifier {
           debugPrint('\n\n\n\n\n\n\n\n\n\nIt means binding exists.'
               '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
 
-          /// update the binding
-          DocumentSnapshot bindingDocumentSnapshot =
-              bindingQuerySnapshot.docs.first;
+          /// no need to update
+          /// just show a message that the binding is already available
 
-          newBindingId = bindingDocumentSnapshot.get('bindingId');
-          debugPrint('Binding id found is : $newBindingId');
-          // try {
-          DocumentReference bindingDocRef = fireStore
-              .collection(uid)
-              .doc('RateList')
-              .collection('Binding')
-              .doc('BIND-$newBindingId');
-
-          await bindingDocRef.update({
-            'rate': int.tryParse(rateC.text.trim()) ?? 0,
-          }).then((value) async {
-            debugPrint('\n\n\n\n\n\n\n\n binding data updated !!\n\n\n\n\n\n');
-            Utils.showMessage('binding data updated !!');
-
-            updateListeners(false);
-          }).onError((error, stackTrace) {
-            debugPrint(
-                '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
-            Utils.showMessage(error.toString());
-            updateListeners(false);
-          });
+          // /// update the binding
+          // DocumentSnapshot bindingDocumentSnapshot =
+          //     bindingQuerySnapshot.docs.first;
+          //
+          // newBindingId = bindingDocumentSnapshot.get('bindingId');
+          // debugPrint('Binding id found is : $newBindingId');
+          // // try {
+          // DocumentReference bindingDocRef = fireStore
+          //     .collection(uid)
+          //     .doc('RateList')
+          //     .collection('Binding')
+          //     .doc('BIND-$newBindingId');
+          //
+          // await bindingDocRef.update({
+          //   'rate': int.tryParse(rateC.text.trim()) ?? 0,
+          // }).then((value) async {
+          //   debugPrint('\n\n\n\n\n\n\n\n binding data updated !!\n\n\n\n\n\n');
+          //   Utils.showMessage('binding data updated !!');
+          //
+          //   updateListeners(false);
+          // }).onError((error, stackTrace) {
+          //   debugPrint(
+          //       '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
+          //   Utils.showMessage(error.toString());
+          //   updateListeners(false);
+          // });
           updateListeners(false);
         } else {
           /// binding doesn't exist

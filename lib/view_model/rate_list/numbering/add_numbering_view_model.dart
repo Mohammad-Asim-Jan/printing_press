@@ -38,32 +38,32 @@ class AddNumberingViewModel with ChangeNotifier {
           debugPrint('\n\n\n\n\n\n\n\n\n\nIt means Numbering exist.'
               '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
 
-          /// update the Numbering
-          DocumentSnapshot numberingDocumentSnapshot =
-              numberingQuerySnapshot.docs.first;
-
-          newNumberingId = numberingDocumentSnapshot.get('numberingId');
-          debugPrint('Numbering id found is : $newNumberingId');
-          // try {
-          DocumentReference numberingDocRef = fireStore
-              .collection(uid)
-              .doc('RateList')
-              .collection('Numbering')
-              .doc('NUM-$newNumberingId');
-
-          await numberingDocRef.update({
-            'rate': int.tryParse(rateC.text.trim()) ?? 0,
-          }).then((value) async {
-            debugPrint('\n\n\n\n\n\n\n\nNumbering data updated !!\n\n\n\n\n\n');
-            Utils.showMessage('Numbering data updated !!');
-
-            updateListeners(false);
-          }).onError((error, stackTrace) {
-            debugPrint(
-                '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
-            Utils.showMessage(error.toString());
-            updateListeners(false);
-          });
+          // /// update the Numbering
+          // DocumentSnapshot numberingDocumentSnapshot =
+          //     numberingQuerySnapshot.docs.first;
+          //
+          // newNumberingId = numberingDocumentSnapshot.get('numberingId');
+          // debugPrint('Numbering id found is : $newNumberingId');
+          // // try {
+          // DocumentReference numberingDocRef = fireStore
+          //     .collection(uid)
+          //     .doc('RateList')
+          //     .collection('Numbering')
+          //     .doc('NUM-$newNumberingId');
+          //
+          // await numberingDocRef.update({
+          //   'rate': int.tryParse(rateC.text.trim()) ?? 0,
+          // }).then((value) async {
+          //   debugPrint('\n\n\n\n\n\n\n\nNumbering data updated !!\n\n\n\n\n\n');
+          //   Utils.showMessage('Numbering data updated !!');
+          //
+          //   updateListeners(false);
+          // }).onError((error, stackTrace) {
+          //   debugPrint(
+          //       '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
+          //   Utils.showMessage(error.toString());
+          //   updateListeners(false);
+          // });
           updateListeners(false);
         } else {
           /// Numbering doesn't exist

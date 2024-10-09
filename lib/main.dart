@@ -8,7 +8,15 @@ import 'package:printing_press/view_model/auth/log_in_view_model.dart';
 import 'package:printing_press/view_model/auth/sign_up_view_model.dart';
 import 'package:printing_press/view_model/orders/place_order_view_model.dart';
 import 'package:printing_press/view_model/payment/payment_view_model.dart';
+import 'package:printing_press/view_model/profit/add_profit_view_model.dart';
+import 'package:printing_press/view_model/profit/profit_view_model.dart';
 import 'package:printing_press/view_model/rate_list/binding/binding_view_model.dart';
+import 'package:printing_press/view_model/rate_list/machine/add_machine_view_model.dart';
+import 'package:printing_press/view_model/rate_list/machine/machine_view_model.dart';
+import 'package:printing_press/view_model/rate_list/news_paper/add_news_paper_view_model.dart';
+import 'package:printing_press/view_model/rate_list/news_paper/news_paper_view_model.dart';
+import 'package:printing_press/view_model/rate_list/paper/add_paper_view_model.dart';
+import 'package:printing_press/view_model/rate_list/paper/paper_view_model.dart';
 import 'package:printing_press/view_model/rate_list/paper_cutting/add_paper_cutting_view_model.dart';
 import 'package:printing_press/view_model/rate_list/rate_list_view_model.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
@@ -40,6 +48,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
+      
       providers: [
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => LogInViewModel()),
@@ -61,6 +70,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NumberingViewModel()),
         ChangeNotifierProvider(create: (_) => AddPaperCuttingViewModel()),
         ChangeNotifierProvider(create: (_) => PaperCuttingViewModel()),
+        ChangeNotifierProvider(create: (_) => AddMachineViewModel()),
+        ChangeNotifierProvider(create: (_) => MachineViewModel()),
+        ChangeNotifierProvider(create: (_) => AddNewsPaperViewModel()),
+        ChangeNotifierProvider(create: (_) => NewsPaperViewModel()),
+        ChangeNotifierProvider(create: (_) => AddPaperViewModel()),
+        ChangeNotifierProvider(create: (_) => PaperViewModel()),
+        ChangeNotifierProvider(create: (_) => AddProfitViewModel()),
+        ChangeNotifierProvider(create: (_) => ProfitViewModel()),
       ],
       child: MaterialApp(
         theme: ThemeData(
