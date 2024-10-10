@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:printing_press/view_model/cashbook/cashbook_view_model.dart';
 import 'package:printing_press/views/cashbook/add_cashbook_entry_view.dart';
+import 'package:printing_press/views/cashbook/cashbook_entry_details_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../colors/color_palette.dart';
 
-class CashBookView extends StatefulWidget {
-  const CashBookView({super.key});
+class CashbookView extends StatefulWidget {
+  const CashbookView({super.key});
 
   @override
-  State<CashBookView> createState() => _CashBookViewState();
+  State<CashbookView> createState() => _CashbookViewState();
 }
 
-class _CashBookViewState extends State<CashBookView> {
+class _CashbookViewState extends State<CashbookView> {
   late CashbookViewModel cashbookViewModel;
 
   @override
@@ -55,6 +56,15 @@ class _CashBookViewState extends State<CashBookView> {
                       itemBuilder: (BuildContext context, int index) {
                         /// todo: change the list tile to custom design
                         return ListTile(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) {
+                                return CashbookEntryDetailsView(
+                                  payment: value.allPayments[index],
+                                );
+                              },
+                            ));
+                          },
                           trailing: SizedBox(
                             width: 100,
                             child: Row(

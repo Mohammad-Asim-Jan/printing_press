@@ -226,6 +226,8 @@ class AddSupplierViewModel with ChangeNotifier {
             updateListeners(false);
           });
         }
+      } else {
+        updateListeners(false);
       }
     } else {
       updateListeners(false);
@@ -282,5 +284,11 @@ class AddSupplierViewModel with ChangeNotifier {
       newBankAccountNumberId = data?['bankAccountNumberId'] + 1;
       documentRef.set({'bankAccountNumberId': newBankAccountNumberId});
     }
+  }
+
+  bool isEmailValid(String email) {
+    String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    RegExp regExp = RegExp(pattern);
+    return regExp.hasMatch(email);
   }
 }

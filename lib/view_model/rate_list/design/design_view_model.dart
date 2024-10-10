@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:printing_press/model/design.dart';
+
+import '../../../model/rate_list/design.dart';
 
 class DesignViewModel with ChangeNotifier {
   late bool dataFetched;

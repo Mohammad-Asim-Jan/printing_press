@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:printing_press/view_model/profit/add_profit_view_model.dart';
+import 'package:printing_press/components/custom_text_field.dart';
+import 'package:printing_press/components/round_button.dart';
+import 'package:printing_press/view_model/rate_list/profit/add_profit_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../components/custom_text_field.dart';
-import '../../../components/round_button.dart';
 
 class AddProfitView extends StatefulWidget {
   const AddProfitView({super.key});

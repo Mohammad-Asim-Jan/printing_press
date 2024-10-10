@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../../../model/paper.dart';
+import 'package:printing_press/model/rate_list/paper.dart';
+
 
 class PaperViewModel with ChangeNotifier {
   late bool dataFetched;

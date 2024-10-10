@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:printing_press/view_model/profit/profit_view_model.dart';
+import 'package:printing_press/view_model/rate_list/profit/profit_view_model.dart';
 import 'package:printing_press/views/rate_list/profit/add_profit_view.dart';
 import 'package:provider/provider.dart';
 

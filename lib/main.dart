@@ -6,10 +6,8 @@ import 'package:printing_press/view_model/cashbook/cashbook_view_model.dart';
 import 'package:printing_press/view_model/home/home_view_model.dart';
 import 'package:printing_press/view_model/auth/log_in_view_model.dart';
 import 'package:printing_press/view_model/auth/sign_up_view_model.dart';
-import 'package:printing_press/view_model/orders/place_order_view_model.dart';
+import 'package:printing_press/view_model/orders/place_customize_order_view_model.dart';
 import 'package:printing_press/view_model/payment/payment_view_model.dart';
-import 'package:printing_press/view_model/profit/add_profit_view_model.dart';
-import 'package:printing_press/view_model/profit/profit_view_model.dart';
 import 'package:printing_press/view_model/rate_list/binding/binding_view_model.dart';
 import 'package:printing_press/view_model/rate_list/machine/add_machine_view_model.dart';
 import 'package:printing_press/view_model/rate_list/machine/machine_view_model.dart';
@@ -18,6 +16,8 @@ import 'package:printing_press/view_model/rate_list/news_paper/news_paper_view_m
 import 'package:printing_press/view_model/rate_list/paper/add_paper_view_model.dart';
 import 'package:printing_press/view_model/rate_list/paper/paper_view_model.dart';
 import 'package:printing_press/view_model/rate_list/paper_cutting/add_paper_cutting_view_model.dart';
+import 'package:printing_press/view_model/rate_list/profit/add_profit_view_model.dart';
+import 'package:printing_press/view_model/rate_list/profit/profit_view_model.dart';
 import 'package:printing_press/view_model/rate_list/rate_list_view_model.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:printing_press/view_model/stock/all_stock_view_model.dart';
@@ -25,6 +25,8 @@ import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart
 import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
 import 'package:printing_press/view_model/suppliers/supplier_orders_history_view_model.dart';
 import 'package:provider/provider.dart';
+import 'view_model/cashbook/add_cashbook_entry_view_model.dart';
+import 'view_model/orders/place_stock_order_view_model.dart';
 import 'view_model/rate_list/binding/add_binding_view_model.dart';
 import 'view_model/rate_list/design/add_design_view_model.dart';
 import 'view_model/rate_list/design/design_view_model.dart';
@@ -48,18 +50,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      
       providers: [
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => LogInViewModel()),
         ChangeNotifierProvider(create: (_) => SignUpViewModel()),
-        ChangeNotifierProvider(create: (_) => PlaceOrderViewModel()),
+        ChangeNotifierProvider(create: (_) => PlaceCustomizeOrderViewModel()),
+        ChangeNotifierProvider(create: (_) => PlaceStockOrderViewModel()),
         ChangeNotifierProvider(create: (_) => AllSuppliersViewModel()),
         ChangeNotifierProvider(create: (_) => AddSupplierViewModel()),
         ChangeNotifierProvider(create: (_) => AllStockViewModel()),
         ChangeNotifierProvider(create: (_) => AddStockViewModel()),
         ChangeNotifierProvider(create: (_) => SupplierOrdersHistoryViewModel()),
-        ChangeNotifierProvider(create: (_) => RateListViewModel()),
+        // ChangeNotifierProvider(create: (_) => RateListViewModel()),
         ChangeNotifierProvider(create: (_) => PaymentViewModel()),
         ChangeNotifierProvider(create: (_) => CashbookViewModel()),
         ChangeNotifierProvider(create: (_) => AddBindingViewModel()),
@@ -78,6 +80,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PaperViewModel()),
         ChangeNotifierProvider(create: (_) => AddProfitViewModel()),
         ChangeNotifierProvider(create: (_) => ProfitViewModel()),
+        ChangeNotifierProvider(create: (_) => AddCashbookEntryViewModel()),
       ],
       child: MaterialApp(
         theme: ThemeData(

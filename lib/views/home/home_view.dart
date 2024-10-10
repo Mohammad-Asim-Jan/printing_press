@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:printing_press/components/round_button.dart';
 import 'package:printing_press/view_model/home/home_view_model.dart';
-import 'package:printing_press/views/cashbook/cash_book_view.dart';
+import 'package:printing_press/views/cashbook/cashbook_view.dart';
 import 'package:printing_press/views/employees/all_employees_view.dart';
 import 'package:printing_press/views/orders/all_orders_view.dart';
 import 'package:printing_press/views/rate_list/rate_list_view.dart';
@@ -50,7 +50,7 @@ class _HomeViewState extends State<HomeView> {
                 title: 'Cashbook',
                 onPress: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const CashBookView(),
+                    builder: (context) => const CashbookView(),
                   ));
                 }),
             const SizedBox(

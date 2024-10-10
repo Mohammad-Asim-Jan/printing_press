@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:printing_press/model/profit.dart';
+import 'package:printing_press/model/rate_list/profit.dart';
 
 class ProfitViewModel with ChangeNotifier {
   late bool dataFetched;

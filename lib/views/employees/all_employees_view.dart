@@ -14,6 +14,9 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
       appBar: AppBar(
         title: const Text('All Employees'),
       ),
+      body: const Center(
+        child: Text('TODO.....'),
+      ),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:printing_press/model/size.dart';
+import 'package:printing_press/model/rate_list/size.dart';
 
 class Machine {
   int machineId;

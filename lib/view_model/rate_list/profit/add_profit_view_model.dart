@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/toast_message.dart';
+import '../../../utils/toast_message.dart';
+
 
 class AddProfitViewModel with ChangeNotifier {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;

@@ -4,7 +4,7 @@ class Payment {
   final int paymentId;
 
   /// only for supplier, for customer order this will be null or even it won't exist
-  final int supplierId;
+  final int? supplierId;
 
   /// only for customer order, for supplier this will be null or even it won't exist
    int? orderId;
@@ -19,10 +19,10 @@ class Payment {
 
   Payment({
     required this.paymentId,
-    this.orderId = 0,
+    this.orderId,
     required this.paymentDateTime,
     required this.amount,
-    required this.supplierId,
+    this.supplierId,
     this.description = '...',
     required this.paymentType,
     required this.paymentMethod,

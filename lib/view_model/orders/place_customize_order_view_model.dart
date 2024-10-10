@@ -8,16 +8,16 @@ import 'package:printing_press/model/stock.dart';
 import '../../firebase_services/firebase_firestore_services.dart';
 import '../../model/rate_list.dart';
 
-class PlaceOrderViewModel with ChangeNotifier {
+class PlaceCustomizeOrderViewModel with ChangeNotifier {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   get formKey => _formKey;
+
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
 
   get formKey2 => _formKey2;
 
   final FirebaseAuth auth = FirebaseAuth.instance;
-
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   late final RateList rateList;
@@ -39,7 +39,7 @@ class PlaceOrderViewModel with ChangeNotifier {
   late int selectedStockIndex;
   TextEditingController stockQuantityC = TextEditingController();
 
-  // new stock order id
+  // new stock ordered id
   late int newStockOrderedId;
 
   // stock id
@@ -102,8 +102,6 @@ class PlaceOrderViewModel with ChangeNotifier {
   // News paper quality
   List<String> selectedNewsPaperSizePaperQualities = [];
   late String selectedNewsPaperQuality;
-
-  //////////////////////////////////////////////////////////
 
   // binding
   List<String> bindingNames = [];

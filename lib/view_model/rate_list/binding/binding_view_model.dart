@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:printing_press/model/binding.dart';
+
+import '../../../model/rate_list/binding.dart';
 
 class BindingViewModel with ChangeNotifier {
   late bool dataFetched;

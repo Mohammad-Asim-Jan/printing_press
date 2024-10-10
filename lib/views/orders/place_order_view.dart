@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:printing_press/components/custom_drop_down.dart';
-import 'package:printing_press/view_model/orders/place_order_view_model.dart';
+import 'package:printing_press/view_model/orders/place_customize_order_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
 import '../../components/round_button.dart';
@@ -14,13 +14,13 @@ class PlaceOrderView extends StatefulWidget {
 }
 
 class _PlaceOrderViewState extends State<PlaceOrderView> {
-  late final PlaceOrderViewModel placeOrderViewModel;
+  late final PlaceCustomizeOrderViewModel placeOrderViewModel;
 
   @override
   void initState() {
     super.initState();
     placeOrderViewModel =
-        Provider.of<PlaceOrderViewModel>(context, listen: false);
+        Provider.of<PlaceCustomizeOrderViewModel>(context, listen: false);
     // placeOrderViewModel.checkData();
     placeOrderViewModel.getAllStock();
   }
@@ -43,7 +43,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                   ),
                 ),
                 Tab(
-                  text: 'Customized',
+                  text: 'Customize',
                   icon: Icon(
                     Icons.edit_calendar_outlined,
                   ),
@@ -52,11 +52,114 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
           title: const Text('Business Order'),
         ),
         body: TabBarView(children: [
-          Consumer<PlaceOrderViewModel>(
+          Consumer<PlaceCustomizeOrderViewModel>(
             builder: (context, val, child) {
               return val.inStockOrderDataFetched
                   ? Column(
                       children: [
+                        ////////////////////////////////
+
+                        // Form(
+                        //   key: addStockViewModel.formKey,
+                        //   child: Column(
+                        //     children: [
+                        //       Consumer<AddStockViewModel>(
+                        //         builder: (context, val1, child) {
+                        //           return CustomTextField(
+                        //               controller: val1.stockNameC,
+                        //               iconData: Icons.inventory,
+                        //               hint: 'Stock name',
+                        //               validatorText: 'Provide stock name');
+                        //         },
+                        //       ),
+                        //       Consumer<AddStockViewModel>(
+                        //         builder: (context, val2, child) {
+                        //           return CustomTextField(
+                        //               controller: val2.stockCategoryC,
+                        //               iconData: Icons.category_rounded,
+                        //               hint: 'Stock category',
+                        //               validatorText: 'Provide stock category');
+                        //         },
+                        //       ),
+                        //       Consumer<AddStockViewModel>(
+                        //         builder: (context, val3, child) {
+                        //           return CustomTextField(
+                        //               controller: val3.stockDescriptionC,
+                        //               iconData: Icons.description_rounded,
+                        //               hint: 'Stock description',
+                        //               validatorText: 'Provide stock description');
+                        //         },
+                        //       ),
+                        //       Consumer<AddStockViewModel>(
+                        //         builder: (context, val4, child) {
+                        //           return CustomTextField(
+                        //               textInputType: TextInputType.number,
+                        //               controller: val4.stockUnitBuyPriceC,
+                        //               inputFormatter:
+                        //               FilteringTextInputFormatter.digitsOnly,
+                        //               iconData: Icons.attach_money,
+                        //               hint: 'Stock price',
+                        //               validatorText: 'Provide stock buying price');
+                        //         },
+                        //       ),
+                        //       Consumer<AddStockViewModel>(
+                        //         builder: (context, val5, child) {
+                        //           return CustomTextField(
+                        //               textInputType: TextInputType.number,
+                        //               controller: val5.stockUnitSellPriceC,
+                        //               iconData: Icons.monetization_on,
+                        //               inputFormatter:
+                        //               FilteringTextInputFormatter.digitsOnly,
+                        //               hint: 'Stock selling price',
+                        //               validatorText: 'Provide stock selling price');
+                        //         },
+                        //       ),
+                        //       Consumer<AddStockViewModel>(
+                        //         ///todo: add plus icon and minus icon for ease
+                        //         builder: (context, val6, child) {
+                        //           return CustomTextField(
+                        //               controller: val6.stockQuantityC,
+                        //               iconData: Icons.list,
+                        //               inputFormatter:
+                        //               FilteringTextInputFormatter.digitsOnly,
+                        //               hint: 'Stock quantity',
+                        //               validatorText: 'Provide stock quantity');
+                        //         },
+                        //       ),
+                        //       Consumer<AddStockViewModel>(
+                        //         builder: (context, val7, child) {
+                        //           return CustomTextField(
+                        //               controller: val7.stockColorC,
+                        //               iconData: Icons.color_lens_rounded,
+                        //               hint: 'Stock color',
+                        //               validatorText: 'Provide stock color');
+                        //         },
+                        //       ),
+                        //       Consumer<AddStockViewModel>(
+                        //         builder: (context, val8, child) {
+                        //           return CustomTextField(
+                        //               controller: val8.stockManufacturedByC,
+                        //               iconData: Icons.factory,
+                        //               hint: 'Stock brand name',
+                        //               validatorText: 'Provide stock brand name');
+                        //         },
+                        //       ),
+                        //
+                        //       ///todo: change the text field to a dropdown
+                        //       Consumer<AddStockViewModel>(
+                        //         builder: (context, val9, child) {
+                        //           return CustomTextField(
+                        //               controller: val9.supplierIdC,
+                        //               iconData: Icons.business,
+                        //               hint: 'Stock supplier id',
+                        //               validatorText: 'Provide stock supplier id');
+                        //         },
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+
+                        /////////////////////////////////
                         Expanded(
                           child: SingleChildScrollView(
                             child: Padding(
@@ -76,7 +179,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               'Stock',
                                             ),
                                           ),
-                                          Consumer<PlaceOrderViewModel>(
+                                          Consumer<
+                                                  PlaceCustomizeOrderViewModel>(
                                               builder: (context, val1, child) {
                                             return Expanded(
                                               flex: 2,
@@ -265,7 +369,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                   : const Center(child: CircularProgressIndicator());
             },
           ),
-          Consumer<PlaceOrderViewModel>(
+          Consumer<PlaceCustomizeOrderViewModel>(
             builder: (context, val, child) {
               return val.customOrderDataFetched
                   ? Column(
@@ -285,7 +389,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         const Text('Design'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                           builder: (context, val1, child) =>
                                               CustomDropDown(
                                                   list: val1.designNames,
@@ -313,7 +417,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                     Row(
                                       children: [
                                         const Text('Paper Size'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                           builder: (context, val2, child) =>
                                               CustomDropDown(
                                             list: val2.paperSizes,
@@ -388,7 +492,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                     Row(
                                       children: [
                                         const Text('Quality'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                           builder: (context, val3, child) =>
                                               CustomDropDown(
                                                   list: val3
@@ -435,7 +539,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                         SizedBox(
                                           height: 60,
                                           width: 100,
-                                          child: Consumer<PlaceOrderViewModel>(
+                                          child: Consumer<
+                                              PlaceCustomizeOrderViewModel>(
                                             builder: (context, val4, child) =>
                                                 TextFormField(
                                               controller: val4.booksQuantityC,
@@ -478,7 +583,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                     Row(
                                       children: [
                                         const Text('Paper Cutting'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                           builder: (context, val5, child) =>
                                               CustomDropDown(
                                                   list: val5.paperCuttingNames,
@@ -509,7 +614,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                     Row(
                                       children: [
                                         const Text('Unit'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                             builder: (context, val6, child) {
                                           return CustomDropDown(
                                               list: val6.basicCuttingUnitsList,
@@ -584,7 +689,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         const Text('Copy Variants'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                           builder: (context, val7, child) =>
                                               CustomDropDown(
                                                   list: val7.copyVariant,
@@ -598,7 +703,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                         ),
                                       ],
                                     ),
-                                    Consumer<PlaceOrderViewModel>(
+                                    Consumer<PlaceCustomizeOrderViewModel>(
                                         builder: (context, val8, child) {
                                       if (val.selectedCopyVariant == 'none') {
                                         return const SizedBox();
@@ -632,7 +737,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                           const Text(
                                                               'News Size'),
                                                           Consumer<
-                                                              PlaceOrderViewModel>(
+                                                              PlaceCustomizeOrderViewModel>(
                                                             builder: (context,
                                                                     val9,
                                                                     child) =>
@@ -722,7 +827,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                           const Text(
                                                               'News Quality'),
                                                           Consumer<
-                                                              PlaceOrderViewModel>(
+                                                              PlaceCustomizeOrderViewModel>(
                                                             builder: (context,
                                                                     val10,
                                                                     child) =>
@@ -774,7 +879,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         const Text('Binding'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                           builder: (context, val9, child) =>
                                               CustomDropDown(
                                                   list: val9.bindingNames,
@@ -797,7 +902,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         const Text('Numbering'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                           builder: (context, val11, child) =>
                                               CustomDropDown(
                                                   list: val11.numberingNames,
@@ -820,7 +925,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         const Text('Print Type'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                           builder: (context, val12, child) =>
                                               CustomDropDown(
                                                   list: val12.printNames,
@@ -840,7 +945,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           MainAxisAlignment.spaceAround,
                                       children: [
                                         const Text('Backside'),
-                                        Consumer<PlaceOrderViewModel>(
+                                        Consumer<PlaceCustomizeOrderViewModel>(
                                           builder: (context, val13, child) =>
                                               CustomDropDown(
                                                   list: val13.backSide,
@@ -862,7 +967,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                         SizedBox(
                                           height: 60,
                                           width: 100,
-                                          child: Consumer<PlaceOrderViewModel>(
+                                          child: Consumer<
+                                              PlaceCustomizeOrderViewModel>(
                                             builder: (context, val14, child) =>
                                                 TextFormField(
                                               controller: val14.otherExpensesC,
