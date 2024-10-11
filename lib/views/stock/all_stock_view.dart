@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:printing_press/view_model/stock/all_stock_view_model.dart';
 import 'package:printing_press/views/stock/add_stock_view.dart';
+import 'package:printing_press/views/stock/stock_details_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../colors/color_palette.dart';
@@ -55,6 +56,11 @@ class _AllStockViewState extends State<AllStockView> {
                       itemBuilder: (BuildContext context, int index) {
                         /// todo: change the list tile to custom design
                         return ListTile(
+                          onTap: (){
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                              return StockDetailsView(stock: value.allStockList[index]);
+                            },));
+                          },
                           trailing: SizedBox(
                             width: 100,
                             child: Row(

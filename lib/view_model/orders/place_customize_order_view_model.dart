@@ -120,6 +120,12 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   // other expenses
   TextEditingController otherExpensesC = TextEditingController();
 
+  /// todo: paper sized or any other rate list things must not be same as available in the firebase
+  /// if design with name "standard" is available, then user can't add a design with name "standard"
+  /// anything that is in the dropdown menu has to be different as it would give you errors
+  /// design name must not be same
+  /// paper size are only some... they are hard coded, can't have any other size
+
   /// paper + extra sheet
   // binding yes or no -- binding rate * paper quantity / 1000 ?? maybe...
   // Printing 1c, 2c, 3c, 4c
@@ -136,42 +142,44 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   // carriage to hangu
   // result = paper quantity depends on cutting + carriage +
 
-  getAllStock() async {
-    allStockList = [];
-    _inStockOrderDataFetched = false;
-    debugPrint('Get all stock called!');
-    allStockList.add('None');
-    stockList.add(Stock(
-        stockId: 0,
-        stockName: 'None',
-        stockQuantity: 0,
-        stockDescription: 'None',
-        stockCategory: 'None',
-        stockUnitBuyPrice: 0,
-        stockUnitSellPrice: 0,
-        availableStock: 0,
-        stockColor: 'None',
-        manufacturedBy: 'None',
-        supplierId: 0,
-        stockDateAdded: Timestamp.now()));
-    selectedStockIndex = 0;
-    selectedStock = allStockList[0];
-    var querySnapshot = await FirebaseFirestore.instance
-        .collection(FirebaseAuth.instance.currentUser!.uid)
-        .doc('StockData')
-        .collection('AvailableStock')
-        .get();
-    var docs = querySnapshot.docs;
-    if (docs.length >= 2) {
-      for (int index = 1; index < docs.length; index++) {
-        stockList.add(Stock.fromJson(docs[index].data()));
-        allStockList.add(docs[index].get('stockName'));
-      }
-    }
-    _inStockOrderDataFetched = true;
-    updateListener();
-  }
+  /// shifted to another view model
+  // getAllStock() async {
+  //   allStockList = [];
+  //   _inStockOrderDataFetched = false;
+  //   debugPrint('Get all stock called!');
+  //   allStockList.add('None');
+  //   stockList.add(Stock(
+  //       stockId: 0,
+  //       stockName: 'None',
+  //       stockQuantity: 0,
+  //       stockDescription: 'None',
+  //       stockCategory: 'None',
+  //       stockUnitBuyPrice: 0,
+  //       stockUnitSellPrice: 0,
+  //       availableStock: 0,
+  //       stockColor: 'None',
+  //       manufacturedBy: 'None',
+  //       supplierId: 0,
+  //       stockDateAdded: Timestamp.now()));
+  //   selectedStockIndex = 0;
+  //   selectedStock = allStockList[0];
+  //   var querySnapshot = await FirebaseFirestore.instance
+  //       .collection(FirebaseAuth.instance.currentUser!.uid)
+  //       .doc('StockData')
+  //       .collection('AvailableStock')
+  //       .get();
+  //   var docs = querySnapshot.docs;
+  //   if (docs.length >= 2) {
+  //     for (int index = 1; index < docs.length; index++) {
+  //       stockList.add(Stock.fromJson(docs[index].data()));
+  //       allStockList.add(docs[index].get('stockName'));
+  //     }
+  //   }
+  //   _inStockOrderDataFetched = true;
+  //   updateListener();
+  // }
 
+  ///shifted to another view model
   // addCustomerStockOrder()async  {
   //   if(_formKey.currentState != null){
   //     if(_formKey.currentState!.validate()){
@@ -266,21 +274,22 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     rateList = RateList.fromJson(data!);
   }
 
-  changeStockDropDown(String? newVal) {
-    if (newVal != null) {
-      selectedStock = newVal;
-      selectedStockIndex = allStockList.indexOf(selectedStock);
-      updateListener();
-
-      if (newVal == 'None') {
-        debugPrint("No stock selected");
-      } else {
-        debugPrint('Stock Rate: ');
-      }
-    } else {
-      notifyListeners();
-    }
-  }
+  ///shifted to another view model
+  // changeStockDropDown(String? newVal) {
+  //   if (newVal != null) {
+  //     selectedStock = newVal;
+  //     selectedStockIndex = allStockList.indexOf(selectedStock);
+  //     updateListener();
+  //
+  //     if (newVal == 'None') {
+  //       debugPrint("No stock selected");
+  //     } else {
+  //       debugPrint('Stock Rate: ');
+  //     }
+  //   } else {
+  //     notifyListeners();
+  //   }
+  // }
 
   setFirebaseDataLocally() {
     setDesignData();
@@ -511,29 +520,30 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     selectedBackSide = 'no';
   }
 
-  setNewStockOrderedId() async {
-    newStockOrderedId = 1;
-    final documentRef = FirebaseFirestore.instance
-        .collection(auth.currentUser!.uid)
-        .doc('StockData')
-        .collection('StockOrdered')
-        .doc('LastStockOrderedId');
-
-    final documentSnapshot = await documentRef.get();
-
-    var data = documentSnapshot.data();
-
-    if (data?['LastStockOrderedId'] == null) {
-      debugPrint(
-          'Stock ordered id found to be null --------- ${data?['LastStockOrderedId']}');
-      await documentRef.set({'LastStockOrderedId': newStockOrderedId});
-    } else {
-      debugPrint(
-          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderedId']}');
-      newStockOrderedId = data?['LastStockOrderedId'] + 1;
-      await documentRef.set({'LastStockOrderedId': newStockOrderedId});
-    }
-  }
+  ///shifted to another view model
+  // setNewStockOrderedId() async {
+  //   newStockOrderedId = 1;
+  //   final documentRef = FirebaseFirestore.instance
+  //       .collection(auth.currentUser!.uid)
+  //       .doc('StockData')
+  //       .collection('StockOrdered')
+  //       .doc('LastStockOrderedId');
+  //
+  //   final documentSnapshot = await documentRef.get();
+  //
+  //   var data = documentSnapshot.data();
+  //
+  //   if (data?['LastStockOrderedId'] == null) {
+  //     debugPrint(
+  //         'Stock ordered id found to be null --------- ${data?['LastStockOrderedId']}');
+  //     await documentRef.set({'LastStockOrderedId': newStockOrderedId});
+  //   } else {
+  //     debugPrint(
+  //         '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderedId']}');
+  //     newStockOrderedId = data?['LastStockOrderedId'] + 1;
+  //     await documentRef.set({'LastStockOrderedId': newStockOrderedId});
+  //   }
+  // }
 
 // Function to find the closest factors of a number
   List<int> closestFactors(int n) {

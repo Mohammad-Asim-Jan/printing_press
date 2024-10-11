@@ -5,17 +5,11 @@ import 'package:printing_press/model/stock.dart';
 
 class PlaceStockOrderViewModel with ChangeNotifier {
   ///todo:
-  // Add the amount in cash book
-  // Add the order in all orders
-  // Decrement from allProduct or stock if selected a product
-  // Order date and time plus order completion time
-  // Pages or anything we may need for this
+  // todo Add the amount in cash book
+  // todo Add the order in all orders
+  // todo Decrement from allProduct or stock if selected a product
+  // todo Order date and time plus order completion time
 
-  /// todo: paper sized or any other rate list things must not be same as available in the firebase
-  /// if design with name "standard" is available, then user can't add a design with name "standard"
-  /// anything that is in the dropdown menu has to be different as it would give you errors
-  /// design name must not be same
-  /// paper size are only some... they are hard coded, can't have any other size
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -33,6 +27,22 @@ class PlaceStockOrderViewModel with ChangeNotifier {
   List<Stock> stockList = [];
   late String selectedStock;
   late int selectedStockIndex;
+
+  /// use it
+  TextEditingController customerNameC = TextEditingController();
+
+  /// use it
+  TextEditingController businessTitleC = TextEditingController();
+
+  /// use it
+  TextEditingController customerContactC = TextEditingController();
+
+  /// use it
+  TextEditingController customerAddressC = TextEditingController();
+
+  /// use it
+  TextEditingController advancePaymentC = TextEditingController();
+
   TextEditingController stockQuantityC = TextEditingController();
 
   // new stock order id
@@ -96,9 +106,10 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       notifyListeners();
     }
   }
-// addCustomerStockOrder()async  {
-  //   if(_formKey.currentState != null){
-  //     if(_formKey.currentState!.validate()){
+
+  // addCustomerStockOrder() async {
+  //   if (_formKey.currentState != null) {
+  //     if (_formKey.currentState!.validate()) {
   //       {
   //         setNewStockOrderedId();
   //         stockId = int.tryParse(stockIdC.text.trim()) ?? 1;
@@ -117,7 +128,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
   //           'stockName': stockNameC.text.trim(),
   //           'stockCategory': stockCategoryC.text.trim(),
   //           'stockUnitBuyPrice':
-  //           int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
+  //               int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
   //           'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
   //           'totalAmount': newTotalAmount,
   //           'customerOrderId': int.tryParse(supplierIdC.text.trim()),
@@ -134,13 +145,12 @@ class PlaceStockOrderViewModel with ChangeNotifier {
   //             .doc('SuppliersData')
   //             .collection('Suppliers')
   //
-  //         /// todo: create a method which will find the supplier id by using supplier name
+  //             /// todo: create a method which will find the supplier id by using supplier name
   //             .doc('SUP-$supplierId');
   //
   //         DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
   //
-  //         supplierPreviousTotalAmount =
-  //             supplierDocSnapshot.get('totalAmount');
+  //         supplierPreviousTotalAmount = supplierDocSnapshot.get('totalAmount');
   //
   //         debugPrint(
   //             '\n\n\n\n\nSupplier previous total amount: $supplierPreviousTotalAmount \n\n\n\n\n');
@@ -163,6 +173,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
   //     updateListener();
   //   }
   // }
+
   setNewStockOrderedId() async {
     newStockOrderedId = 1;
     final documentRef = FirebaseFirestore.instance
