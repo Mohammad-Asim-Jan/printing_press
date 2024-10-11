@@ -20,7 +20,6 @@ class CustomTextField extends StatefulWidget {
     required this.validatorText,
     this.textInputType = TextInputType.text,
     this.inputFormatter,
-
   });
 
   @override

@@ -19,6 +19,25 @@ class PaymentViewModel with ChangeNotifier {
   TextEditingController descriptionC = TextEditingController();
   TextEditingController paymentMethodC = TextEditingController();
 
+  late int supplierPreviousRemainingAmount;
+
+  late int supplierPreviousAmountPaid;
+
+  getSupplierPreviousRemainingAmount(int? supplierId) async {
+    DocumentReference supplierRef = FirebaseFirestore.instance
+        .collection(uid)
+        .doc('SuppliersData')
+        .collection('Suppliers')
+        .doc('SUP-$supplierId');
+
+    DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
+
+    supplierPreviousRemainingAmount =
+        supplierDocSnapshot.get('amountRemaining');
+
+    amountC.text = supplierPreviousRemainingAmount.toString();
+  }
+
   //final int? supplierId; -> from where it comes
   //final int? orderId; -> from where it comes
   //final String paymentType; -> cash-in
@@ -26,10 +45,12 @@ class PaymentViewModel with ChangeNotifier {
   ///   String? description; -> text field
   ///   final int amount; -> text field
   ///   final String paymentMethod; -> dropdown menu having the list of the bank accounts of the supplier + cash a default option
-  addPaymentInFirestore(int supplierId) async {
-    updateListener();
+  addPaymentInFirestore(int? supplierId, int orderId) async {
     if (_formKey.currentState != null) {
+      debugPrint('Form key is not null\n');
+      updateListener(true);
       if (_formKey.currentState!.validate()) {
+        debugPrint('Form key is valid\n');
         Timestamp timestamp = Timestamp.now();
         await setNewPaymentId();
         await setNewCashbookEntryId();
@@ -47,6 +68,7 @@ class PaymentViewModel with ChangeNotifier {
           'paymentType': 'CASH-OUT',
 
           ///todo: do we need to have a bank ref?
+          ///for supplier, there has to be a payment method dropdown
           'paymentMethod': paymentMethodC.text.trim(),
         }).then((value) async {
           Utils.showMessage('Supplier payment added !');
@@ -70,29 +92,67 @@ class PaymentViewModel with ChangeNotifier {
             /// this denotes either the payment is done physically or through bank acc
             'paymentMethod': paymentMethodC.text.trim(),
           }).then(
-            (value) {
+            (value) async {
               Utils.showMessage('Cashbook Entry added!');
               debugPrint('\n\n\nCashbook Entry added!\n\n\n');
+
+              /// update the supplier remaining amount and total amount paid
+
+              DocumentReference supplierRef = FirebaseFirestore.instance
+                  .collection(uid)
+                  .doc('SuppliersData')
+                  .collection('Suppliers')
+                  .doc('SUP-$supplierId');
+
+              DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
+
+              supplierPreviousRemainingAmount =
+                  supplierDocSnapshot.get('amountRemaining');
+              supplierPreviousAmountPaid =
+                  supplierDocSnapshot.get('totalPaidAmount');
+
+              supplierRef.update({
+                'totalPaidAmount': supplierPreviousAmountPaid +
+                    int.tryParse(amountC.text.trim())!,
+                'amountRemaining': supplierPreviousRemainingAmount +
+                    int.tryParse(amountC.text.trim())!
+              }).then(
+                (value) {
+                  Utils.showMessage('Supplier rem and paid amount updated!');
+                  updateListener(false);
+                },
+              ).onError(
+                (error, stackTrace) {
+                  Utils.showMessage('Sup rem and paid amount error: $error');
+                  updateListener(false);
+                },
+              );
             },
           ).onError(
             (error, stackTrace) {
               Utils.showMessage('Cashbook entry Error:$error');
               debugPrint('\n\n\nCashbook Entry error!\n\n\n');
+              updateListener(false);
             },
           );
+          updateListener(false);
         }).onError(
           (error, stackTrace) {
-            debugPrint('Error occurred : $error');
+            debugPrint(
+                'Error occurred while adding supplier payment history : $error');
             Utils.showMessage('Error Occurred: $error');
+            updateListener(false);
           },
         );
       } else {
-        Utils.showMessage('Current State is not valid!');
+        Utils.showMessage('Form key is not valid!\n');
+        updateListener(false);
       }
     } else {
+      debugPrint('Form key is null \n');
       Utils.showMessage('Current state = null');
+      updateListener(false);
     }
-    updateListener();
   }
 
   setNewPaymentId() async {
@@ -143,8 +203,8 @@ class PaymentViewModel with ChangeNotifier {
     }
   }
 
-  updateListener() {
-    _loading = !_loading;
+  updateListener(bool loading) {
+    _loading = loading;
     notifyListeners();
   }
 }

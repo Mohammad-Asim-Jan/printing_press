@@ -48,33 +48,45 @@ class _SupplierOrdersHistoryViewState extends State<SupplierOrdersHistoryView> {
       appBar: AppBar(
         title: const Text('Stock ordered history!'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Consumer<SupplierOrdersHistoryViewModel>(
-          builder: (context, value, child) => value.dataFetched
-              ? value.allStockOrderHistoryList.isEmpty
-                  ? const Center(
-                      child: Text('No record found!'),
-                    )
+      body: Consumer<SupplierOrdersHistoryViewModel>(
+        builder: (context, value, child) => value.dataFetched
+            ? value.allStockOrderHistoryList.isEmpty
+                ? const Center(
+                    child: Text('No record found!'),
+                  )
 
-                  ///todo: change listview.builder to streams builder, add a button to add the payment transaction
-                  : Column(
+                ///todo: change listview.builder to streams builder, add a button to add the payment transaction
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
                       children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total'),
-                            Text('Paid'),
-                            Text('Remaining'),
-                          ],
+                        Container(
+                          color: kSecColor,
+                          child: Column(
+                            children: [
+                              const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Total'),
+                                  Text('Paid'),
+                                  Text('Remaining'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('${widget.totalAmount}'),
+                                  Text('${widget.paidAmount}'),
+                                  Text('${widget.remainingAmount}'),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('${widget.totalAmount}'),
-                            Text('${widget.paidAmount}'),
-                            Text('${widget.remainingAmount}'),
-                          ],
+                        const SizedBox(
+                          height: 15,
                         ),
                         Expanded(
                           child: ListView.builder(
@@ -162,12 +174,15 @@ class _SupplierOrdersHistoryViewState extends State<SupplierOrdersHistoryView> {
                                       .toString()),
                                 );
                               } else {
-                                return Center(
+                                return const Center(
                                   child: Text('Some error !'),
                                 );
                               }
                             },
                           ),
+                        ),
+                        const SizedBox(
+                          height: 15,
                         ),
                         RoundButton(
                             title: 'Payment',
@@ -182,9 +197,9 @@ class _SupplierOrdersHistoryViewState extends State<SupplierOrdersHistoryView> {
                               ));
                             }),
                       ],
-                    )
-              : const Center(child: CircularProgressIndicator()),
-        ),
+                    ),
+                  )
+            : const Center(child: CircularProgressIndicator()),
       ),
     );
   }

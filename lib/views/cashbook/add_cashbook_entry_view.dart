@@ -4,7 +4,6 @@ import 'package:printing_press/components/custom_drop_down.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
 import 'package:printing_press/view_model/cashbook/add_cashbook_entry_view_model.dart';
-import 'package:printing_press/view_model/payment/payment_view_model.dart';
 import 'package:provider/provider.dart';
 
 class AddCashbookEntryView extends StatefulWidget {

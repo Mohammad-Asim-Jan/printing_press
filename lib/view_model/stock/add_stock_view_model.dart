@@ -9,11 +9,15 @@ class AddStockViewModel with ChangeNotifier {
 
   bool loading = false;
 
+  late bool _dataFetched;
+
+  get dataFetched => _dataFetched;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late int newStockId;
   late int newStockOrderId;
   late int supplierId;
   late int supplierPreviousTotalAmount;
+  late int supplierPreviousRemainingAmount;
   late int previousStockQuantity;
   late int previousAvailableStockQuantity;
   late int previousTotalAmount;
@@ -32,7 +36,55 @@ class AddStockViewModel with ChangeNotifier {
   TextEditingController stockSizeHeightC = TextEditingController();
   TextEditingController stockColorC = TextEditingController();
   TextEditingController stockManufacturedByC = TextEditingController();
-  TextEditingController supplierIdC = TextEditingController();
+
+  // TextEditingController supplierIdC = TextEditingController();
+
+  late List<String> suppliersList;
+  late String selectedSupplier;
+  late int selectedSupplierIndex;
+  late List<int> suppliersIdList;
+
+  getAllSuppliersName() async {
+    suppliersList = [];
+    suppliersIdList = [];
+    _dataFetched = false;
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection(FirebaseAuth.instance.currentUser!.uid)
+        .doc('SuppliersData')
+        .collection('Suppliers')
+        .get();
+
+    List<QueryDocumentSnapshot> list = querySnapshot.docs;
+
+    if (list.length >= 2) {
+      debugPrint('The list we have got, has length equals to ${list.length}');
+      for (int i = 1; i < list.length; i++) {
+        suppliersList.add(list[i].get('supplierName'));
+        suppliersIdList.add(list[i].get('supplierId'));
+      }
+      setDropdownVal();
+    }
+  }
+
+  setDropdownVal() {
+    selectedSupplier = suppliersList[0];
+    selectedSupplierIndex = 0;
+    _dataFetched = true;
+    notifyListeners();
+  }
+
+  changeSupplierDropdown(String? newVal) {
+    if (newVal != null) {
+      selectedSupplier = newVal;
+      selectedSupplierIndex = suppliersList.indexOf(selectedSupplier);
+      debugPrint('Supplier index: $selectedSupplierIndex');
+      debugPrint('Supplier id: ${suppliersIdList[selectedSupplierIndex]}');
+      notifyListeners();
+    } else {
+      notifyListeners();
+    }
+  }
 
   addStockInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
@@ -40,215 +92,225 @@ class AddStockViewModel with ChangeNotifier {
       updateListeners(true);
 
       if (_formKey.currentState!.validate()) {
-        ///todo: check if the quantity is null or zero, then don't update
-        /// check if stock is already available
-        await setNewStockOrderId();
-        QuerySnapshot stockQuerySnapshot = await fireStore
-            .collection(uid)
-            .doc('StockData')
-            .collection('AvailableStock')
-
-            /// todo: create a method which will find the supplier id by using supplier name
-            /// todo: store the supplierId instead of supplier name
-            .where('stockName', isEqualTo: stockNameC.text.trim())
-            .where('stockCategory', isEqualTo: stockCategoryC.text.trim())
-            .where('stockDescription', isEqualTo: stockDescriptionC.text.trim())
-            .where('stockUnitBuyPrice',
-                isEqualTo: int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0)
-            .where('stockUnitSellPrice',
-                isEqualTo: int.tryParse(stockUnitSellPriceC.text.trim()) ??
-                    int.tryParse(stockUnitBuyPriceC.text.trim()) ??
-                    1)
-            .where('stockColor', isEqualTo: stockColorC.text.trim())
-            .where('manufacturedBy',
-                isEqualTo: stockManufacturedByC.text.trim())
-            .where('supplierId',
-                isEqualTo: int.tryParse(supplierIdC.text.trim()))
-            .limit(1)
-            .get();
-
-        if (stockQuerySnapshot.docs.isNotEmpty) {
-          debugPrint('\n\n\n\n\n\n\n\n\n\nIt means stock exists.'
-              '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
-
-          newTotalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
-              (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
-
-          debugPrint('\n\nNew Total Amount: $newTotalAmount\n\n');
-
-          /// update the Stock
-          DocumentSnapshot stockDocumentSnapshot =
-              stockQuerySnapshot.docs.first;
-          newStockId = stockDocumentSnapshot.get('stockId');
-          previousStockQuantity = stockDocumentSnapshot.get('stockQuantity');
-          previousAvailableStockQuantity =
-              stockDocumentSnapshot.get('availableStock') ?? 0;
-
-          previousTotalAmount = stockDocumentSnapshot.get('totalAmount');
-          totalAmount = previousTotalAmount + newTotalAmount;
-          // try {
-          DocumentReference stockDocRef = fireStore
-              .collection(uid)
-              .doc('StockData')
-              .collection('AvailableStock')
-
-              /// todo: create a method which will find the supplier id by using supplier name
-              .doc('STOCK-$newStockId');
-
-          await stockDocRef.update({
-            'stockDateAdded': Timestamp.now(),
-            'availableStock': previousAvailableStockQuantity +
-                (int.tryParse(stockQuantityC.text.trim()) ?? 0),
-            'stockQuantity': int.tryParse(stockQuantityC.text.trim()) == null
-                ? previousStockQuantity
-                : int.tryParse(stockQuantityC.text.trim())! +
-                    previousStockQuantity,
-            'totalAmount': totalAmount,
-          }).then((value) async {
-            ///todo: add an order history
-            debugPrint('\n\n\n\n\n\n\n\n Stock data updated !!\n\n\n\n\n\n');
-            Utils.showMessage('Stock data updated !!');
-
-            /// adding a stock order
-            await fireStore
-                .collection(uid)
-                .doc('StockData')
-                .collection('StockOrderHistory')
-                .doc('SUP-ORDER-$newStockOrderId')
-                .set({
-              'stockOrderId': newStockOrderId,
-              'stockId': newStockId,
-              'stockName': stockNameC.text.trim(),
-              'stockCategory': stockCategoryC.text.trim(),
-              'stockUnitBuyPrice':
-                  int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
-              'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-              'totalAmount': newTotalAmount,
-              'supplierId': int.tryParse(supplierIdC.text.trim()),
-              'stockDateAdded': Timestamp.now(),
-            });
-
-            /// update the supplier total amount etc
-            supplierId = int.tryParse(supplierIdC.text.trim())!;
-
-            DocumentReference supplierRef = fireStore
-                .collection(uid)
-                .doc('SuppliersData')
-                .collection('Suppliers')
-
-                /// todo: create a method which will find the supplier id by using supplier name
-                .doc('SUP-$supplierId');
-
-            DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
-
-            supplierPreviousTotalAmount =
-                supplierDocSnapshot.get('totalAmount');
-            supplierRef.update({
-              'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
-            });
-
-            updateListeners(false);
-          }).onError((error, stackTrace) {
-            debugPrint(
-                '\n\n\n\n\n\n\n some thing not worked. error!!!!!!!!!!!!! ERROR : $error}');
-            Utils.showMessage(error.toString());
-            updateListeners(false);
-          });
-          // } catch (e, s) {
-          //   debugPrint(
-          //       '\n\n\n\n\n\n\n some thing not worked. errorrrrrr 222222222222!!!!!!!!!!!!!');
-          // }
+        /// checking if the quantity is zero, then don't update
+        if (int.tryParse(stockQuantityC.text.trim()) == 0) {
+          Utils.showMessage('Quantity must be greater than 0');
           updateListeners(false);
         } else {
-          /// stock doesn't exist
-          await setNewStockId();
-
-          newTotalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
-              (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
-
-          /// Adding a new stock
-          await fireStore
+          /// check if stock is already available
+          await setNewStockOrderId();
+          QuerySnapshot stockQuerySnapshot = await fireStore
               .collection(uid)
               .doc('StockData')
               .collection('AvailableStock')
-              .doc('STOCK-$newStockId')
-              .set({
-            'stockId': newStockId,
-            'availableStock': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-            'stockName': stockNameC.text.trim(),
-            'stockCategory': stockCategoryC.text.trim(),
-            'stockDescription': stockDescriptionC.text.trim(),
-            'stockUnitBuyPrice':
-                int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
-            'stockUnitSellPrice':
-                int.tryParse(stockUnitSellPriceC.text.trim()) ??
-                    int.tryParse(stockUnitBuyPriceC.text.trim()) ??
-                    1,
-            'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-            'stockColor': stockColorC.text.trim(),
-            'manufacturedBy': stockManufacturedByC.text.trim(),
-            'totalAmount': newTotalAmount,
-            'supplierId': int.tryParse(supplierIdC.text.trim()) ?? 0,
-            'stockDateAdded': Timestamp.now()
-          }).then((value) async {
-            /// Adding the history of the stock
+              .where('stockName', isEqualTo: stockNameC.text.trim())
+              .where('stockCategory', isEqualTo: stockCategoryC.text.trim())
+              .where('stockDescription',
+                  isEqualTo: stockDescriptionC.text.trim())
+              .where('stockUnitBuyPrice',
+                  isEqualTo: int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0)
+              .where('stockUnitSellPrice',
+                  isEqualTo: int.tryParse(stockUnitSellPriceC.text.trim()) ??
+                      int.tryParse(stockUnitBuyPriceC.text.trim()) ??
+                      1)
+              .where('stockColor', isEqualTo: stockColorC.text.trim())
+              .where('manufacturedBy',
+                  isEqualTo: stockManufacturedByC.text.trim())
+              .where('supplierId',
+                  isEqualTo: suppliersIdList[selectedSupplierIndex])
+              .limit(1)
+              .get();
+
+          if (stockQuerySnapshot.docs.isNotEmpty) {
+            debugPrint('\n\n\n\n\n\n\n\n\n\nIt means stock exists.'
+                '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
+
+            newTotalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
+                (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
+
+            debugPrint('\n\nNew Total Amount: $newTotalAmount\n\n');
+
+            /// update the Stock
+            DocumentSnapshot stockDocumentSnapshot =
+                stockQuerySnapshot.docs.first;
+            newStockId = stockDocumentSnapshot.get('stockId');
+            previousStockQuantity = stockDocumentSnapshot.get('stockQuantity');
+            previousAvailableStockQuantity =
+                stockDocumentSnapshot.get('availableStock') ?? 0;
+
+            previousTotalAmount = stockDocumentSnapshot.get('totalAmount');
+            totalAmount = previousTotalAmount + newTotalAmount;
+            // try {
+            DocumentReference stockDocRef = fireStore
+                .collection(uid)
+                .doc('StockData')
+                .collection('AvailableStock')
+
+                /// todo: create a method which will find the supplier id by using supplier name
+                .doc('STOCK-$newStockId');
+
+            await stockDocRef.update({
+              'stockDateAdded': Timestamp.now(),
+              'availableStock': previousAvailableStockQuantity +
+                  (int.tryParse(stockQuantityC.text.trim()) ?? 0),
+              'stockQuantity': int.tryParse(stockQuantityC.text.trim()) == null
+                  ? previousStockQuantity
+                  : int.tryParse(stockQuantityC.text.trim())! +
+                      previousStockQuantity,
+              'totalAmount': totalAmount,
+            }).then((value) async {
+              ///todo: add an order history
+              debugPrint('\n\n\n\n\n\n\n\n Stock data updated !!\n\n\n\n\n\n');
+              Utils.showMessage('Stock data updated !!');
+
+              /// adding a stock order
+              await fireStore
+                  .collection(uid)
+                  .doc('StockData')
+                  .collection('StockOrderHistory')
+                  .doc('SUP-ORDER-$newStockOrderId')
+                  .set({
+                'stockOrderId': newStockOrderId,
+                'stockId': newStockId,
+                'stockName': stockNameC.text.trim(),
+                'stockCategory': stockCategoryC.text.trim(),
+                'stockUnitBuyPrice':
+                    int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
+                'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
+                'totalAmount': newTotalAmount,
+                'supplierId': suppliersIdList[selectedSupplierIndex],
+                'stockDateAdded': Timestamp.now(),
+              });
+
+              /// update the supplier total amount and remaining amount
+              supplierId = suppliersIdList[selectedSupplierIndex];
+
+              DocumentReference supplierRef = fireStore
+                  .collection(uid)
+                  .doc('SuppliersData')
+                  .collection('Suppliers')
+                  .doc('SUP-$supplierId');
+
+              DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
+
+              supplierPreviousTotalAmount =
+                  supplierDocSnapshot.get('totalAmount');
+              supplierPreviousRemainingAmount =
+                  supplierDocSnapshot.get('amountRemaining') ?? 0;
+
+              supplierRef.update({
+                'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
+                'amountRemaining':
+                    supplierPreviousRemainingAmount + newTotalAmount
+              });
+
+              updateListeners(false);
+            }).onError((error, stackTrace) {
+              debugPrint(
+                  '\n\n\n\n\n\n\n some thing not worked. error!!!!!!!!!!!!! ERROR : $error}');
+              Utils.showMessage(error.toString());
+              updateListeners(false);
+            });
+            // } catch (e, s) {
+            //   debugPrint(
+            //       '\n\n\n\n\n\n\n some thing not worked. errorrrrrr 222222222222!!!!!!!!!!!!!');
+            // }
+            updateListeners(false);
+          } else {
+            /// stock doesn't exist
+            await setNewStockId();
+
+            newTotalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
+                (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
+
+            /// Adding a new stock
             await fireStore
                 .collection(uid)
                 .doc('StockData')
-                .collection('StockOrderHistory')
-                .doc('SUP-ORDER-$newStockOrderId')
+                .collection('AvailableStock')
+                .doc('STOCK-$newStockId')
                 .set({
-              'stockOrderId': newStockOrderId,
               'stockId': newStockId,
+              'availableStock': int.tryParse(stockQuantityC.text.trim()) ?? 0,
               'stockName': stockNameC.text.trim(),
               'stockCategory': stockCategoryC.text.trim(),
+              'stockDescription': stockDescriptionC.text.trim(),
               'stockUnitBuyPrice':
                   int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
+              'stockUnitSellPrice':
+                  int.tryParse(stockUnitSellPriceC.text.trim()) ??
+                      int.tryParse(stockUnitBuyPriceC.text.trim()) ??
+                      1,
               'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
+              'stockColor': stockColorC.text.trim(),
+              'manufacturedBy': stockManufacturedByC.text.trim(),
               'totalAmount': newTotalAmount,
-              'supplierId': int.tryParse(supplierIdC.text.trim()),
-              'stockDateAdded': Timestamp.now(),
+              'supplierId': suppliersIdList[selectedSupplierIndex],
+              'stockDateAdded': Timestamp.now()
+            }).then((value) async {
+              /// Adding the history of the stock
+              await fireStore
+                  .collection(uid)
+                  .doc('StockData')
+                  .collection('StockOrderHistory')
+                  .doc('SUP-ORDER-$newStockOrderId')
+                  .set({
+                'stockOrderId': newStockOrderId,
+                'stockId': newStockId,
+                'stockName': stockNameC.text.trim(),
+                'stockCategory': stockCategoryC.text.trim(),
+                'stockUnitBuyPrice':
+                    int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
+                'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
+                'totalAmount': newTotalAmount,
+                'supplierId': suppliersIdList[selectedSupplierIndex],
+                'stockDateAdded': Timestamp.now(),
+              });
+
+              /// update the supplier total amount
+              supplierId = suppliersIdList[selectedSupplierIndex];
+
+              debugPrint(
+                  '\n\n\n\n\nSupplier id while updating the total amount: $supplierId \n\n\n\n\n');
+              DocumentReference supplierRef = fireStore
+                  .collection(uid)
+                  .doc('SuppliersData')
+                  .collection('Suppliers')
+
+                  /// todo: create a method which will find the supplier id by using supplier name
+                  .doc('SUP-$supplierId');
+
+              DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
+
+              supplierPreviousTotalAmount =
+                  supplierDocSnapshot.get('totalAmount');
+              supplierPreviousRemainingAmount =
+                  supplierDocSnapshot.get('amountRemaining');
+
+              debugPrint(
+                  '\n\n\n\n\nSupplier previous total amount: $supplierPreviousTotalAmount \n\n\n\n\n');
+              debugPrint(
+                  '\n\n\n\n\nSupplier new total amount: $newTotalAmount \n\n\n\n\n');
+
+              supplierRef.update({
+                'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
+                'amountRemaining':
+                    supplierPreviousRemainingAmount + newTotalAmount
+              });
+
+              Utils.showMessage('Successfully stock added');
+              Utils.showMessage('Successfully stock order Added');
+              debugPrint('New stock added!!!!!!!!!!!!!!!!!');
+
+              updateListeners(false);
+            }).onError((error, stackTrace) {
+              Utils.showMessage(error.toString());
+              updateListeners(false);
             });
-
-            /// update the supplier total amount
-            supplierId = int.tryParse(supplierIdC.text.trim())!;
-
-            debugPrint(
-                '\n\n\n\n\nSupplier id while updating the total amount: $supplierId \n\n\n\n\n');
-            DocumentReference supplierRef = fireStore
-                .collection(uid)
-                .doc('SuppliersData')
-                .collection('Suppliers')
-
-                /// todo: create a method which will find the supplier id by using supplier name
-                .doc('SUP-$supplierId');
-
-            DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
-
-            supplierPreviousTotalAmount =
-                supplierDocSnapshot.get('totalAmount');
-
-            debugPrint(
-                '\n\n\n\n\nSupplier previous total amount: $supplierPreviousTotalAmount \n\n\n\n\n');
-            debugPrint(
-                '\n\n\n\n\nSupplier new total amount: $newTotalAmount \n\n\n\n\n');
-
-            supplierRef.update({
-              'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
-            });
-
-            Utils.showMessage('Successfully stock added');
-            Utils.showMessage('Successfully stock order Added');
-            debugPrint('New stock added!!!!!!!!!!!!!!!!!');
-
-            updateListeners(false);
-          }).onError((error, stackTrace) {
-            Utils.showMessage(error.toString());
-            updateListeners(false);
-          });
+          }
         }
       } else {
-      updateListeners(false);
+        updateListeners(false);
       }
     } else {
       updateListeners(false);
