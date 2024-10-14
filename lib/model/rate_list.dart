@@ -1,10 +1,5 @@
 import 'dart:core';
-///todo: to-json
-
-/// todo: list of copy type
-/// for news, there is no printing, while for others there is
-///
-
+// todo: remove this model
 class RateList {
   List<Standard> binding;
   List<Standard> numbering;
@@ -76,8 +71,8 @@ class Machine {
     return Machine(
       name: json['name'],
       size: Size.fromJson(json['size']),
-      plate: json['plate'],
-      printing: json['printing'],
+      plate: json['plateRate'],
+      printing: json['printingRate'],
     );
   }
 }

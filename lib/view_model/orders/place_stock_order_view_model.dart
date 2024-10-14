@@ -12,16 +12,13 @@ class PlaceStockOrderViewModel with ChangeNotifier {
   // todo Order date and time plus order completion time
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   get formKey => _formKey;
   final FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   late String uid;
-  late bool _inStockOrderDataFetched;
   bool _loading = false;
-
   get loading => _loading;
-
+  late bool _inStockOrderDataFetched;
   get inStockOrderDataFetched => _inStockOrderDataFetched;
 
   // all stock
@@ -88,35 +85,30 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     }
   }
 
-  updateStock() async {
-    DocumentReference stockDocRef = firestore
+
+  setNewCustomerStockOrderId() async {
+    newCustomerOrderId = 1;
+    final documentRef = firestore
         .collection(uid)
-        .doc('StockData')
-        .collection('AvailableStock')
-        .doc('STOCK-${selectedStockModel.stockId}');
+        .doc('CustomerData')
+        .collection('CustomerOrders')
+        .doc('0LastCustomerOrderId');
 
-    DocumentSnapshot snapshot = await stockDocRef.get();
-    int previousAvailableStockQuantity = await snapshot.get('availableStock');
+    final documentSnapshot = await documentRef.get();
 
-    await stockDocRef.update({
-      'availableStock': previousAvailableStockQuantity -
-          (int.tryParse(stockQuantityC.text.trim()))!,
-    }).then(
-      (value) {
-        Utils.showMessage('Stock Updated!');
-        debugPrint('Stock updated successfully');
+    var data = documentSnapshot.data();
 
-        updateListener(false);
-      },
-    ).onError(
-      (error, stackTrace) {
-        Utils.showMessage('Error: $error');
-        debugPrint('Stock update failed error....$error');
-        updateListener(false);
-      },
-    );
+    if (data?['0LastCustomerOrderId'] == null) {
+      debugPrint(
+          'Order id found to be null --------- ${data?['0LastCustomerOrderId']}');
+      await documentRef.set({'0LastCustomerOrderId': newCustomerOrderId});
+    } else {
+      debugPrint(
+          '\n\n\nOrder id is found to be available. \nOrder id: ${data?['0LastCustomerOrderId']}');
+      newCustomerOrderId = data?['0LastCustomerOrderId'] + 1;
+      await documentRef.set({'0LastCustomerOrderId': newCustomerOrderId});
+    }
   }
-
   addCustomerStockOrder() async {
     await firestore
         .collection(uid)
@@ -153,30 +145,20 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     );
   }
 
-  setNewCustomerStockOrderId() async {
-    newCustomerOrderId = 1;
+  setNewStockOrderedHistoryId() async {
+    newStockOrderedHistoryId = 1;
     final documentRef = firestore
-        .collection(uid)
-        .doc('CustomerData')
-        .collection('CustomerOrders')
-        .doc('0LastCustomerOrderId');
+        .collection(auth.currentUser!.uid)
+        .doc('StockData')
+        .collection('StockOrderHistory')
+        .doc('LastStockOrderId');
 
     final documentSnapshot = await documentRef.get();
-
     var data = documentSnapshot.data();
 
-    if (data?['0LastCustomerOrderId'] == null) {
-      debugPrint(
-          'Order id found to be null --------- ${data?['0LastCustomerOrderId']}');
-      await documentRef.set({'0LastCustomerOrderId': newCustomerOrderId});
-    } else {
-      debugPrint(
-          '\n\n\nOrder id is found to be available. \nOrder id: ${data?['0LastCustomerOrderId']}');
-      newCustomerOrderId = data?['0LastCustomerOrderId'] + 1;
-      await documentRef.set({'0LastCustomerOrderId': newCustomerOrderId});
-    }
+    newStockOrderedHistoryId = data?['LastStockOrderId'] + 1;
+    await documentRef.set({'LastStockOrderId': newStockOrderedHistoryId});
   }
-
   addStockOrderHistoryByCustomer() async {
     await firestore
         .collection(uid)
@@ -209,21 +191,30 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     );
   }
 
-  setNewStockOrderedHistoryId() async {
-    newStockOrderedHistoryId = 1;
+
+  setNewCashbookEntryId() async {
+    newCashbookEntryId = 1;
     final documentRef = firestore
-        .collection(auth.currentUser!.uid)
-        .doc('StockData')
-        .collection('StockOrderHistory')
-        .doc('LastStockOrderId');
+        .collection(uid)
+        .doc('CashbookData')
+        .collection('CashbookEntry')
+        .doc('LastCashbookEntryId');
 
     final documentSnapshot = await documentRef.get();
+
     var data = documentSnapshot.data();
 
-    newStockOrderedHistoryId = data?['LastStockOrderId'] + 1;
-    await documentRef.set({'LastStockOrderId': newStockOrderedHistoryId});
+    if (data?['LastCashbookEntryId'] == null) {
+      debugPrint(
+          'Cashbook entry id found to be null --------- ${data?['LastCashbookEntryId']}');
+      await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
+    } else {
+      debugPrint(
+          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastCashbookEntryId']}');
+      newCashbookEntryId = data?['LastCashbookEntryId'] + 1;
+      await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
+    }
   }
-
   addCustomerPaymentInCashbook() async {
     /// adding the payment history to cashbook
 
@@ -255,28 +246,33 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     );
   }
 
-  setNewCashbookEntryId() async {
-    newCashbookEntryId = 1;
-    final documentRef = firestore
+  updateStock() async {
+    DocumentReference stockDocRef = firestore
         .collection(uid)
-        .doc('CashbookData')
-        .collection('CashbookEntry')
-        .doc('LastCashbookEntryId');
+        .doc('StockData')
+        .collection('AvailableStock')
+        .doc('STOCK-${selectedStockModel.stockId}');
 
-    final documentSnapshot = await documentRef.get();
+    DocumentSnapshot snapshot = await stockDocRef.get();
+    int previousAvailableStockQuantity = await snapshot.get('availableStock');
 
-    var data = documentSnapshot.data();
+    await stockDocRef.update({
+      'availableStock': previousAvailableStockQuantity -
+          (int.tryParse(stockQuantityC.text.trim()))!,
+    }).then(
+          (value) {
+        Utils.showMessage('Stock Updated!');
+        debugPrint('Stock updated successfully');
 
-    if (data?['LastCashbookEntryId'] == null) {
-      debugPrint(
-          'Cashbook entry id found to be null --------- ${data?['LastCashbookEntryId']}');
-      await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
-    } else {
-      debugPrint(
-          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastCashbookEntryId']}');
-      newCashbookEntryId = data?['LastCashbookEntryId'] + 1;
-      await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
-    }
+        updateListener(false);
+      },
+    ).onError(
+          (error, stackTrace) {
+        Utils.showMessage('Error: $error');
+        debugPrint('Stock update failed error....$error');
+        updateListener(false);
+      },
+    );
   }
 
   getAllStock() async {

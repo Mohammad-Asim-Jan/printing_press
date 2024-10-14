@@ -4,8 +4,11 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:printing_press/model/stock.dart';
-import '../../firebase_services/firebase_firestore_services.dart';
+import 'package:printing_press/model/rate_list/binding.dart';
+import 'package:printing_press/model/rate_list/design.dart';
+import 'package:printing_press/model/rate_list/numbering.dart';
+import 'package:printing_press/model/rate_list/paper_cutting.dart';
+import 'package:printing_press/model/rate_list/profit.dart';
 import '../../model/rate_list.dart';
 
 class PlaceCustomizeOrderViewModel with ChangeNotifier {
@@ -13,39 +16,14 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
 
   get formKey => _formKey;
 
-  final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
-
-  get formKey2 => _formKey2;
-
   final FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  late final RateList rateList;
 
   Map<String, dynamic>? data;
 
   bool _customOrderDataFetched = false;
 
   get customOrderDataFetched => _customOrderDataFetched;
-
-  late bool _inStockOrderDataFetched;
-
-  get inStockOrderDataFetched => _inStockOrderDataFetched;
-
-  // all stock
-  List<String> allStockList = [];
-  List<Stock> stockList = [];
-  late String selectedStock;
-  late int selectedStockIndex;
-  TextEditingController stockQuantityC = TextEditingController();
-
-  // new stock ordered id
-  late int newStockOrderedId;
-
-  // stock id
-  late int stockId;
-
-  TextEditingController stockIdC = TextEditingController();
 
   // design
   List<String> designNames = [];
@@ -120,12 +98,16 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   // other expenses
   TextEditingController otherExpensesC = TextEditingController();
 
+  // Quantity
+  TextEditingController quantityC = TextEditingController();
+
   /// todo: paper sized or any other rate list things must not be same as available in the firebase
   /// if design with name "standard" is available, then user can't add a design with name "standard"
-  /// anything that is in the dropdown menu has to be different as it would give you errors
+  /// anything that is in the dropdown menu has to be different else it would give you errors
   /// design name must not be same
   /// paper size are only some... they are hard coded, can't have any other size
 
+  ///todo: rating
   /// paper + extra sheet
   // binding yes or no -- binding rate * paper quantity / 1000 ?? maybe...
   // Printing 1c, 2c, 3c, 4c
@@ -142,190 +124,153 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   // carriage to hangu
   // result = paper quantity depends on cutting + carriage +
 
-  /// shifted to another view model
-  // getAllStock() async {
-  //   allStockList = [];
-  //   _inStockOrderDataFetched = false;
-  //   debugPrint('Get all stock called!');
-  //   allStockList.add('None');
-  //   stockList.add(Stock(
-  //       stockId: 0,
-  //       stockName: 'None',
-  //       stockQuantity: 0,
-  //       stockDescription: 'None',
-  //       stockCategory: 'None',
-  //       stockUnitBuyPrice: 0,
-  //       stockUnitSellPrice: 0,
-  //       availableStock: 0,
-  //       stockColor: 'None',
-  //       manufacturedBy: 'None',
-  //       supplierId: 0,
-  //       stockDateAdded: Timestamp.now()));
-  //   selectedStockIndex = 0;
-  //   selectedStock = allStockList[0];
-  //   var querySnapshot = await FirebaseFirestore.instance
-  //       .collection(FirebaseAuth.instance.currentUser!.uid)
-  //       .doc('StockData')
-  //       .collection('AvailableStock')
-  //       .get();
-  //   var docs = querySnapshot.docs;
-  //   if (docs.length >= 2) {
-  //     for (int index = 1; index < docs.length; index++) {
-  //       stockList.add(Stock.fromJson(docs[index].data()));
-  //       allStockList.add(docs[index].get('stockName'));
-  //     }
-  //   }
-  //   _inStockOrderDataFetched = true;
-  //   updateListener();
-  // }
-
-  ///shifted to another view model
-  // addCustomerStockOrder()async  {
-  //   if(_formKey.currentState != null){
-  //     if(_formKey.currentState!.validate()){
-  //       {
-  //         setNewStockOrderedId();
-  //         stockId = int.tryParse(stockIdC.text.trim()) ?? 1;
-  //
-  //         ///todo: get the details of the stock using the stock id or stock name
-  //
-  //         /// Adding the history of the stock
-  //         await firestore
-  //             .collection(auth.currentUser!.uid)
-  //             .doc('StockData')
-  //             .collection('StockOrdered')
-  //             .doc('CUS-ORDER-$newStockOrderedId')
-  //             .set({
-  //           'stockOrderId': newStockOrderedId,
-  //           'stockId': stockId,
-  //           'stockName': stockNameC.text.trim(),
-  //           'stockCategory': stockCategoryC.text.trim(),
-  //           'stockUnitBuyPrice':
-  //           int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
-  //           'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-  //           'totalAmount': newTotalAmount,
-  //           'customerOrderId': int.tryParse(supplierIdC.text.trim()),
-  //           'stockDateAdded': Timestamp.now(),
-  //         });
-  //
-  //         /// update the supplier total amount
-  //         supplierId = int.tryParse(supplierIdC.text.trim())!;
-  //
-  //         debugPrint(
-  //             '\n\n\n\n\nSupplier id while updating the total amount: $supplierId \n\n\n\n\n');
-  //         DocumentReference supplierRef = fireStore
-  //             .collection(uid)
-  //             .doc('SuppliersData')
-  //             .collection('Suppliers')
-  //
-  //         /// todo: create a method which will find the supplier id by using supplier name
-  //             .doc('SUP-$supplierId');
-  //
-  //         DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
-  //
-  //         supplierPreviousTotalAmount =
-  //             supplierDocSnapshot.get('totalAmount');
-  //
-  //         debugPrint(
-  //             '\n\n\n\n\nSupplier previous total amount: $supplierPreviousTotalAmount \n\n\n\n\n');
-  //         debugPrint(
-  //             '\n\n\n\n\nSupplier new total amount: $newTotalAmount \n\n\n\n\n');
-  //
-  //         supplierRef.update({
-  //           'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
-  //         });
-  //
-  //         Utils.showMessage('Successfully user stock order Added');
-  //         debugPrint('New stock added!!!!!!!!!!!!!!!!!');
-  //
-  //         updateListener();
-  //       }
-  //     } else {
-  //       updateListener();
-  //     }
-  //   } else {
-  //     updateListener();
-  //   }
-  // }
-
   checkData() {
-    getFirestoreData();
+    fetchData();
+    List<List<dynamic>> lists = [
+      bindings,
+      designs,
+      machines,
+      newsPapers,
+      numberings,
+      papers,
+      paperCuttings,
+      profits
+    ];
     Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-      if (data != null) {
+      if (!lists.any((element) => element.isEmpty)) {
         debugPrint('data is not null anymore...');
-        setFirebaseDataLocally();
+        // setFirebaseDataLocally();
+
+        ///todo: if there is any element empty (like design, paper etc), it will always shows progressindicator on the view, this is a problem that need to be solved
+        setDesignData();
+        setPaperSizeData();
+        setPaperQualityData();
+        setPaperCuttingData();
+        setBasicCuttingUnit();
+        setCopyVariants();
+        setBindingData();
+        setNewsPaperSizeData();
+        setNewsPaperQualityData();
+        setNumberingData();
+        setBackSide();
+
         _customOrderDataFetched = true;
         timer.cancel();
         updateListener();
       } else {
+        ///todo: let the user know that there is something not set
+        ///for ex if there is no design or binding or anything, then show the user that go to add some
         debugPrint('data is null');
         updateListener();
       }
     });
   }
 
-  updateListener() {
-    notifyListeners();
-  }
+  List<Binding> bindings = [];
+  List<Design> designs = [];
+  List<Machine> machines = [];
+  List<Paper> newsPapers = [];
+  List<Numbering> numberings = [];
+  List<Paper> papers = [];
+  List<PaperCutting> paperCuttings = [];
+  List<Profit> profits = [];
 
-  getFirestoreData() async {
-    FirebaseFirestoreServices firestore = FirebaseFirestoreServices(auth: auth);
-    data = await firestore.fetchData();
-    rateList = RateList.fromJson(data!);
-  }
+  fetchData() async {
+    List<String> subCollectionNames = [
+      'Binding',
+      'Design',
+      'Machine',
+      'NewsPaper',
+      'Numbering',
+      'Paper',
+      'PaperCutting',
+      'Profit',
+    ];
 
-  ///shifted to another view model
-  // changeStockDropDown(String? newVal) {
-  //   if (newVal != null) {
-  //     selectedStock = newVal;
-  //     selectedStockIndex = allStockList.indexOf(selectedStock);
-  //     updateListener();
-  //
-  //     if (newVal == 'None') {
-  //       debugPrint("No stock selected");
-  //     } else {
-  //       debugPrint('Stock Rate: ');
-  //     }
-  //   } else {
-  //     notifyListeners();
-  //   }
-  // }
+    // Map<String, dynamic> modelListMap = {
+    //   'Binding': bindings,
+    //   'Design': designs,
+    //   'Machine': machines,
+    //   'NewsPaper': newsPapers,
+    //   'Numbering': numberings,
+    //   'Paper': papers,
+    //   'PaperCutting': paperCuttings,
+    //   'Profit': profits,
+    // };
 
-  setFirebaseDataLocally() {
-    setDesignData();
-    setPaperSizeData();
-    setPaperQualityData();
-    setPaperCuttingData();
-    setBasicCuttingUnit();
-    setCopyVariants();
-    setBindingData();
-    setNewsPaperSizeData();
-    setNewsPaperQualityData();
-    setNumberingData();
-    setBackSide();
+    // Map<String, dynamic> classMap = {
+    //   'Binding': Binding.fromJson,
+    //   'Design': Design.fromJson,
+    //   'Machine': Machine.fromJson,
+    //   'NewsPaper': Paper.fromJson,
+    //   'Numbering': Numbering.fromJson,
+    //   'Paper': Paper.fromJson,
+    //   'PaperCutting': PaperCutting.fromJson,
+    //   'Profit': Profit.fromJson,
+    // };
+
+    DocumentReference docRef =
+        firestore.collection(auth.currentUser!.uid).doc('RateList');
+
+    /// it is used for separate collection
+    for (String subCollectionName in subCollectionNames) {
+      CollectionReference<Map<String, dynamic>> subCollectionRef =
+          docRef.collection(subCollectionName);
+
+      // Fetch documents in the sub-collection
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await subCollectionRef.get();
+
+      if (querySnapshot.size > 1) {
+        /// it is used for separate document in a collection
+        for (int index = 1; index < querySnapshot.docs.length; index++) {
+          Map<String, dynamic> data = querySnapshot.docs[index].data();
+
+          switch (subCollectionName) {
+            case 'Binding':
+              bindings.add(Binding.fromJson(data));
+              break;
+            case 'Design':
+              designs.add(Design.fromJson(data));
+              break;
+            case 'Machine':
+              machines.add(Machine.fromJson(data));
+              break;
+            case 'NewsPaper':
+              newsPapers.add(Paper.fromJson(data));
+              break;
+            case 'Numbering':
+              numberings.add(Numbering.fromJson(data));
+              break;
+            case 'Paper':
+              papers.add(Paper.fromJson(data));
+              break;
+            case 'PaperCutting':
+              paperCuttings.add(PaperCutting.fromJson(data));
+              break;
+            case 'Profit':
+              profits.add(Profit.fromJson(data));
+              break;
+          }
+        }
+      }
+    }
   }
 
   setDesignData() {
     designNames.add('none');
     // design
-    for (var design in rateList.designs) {
+    for (var design in designs) {
       designNames.add(design.name);
     }
     selectedDesign = designNames[0];
     selectedDesignIndex = 0;
-    debugPrint("Design names: $designNames");
-    if (selectedDesign == 'none') {
-      debugPrint("No design");
-    } else {
-      debugPrint(
-          'Design Rate: ${rateList.designs[selectedDesignIndex - 1].rate}');
-    }
   }
 
   setPaperSizeData() {
     paperSizes.add('none');
     // paper size
-    for (var paper in rateList.paper) {
+    for (var paper in papers) {
       /// TODO: if this or opposite to this
       /// TODO: make changes to all in this file or anywhere else
       if (!paperSizes.contains('${paper.size.width} x ${paper.size.height}') &&
@@ -343,7 +288,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     if (selectedPaperSize == 'none') {
       selectedPaperSizePaperQualities.add('none');
     } else {
-      for (var paper in rateList.paper) {
+      for (var paper in papers) {
         debugPrint('\nselected Paper size : $selectedPaperSize');
         debugPrint(
             'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
@@ -365,8 +310,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
 
     // rate of the selected paper size, selected paper quality
     if (selectedPaperSize != 'none') {
-      int rate = rateList
-          .paper[selectedPaperSizeIndexes[
+      int rate = papers[selectedPaperSizeIndexes[
               selectedPaperSizePaperQualities.indexOf(selectedPaperQuality)]]
           .rate;
       debugPrint('Rate of the selected paper quality is : $rate');
@@ -377,7 +321,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
 
   setPaperCuttingData() {
     paperCuttingNames.add('none');
-    for (var paperCutting in rateList.paperCutting) {
+    for (var paperCutting in paperCuttings) {
       paperCuttingNames.add(paperCutting.name);
     }
     selectedPaperCutting = paperCuttingNames[0];
@@ -414,7 +358,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   setNewsPaperSizeData() {
     newsPaperSizes.add('none');
     // paper size
-    for (var news in rateList.news) {
+    for (var news in newsPapers) {
       /// TODO: if this or opposite to this
       /// TODO: make changes to all in this file or anywhere else
       if (!newsPaperSizes
@@ -438,7 +382,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     ///todo: remove the else block because data in the initial stage is always none
     else {
       int index = 0;
-      for (var news in rateList.news) {
+      for (var news in newsPapers) {
         debugPrint('\nselected news Paper size : $selectedNewsPaperSize');
         debugPrint(
             'checking the news paper size in firebase: ${news.size.width} x ${news.size.height}');
@@ -462,9 +406,9 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
 
     // rate of the selected news paper size, selected paper quality
     if (selectedNewsPaperSize != 'none') {
-      int rate = rateList
-          .news[selectedNewsPaperSizeIndexes[selectedNewsPaperSizePaperQualities
-              .indexOf(selectedNewsPaperQuality)]]
+      int rate = newsPapers[selectedNewsPaperSizeIndexes[
+              selectedNewsPaperSizePaperQualities
+                  .indexOf(selectedNewsPaperQuality)]]
           .rate;
       debugPrint('Rate of the selected paper quality is : $rate');
     } else {
@@ -474,76 +418,52 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
 
   setBindingData() {
     bindingNames.add('none');
-    for (var binding in rateList.binding) {
+    for (var binding in bindings) {
       bindingNames.add(binding.name);
     }
     selectedBinding = bindingNames[0];
     selectedBindingIndex = 0;
     debugPrint(
         "Binding names and index: $selectedBinding $selectedBindingIndex");
-    debugPrint(
-        "Rate of binding: ${rateList.binding[selectedBindingIndex].rate}");
+    debugPrint("Rate of binding: ${bindings[selectedBindingIndex].rate}");
     if (selectedBinding == 'none') {
       debugPrint("No binding");
     } else {
-      debugPrint(
-          'Binding Rate: ${rateList.binding[selectedBindingIndex - 1].rate}');
+      debugPrint('Binding Rate: ${bindings[selectedBindingIndex - 1].rate}');
     }
   }
 
   setNumberingData() {
     numberingNames.add('none');
-    for (var numbering in rateList.numbering) {
+    for (var numbering in numberings) {
       numberingNames.add(numbering.name);
     }
     selectedNumbering = numberingNames[0];
     selectedNumberingIndex = 0;
     debugPrint(
         "Numbering names and index: $selectedNumbering $selectedNumberingIndex");
-    debugPrint(
-        "Rate of numbering: ${rateList.numbering[selectedNumberingIndex].rate}");
+    debugPrint("Rate of numbering: ${numberings[selectedNumberingIndex].rate}");
     if (selectedNumbering == 'none') {
       debugPrint("No numbering");
     } else {
       debugPrint(
-          'Numbering Rate: ${rateList.numbering[selectedNumberingIndex - 1].rate}');
+          'Numbering Rate: ${numberings[selectedNumberingIndex - 1].rate}');
     }
   }
 
   setPrintData() {
-    // design
+    // print
     selectedPrint = printNames[0];
-    debugPrint("Design names: $printNames");
+    debugPrint("Print names: $printNames");
   }
 
   setBackSide() {
     selectedBackSide = 'no';
   }
 
-  ///shifted to another view model
-  // setNewStockOrderedId() async {
-  //   newStockOrderedId = 1;
-  //   final documentRef = FirebaseFirestore.instance
-  //       .collection(auth.currentUser!.uid)
-  //       .doc('StockData')
-  //       .collection('StockOrdered')
-  //       .doc('LastStockOrderedId');
-  //
-  //   final documentSnapshot = await documentRef.get();
-  //
-  //   var data = documentSnapshot.data();
-  //
-  //   if (data?['LastStockOrderedId'] == null) {
-  //     debugPrint(
-  //         'Stock ordered id found to be null --------- ${data?['LastStockOrderedId']}');
-  //     await documentRef.set({'LastStockOrderedId': newStockOrderedId});
-  //   } else {
-  //     debugPrint(
-  //         '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderedId']}');
-  //     newStockOrderedId = data?['LastStockOrderedId'] + 1;
-  //     await documentRef.set({'LastStockOrderedId': newStockOrderedId});
-  //   }
-  // }
+  updateListener() {
+    notifyListeners();
+  }
 
 // Function to find the closest factors of a number
   List<int> closestFactors(int n) {

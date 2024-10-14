@@ -37,9 +37,9 @@ class SignUpViewModel with ChangeNotifier {
           )
               .then((value) {
             Utils.showMessage(_auth.currentUser!.email.toString());
-            FirebaseFirestoreServices firestoreServices =
-                FirebaseFirestoreServices(auth: _auth);
-            firestoreServices.initialData();
+            // FirebaseFirestoreServices firestoreServices =
+            //     FirebaseFirestoreServices(auth: _auth);
+            // firestoreServices.initialData();
             SignOut().signOut(context);
             setLoading(false);
           }).onError((error, stackTrace) {
