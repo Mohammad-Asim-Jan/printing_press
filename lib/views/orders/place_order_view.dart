@@ -23,7 +23,19 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
     placeStockOrderViewModel =
         Provider.of<PlaceStockOrderViewModel>(context, listen: false);
     // placeOrderViewModel.checkData();
+
+    placeStockOrderViewModel.uid =
+        placeStockOrderViewModel.auth.currentUser!.uid;
     placeStockOrderViewModel.getAllStock();
+
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    placeStockOrderViewModel.uid;
+
   }
 
   @override
@@ -56,221 +68,337 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
           Consumer<PlaceStockOrderViewModel>(
             builder: (context, value, child) {
               return value.inStockOrderDataFetched
-                  ? Column(
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Form(
-                                key: placeStockOrderViewModel.formKey,
+                  ? value.allStockList.isEmpty
+                      ? const Center(
+                          ///todo: add a button that will jump to add stocks view
+                          child: Text(
+                              'You have to add stock before taking an order!'),
+                        )
+                      : Column(
+                          children: [
+                            Expanded(
+                              child: SingleChildScrollView(
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Column(
-                                    children: [
-                                      // customerName
-                                      /// text field
-                                      Consumer<PlaceStockOrderViewModel>(
-                                        builder: (context, val1, child) {
-                                          return CustomTextField(
-                                              controller: val1.customerNameC,
-                                              iconData: Icons.person,
-                                              hint: 'Customer name',
-                                              validatorText:
-                                                  'Provide customer name');
-                                        },
-                                      ),
-
-                                      // businessTitle
-                                      /// text field
-                                      Consumer<PlaceStockOrderViewModel>(
-                                        builder: (context, val2, child) {
-                                          return CustomTextField(
-                                              controller: val2.businessTitleC,
-                                              iconData: Icons.business,
-                                              hint: 'Business name',
-                                              validatorText:
-                                                  'Provide business name');
-                                        },
-                                      ),
-
-                                      // customerContact
-                                      /// text field number only
-                                      Consumer<PlaceStockOrderViewModel>(
-                                        builder: (context, val3, child) {
-                                          return CustomTextField(
-                                              textInputType:
-                                                  TextInputType.number,
-                                              controller: val3.customerContactC,
-                                              inputFormatter:
-                                                  FilteringTextInputFormatter
-                                                      .digitsOnly,
-                                              iconData: Icons.phone,
-                                              hint: 'Contact',
-                                              validatorText:
-                                                  'Provide customer phone no.');
-                                        },
-                                      ),
-
-                                      // customerAddress
-                                      /// text field
-                                      Consumer<PlaceStockOrderViewModel>(
-                                          builder: (context, val4, child) {
-                                        return CustomTextField(
-                                            controller: val4.customerAddressC,
-                                            iconData: Icons.home_filled,
-                                            hint: 'Address',
-                                            validatorText:
-                                                'Provide customer address');
-                                      }),
-
-                                      // orderDateTime
-                                      /// auto
-                                      // orderDueDateTime,
-                                      /// null here
-                                      // orderStatus
-                                      /// first pending
-                                      // orderId
-                                      /// auto generated
-                                      // stockId
-                                      /// auto
-                                      // stockName
-                                      /// auto
-                                      // stockCategory
-                                      /// auto
-                                      // stockUnitSellPrice
-                                      /// auto
-                                      // stockQuantity
-                                      /// text field number only
-
-                                      Row(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Form(
+                                    key: placeStockOrderViewModel.formKey,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Column(
                                         children: [
-                                          const Expanded(
-                                            flex: 1,
-                                            child: Center(
-                                              child: Text(
-                                                'Stock',
-                                              ),
-                                            ),
-                                          ),
+                                          // customerName
+                                          /// text field
                                           Consumer<PlaceStockOrderViewModel>(
-                                              builder: (context, val1, child) {
-                                            return Expanded(
-                                              flex: 2,
-                                              child: CustomDropDown(
-                                                list: val1.allStockList,
-                                                value: val1.selectedStock,
-                                                hint: val1.selectedStock,
-                                                onChanged: (newVal) {
-                                                  val1.changeStockDropDown(
-                                                      newVal);
-                                                },
-                                              ),
-                                            );
+                                            builder: (context, val1, child) {
+                                              return CustomTextField(
+                                                  controller:
+                                                      val1.customerNameC,
+                                                  iconData: Icons.person,
+                                                  hint: 'Customer name',
+                                                  validatorText:
+                                                      'Provide customer name');
+                                            },
+                                          ),
+
+                                          // businessTitle
+                                          /// text field
+                                          Consumer<PlaceStockOrderViewModel>(
+                                            builder: (context, val2, child) {
+                                              return CustomTextField(
+                                                  controller:
+                                                      val2.businessTitleC,
+                                                  iconData: Icons.business,
+                                                  hint: 'Business name',
+                                                  validatorText:
+                                                      'Provide business name');
+                                            },
+                                          ),
+
+                                          // customerContact
+                                          /// text field number only
+                                          Consumer<PlaceStockOrderViewModel>(
+                                            builder: (context, val3, child) {
+                                              return CustomTextField(
+                                                  maxLength: 11,
+                                                  textInputType:
+                                                      TextInputType.number,
+                                                  controller:
+                                                      val3.customerContactC,
+                                                  inputFormatter:
+                                                      FilteringTextInputFormatter
+                                                          .digitsOnly,
+                                                  iconData: Icons.phone,
+                                                  hint: 'Contact',
+                                                  validatorText:
+                                                      'Provide customer phone no.');
+                                            },
+                                          ),
+
+                                          // customerAddress
+                                          /// text field
+                                          Consumer<PlaceStockOrderViewModel>(
+                                              builder: (context, val4, child) {
+                                            return CustomTextField(
+                                                controller:
+                                                    val4.customerAddressC,
+                                                iconData: Icons.home_filled,
+                                                hint: 'Address',
+                                                validatorText:
+                                                    'Provide customer address');
                                           }),
-                                        ],
-                                      ),
-                                      // const SizedBox(height: 100,),
 
-                                      Column(
-                                        children: [
-                                          const Text('Stock Details'),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
+                                          // orderDateTime
+                                          /// auto
+                                          // orderDueDateTime,
+                                          /// null here
+                                          // orderStatus
+                                          /// first pending
+                                          // orderId
+                                          /// auto generated
+                                          // stockId
+                                          /// auto
+                                          // stockName
+                                          /// auto
+                                          // stockCategory
+                                          /// auto
+                                          // stockUnitSellPrice
+                                          /// auto
+                                          // stockQuantity
+                                          /// text field number only
+
                                           Row(
                                             children: [
                                               const Expanded(
-                                                  flex: 1, child: Text('Id: ')),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Text(value
-                                                      .stockList[value
-                                                          .selectedStockIndex]
-                                                      .stockId
-                                                      .toString())),
-                                              const Expanded(
-                                                  flex: 2,
-                                                  child: Text('Name: ')),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Text(value
-                                                      .stockList[value
-                                                          .selectedStockIndex]
-                                                      .stockName)),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: [
-                                              const Expanded(
-                                                  flex: 1,
-                                                  child: Text('Color: ')),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Text(value
-                                                      .stockList[value
-                                                          .selectedStockIndex]
-                                                      .stockColor)),
-                                              const Expanded(
-                                                  flex: 2,
+                                                flex: 1,
+                                                child: Center(
                                                   child: Text(
-                                                      'Manufactured By: ')),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Text(value
-                                                      .stockList[value
-                                                          .selectedStockIndex]
-                                                      .manufacturedBy)),
+                                                    'Stock',
+                                                  ),
+                                                ),
+                                              ),
+                                              Consumer<
+                                                      PlaceStockOrderViewModel>(
+                                                  builder:
+                                                      (context, val1, child) {
+                                                return Expanded(
+                                                  flex: 2,
+                                                  child: CustomDropDown(
+                                                    list: val1.allStockList,
+                                                    value: val1.selectedStock,
+                                                    hint: val1.selectedStock,
+                                                    onChanged: (newVal) {
+                                                      val1.changeStockDropDown(
+                                                          newVal);
+                                                    },
+                                                  ),
+                                                );
+                                              }),
                                             ],
+                                          ),
+                                          // const SizedBox(height: 100,),
+
+                                          Column(
+                                            children: [
+                                              const Text('Stock Details'),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Expanded(
+                                                      flex: 1,
+                                                      child:
+                                                          Text('Stock Id: ')),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Text(value
+                                                          .stockList[value
+                                                              .selectedStockIndex]
+                                                          .stockId
+                                                          .toString())),
+                                                  const Expanded(
+                                                      flex: 2,
+                                                      child: Text('Name: ')),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Text(value
+                                                          .stockList[value
+                                                              .selectedStockIndex]
+                                                          .stockName)),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Expanded(
+                                                      flex: 1,
+                                                      child: Text('Color: ')),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Text(value
+                                                          .stockList[value
+                                                              .selectedStockIndex]
+                                                          .stockColor)),
+                                                  const Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                          'Manufactured By: ')),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Text(value
+                                                          .stockList[value
+                                                              .selectedStockIndex]
+                                                          .manufacturedBy)),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Expanded(
+                                                      flex: 1,
+                                                      child:
+                                                          Text('Category: ')),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Text(value
+                                                          .stockList[value
+                                                              .selectedStockIndex]
+                                                          .stockCategory)),
+                                                  const Expanded(
+                                                      flex: 2,
+                                                      child:
+                                                          Text('Available: ')),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Text(value
+                                                          .stockList[value
+                                                              .selectedStockIndex]
+                                                          .availableStock
+                                                          .toString())),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                          'Description: ')),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Text(value
+                                                          .stockList[value
+                                                              .selectedStockIndex]
+                                                          .stockDescription)),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Expanded(
+                                                      flex: 1,
+                                                      child: Text('Price: ')),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Text(value
+                                                          .stockList[value
+                                                              .selectedStockIndex]
+                                                          .stockUnitSellPrice
+                                                          .toString())),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
                                           ),
                                           Row(
                                             children: [
                                               const Expanded(
                                                   flex: 1,
-                                                  child: Text('Category: ')),
-                                              const SizedBox(
-                                                width: 10,
+                                                  child: Text('Quantity')),
+                                              Expanded(
+                                                flex: 2,
+
+                                                ///todo: add plus icon and minus icon for ease
+                                                child: TextFormField(
+                                                  controller:
+                                                      value.stockQuantityC,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  cursorColor: kPrimeColor,
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                    prefixIcon: const Icon(
+                                                      Icons.filter_none_rounded,
+                                                      size: 24,
+                                                    ),
+                                                    hintText: 'Quantity',
+                                                    filled: true,
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                      borderSide: BorderSide(
+                                                        width: 2,
+                                                        color: kPrimeColor,
+                                                      ),
+                                                    ),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                      borderSide: BorderSide(
+                                                        color: kSecColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  validator: (text) {
+                                                    if (text == '' ||
+                                                        text == null) {
+                                                      return 'Provide stock quantity';
+                                                    } else if (int.tryParse(
+                                                            value.stockQuantityC
+                                                                .text)! >
+                                                        value
+                                                            .stockList[value
+                                                                .selectedStockIndex]
+                                                            .stockQuantity) {
+                                                      return 'Out of stock';
+                                                    }
+                                                    return null;
+                                                  },
+                                                ),
                                               ),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Text(value
-                                                      .stockList[value
-                                                          .selectedStockIndex]
-                                                      .stockCategory)),
-                                              const Expanded(
-                                                  flex: 2,
-                                                  child: Text('Available: ')),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Text(value
-                                                      .stockList[value
-                                                          .selectedStockIndex]
-                                                      .availableStock
-                                                      .toString())),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Expanded(
-                                              flex: 1, child: Text('Quantity')),
-                                          Expanded(
-                                            flex: 2,
 
-                                            ///todo: add plus icon and minus icon for ease
-                                            child: TextFormField(
-                                              controller: value.stockQuantityC,
+                                          // totalAmount
+                                          /// text auto generated through calculations
+
+                                          // advancePayment
+                                          /// text field number only
+                                          Consumer<PlaceStockOrderViewModel>(
+                                              builder: (context, val5, child) {
+                                            return TextFormField(
+                                              controller: val5.advancePaymentC,
                                               keyboardType:
                                                   TextInputType.number,
                                               cursorColor: kPrimeColor,
@@ -280,10 +408,10 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               ],
                                               decoration: InputDecoration(
                                                 prefixIcon: const Icon(
-                                                  Icons.filter_none_rounded,
+                                                  Icons.monetization_on_rounded,
                                                   size: 24,
                                                 ),
-                                                hintText: 'Quantity',
+                                                hintText: 'Advance payment',
                                                 filled: true,
                                                 focusedBorder:
                                                     OutlineInputBorder(
@@ -304,64 +432,38 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 ),
                                               ),
                                               validator: (text) {
-                                                if (value.selectedStockIndex ==
-                                                    0) {
-                                                  return 'Select a stock';
-                                                } else if (text == '' ||
+                                                if (text == '' ||
                                                     text == null) {
-                                                  return 'Provide stock quantity';
-                                                } else if (int.tryParse(value
-                                                        .stockQuantityC.text)! >
-                                                    value
-                                                        .stockList[value
-                                                            .selectedStockIndex]
-                                                        .stockQuantity) {
-                                                  return 'Out of stock';
+                                                  return 'Provide advance payment';
+                                                } else if (val5.stockQuantity ==
+                                                    0) {
+                                                  return 'Enter stock quantity (at least 1)';
+                                                } else if (int.tryParse(val5
+                                                        .advancePaymentC.text
+                                                        .trim())! >
+                                                    val5.totalAmount) {
+                                                  return 'Please enter below \$${val5.totalAmount}';
                                                 }
                                                 return null;
                                               },
-                                            ),
-                                          ),
+                                            );
+                                          }),
                                         ],
                                       ),
-
-                                      // totalAmount
-                                      /// text auto generated through calculations
-
-                                      // advancePayment
-                                      /// text field number only
-                                      Consumer<PlaceStockOrderViewModel>(
-                                          builder: (context, val5, child) {
-                                        return CustomTextField(
-                                            textInputType: TextInputType.number,
-                                            controller: val5.advancePaymentC,
-                                            inputFormatter:
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly,
-                                            iconData:
-                                                Icons.monetization_on_rounded,
-                                            hint: 'Advance payment',
-                                            validatorText:
-                                                'Provide advance payment');
-                                      }),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        RoundButton(
-                          title: 'Place Order',
-                          onPress: () {
-                            if (value.formKey.currentState.validate()) {
-                              ///todo: add order in firebase firestore
-                              debugPrint('Available stock');
-                            }
-                          },
-                        ),
-                      ],
-                    )
+                            RoundButton(
+                              title: 'Place Order',
+                              loading: value.loading,
+                              onPress: () {
+                                value.addCustomerOrderDataInFirebase(context);
+                              },
+                            ),
+                          ],
+                        )
                   : const Center(child: CircularProgressIndicator());
             },
           ),

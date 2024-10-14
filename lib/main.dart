@@ -18,7 +18,6 @@ import 'package:printing_press/view_model/rate_list/paper/paper_view_model.dart'
 import 'package:printing_press/view_model/rate_list/paper_cutting/add_paper_cutting_view_model.dart';
 import 'package:printing_press/view_model/rate_list/profit/add_profit_view_model.dart';
 import 'package:printing_press/view_model/rate_list/profit/profit_view_model.dart';
-import 'package:printing_press/view_model/rate_list/rate_list_view_model.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:printing_press/view_model/stock/all_stock_view_model.dart';
 import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';

@@ -12,7 +12,7 @@ class Stock {
 
   // final Size stockSize;
   final String stockColor;
-  String? totalAmount;
+  int? totalAmount;
   final String manufacturedBy;
   final int supplierId;
   final Timestamp stockDateAdded;

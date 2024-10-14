@@ -360,7 +360,7 @@ class AddStockViewModel with ChangeNotifier {
       await documentRef.set({'LastStockOrderId': newStockOrderId});
     } else {
       debugPrint(
-          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderId']}');
+          '\n\n\nStock ordered id is found to be available. \nStock order id: ${data?['LastStockOrderId']}');
       newStockOrderId = data?['LastStockOrderId'] + 1;
       await documentRef.set({'LastStockOrderId': newStockOrderId});
     }

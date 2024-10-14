@@ -44,7 +44,7 @@ class _CashbookEntryDetailsViewState extends State<CashbookEntryDetailsView> {
               ],
             ),
             Row(
-              children: widget.payment.orderId == null
+              children: widget.payment.customerOrderId == null
                   ? widget.payment.supplierId == null
                       ? [
                           const Text('RANDOM ENTRY'),
@@ -55,7 +55,7 @@ class _CashbookEntryDetailsViewState extends State<CashbookEntryDetailsView> {
                         ]
                   : [
                       const Text('Order Id: '),
-                      Text(widget.payment.orderId.toString()),
+                      Text(widget.payment.customerOrderId.toString()),
                     ],
             ),
             Row(

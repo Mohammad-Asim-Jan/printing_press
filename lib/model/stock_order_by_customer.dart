@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StockOrderByCustomer {
   ///todo: implement it in the add order view model (customer)
-  final int orderId;
+  final int customerOrderId;
   final String customerName;
   final String businessTitle;
-  final String customerContact;
+  final int customerContact;
   final String customerAddress;
   final int stockId; // ref to the stock
   final String stockName;
@@ -15,21 +15,22 @@ class StockOrderByCustomer {
   final Timestamp orderDateTime;
   Timestamp? orderDueDateTime; // no due date for in-stock order
   final String orderStatus;
+
   // final List<Stock> itemOrdered; ///todo: either to add this or not!
   // final Timestamp stockDateAdded;
-  final int advancePayment;
+  final int paidAmount;
   final int totalAmount;
 
   StockOrderByCustomer({
     required this.customerName,
     required this.businessTitle,
     required this.customerContact,
-    required this.orderId,
+    required this.customerOrderId,
     required this.customerAddress,
     required this.orderDateTime,
     this.orderDueDateTime,
     required this.orderStatus,
-    required this.advancePayment,
+    required this.paidAmount,
     required this.totalAmount,
     required this.stockId,
     required this.stockName,
@@ -50,12 +51,12 @@ class StockOrderByCustomer {
       customerName: json['customerName'],
       businessTitle: json['businessTitle'],
       customerContact: json['customerContact'],
-      orderId: json['orderId'],
+      customerOrderId: json['customerOrderId'],
       customerAddress: json['customerAddress'],
       orderDateTime: json['orderDateTime'],
       orderDueDateTime: json['orderDueDateTime'],
       orderStatus: json['orderStatus'],
-      advancePayment: json['advancePayment'],
+      paidAmount: json['paidAmount'],
       totalAmount: json['totalAmount'],
     );
   }

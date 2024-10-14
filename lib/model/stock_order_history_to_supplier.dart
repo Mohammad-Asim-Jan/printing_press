@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class StockOrderToSupplier {
+class StockOrderHistoryToSupplier {
   final int stockOrderId;
   final int stockId; // ref to the stock
   final String stockName;
@@ -11,7 +11,7 @@ class StockOrderToSupplier {
   final int supplierId;
   final Timestamp stockDateAdded;
 
-  StockOrderToSupplier({
+  StockOrderHistoryToSupplier({
     required this.stockOrderId,
     required this.stockId,
     required this.stockName,
@@ -23,8 +23,8 @@ class StockOrderToSupplier {
     required this.stockDateAdded,
   });
 
-  factory StockOrderToSupplier.fromJson(Map<String, dynamic> json) {
-    return StockOrderToSupplier(
+  factory StockOrderHistoryToSupplier.fromJson(Map<String, dynamic> json) {
+    return StockOrderHistoryToSupplier(
       stockOrderId: json['stockOrderId'],
       stockId: json['stockId'],
       stockName: json['stockName'],

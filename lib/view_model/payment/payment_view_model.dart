@@ -52,7 +52,7 @@ class PaymentViewModel with ChangeNotifier {
       if (_formKey.currentState!.validate()) {
         debugPrint('Form key is valid\n');
         Timestamp timestamp = Timestamp.now();
-        await setNewPaymentId();
+        await setNewStockOrderHistoryId();
         await setNewCashbookEntryId();
         await FirebaseFirestore.instance
             .collection(uid)
@@ -155,7 +155,7 @@ class PaymentViewModel with ChangeNotifier {
     }
   }
 
-  setNewPaymentId() async {
+  setNewStockOrderHistoryId() async {
     newStockOrderId = 1;
     final documentRef = FirebaseFirestore.instance
         .collection(uid)

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/model/stock.dart';
+import 'package:printing_press/utils/toast_message.dart';
 
 class PlaceStockOrderViewModel with ChangeNotifier {
   ///todo:
@@ -10,15 +11,16 @@ class PlaceStockOrderViewModel with ChangeNotifier {
   // todo Decrement from allProduct or stock if selected a product
   // todo Order date and time plus order completion time
 
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   get formKey => _formKey;
-
   final FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
+  late String uid;
   late bool _inStockOrderDataFetched;
+  bool _loading = false;
+
+  get loading => _loading;
 
   get inStockOrderDataFetched => _inStockOrderDataFetched;
 
@@ -28,66 +30,294 @@ class PlaceStockOrderViewModel with ChangeNotifier {
   late String selectedStock;
   late int selectedStockIndex;
 
-  /// use it
+  late Stock selectedStockModel;
+  late int stockQuantity;
+  late int totalAmount;
+
   TextEditingController customerNameC = TextEditingController();
-
-  /// use it
   TextEditingController businessTitleC = TextEditingController();
-
-  /// use it
   TextEditingController customerContactC = TextEditingController();
-
-  /// use it
   TextEditingController customerAddressC = TextEditingController();
-
-  /// use it
   TextEditingController advancePaymentC = TextEditingController();
-
   TextEditingController stockQuantityC = TextEditingController();
 
   // new stock order id
-  late int newStockOrderedId;
+  late int newStockOrderedHistoryId;
 
-  // stock id
-  late int stockId;
+  // customer order id
+  late int newCustomerOrderId;
+
+  // cashbook id
+  late int newCashbookEntryId;
+
+  addCustomerOrderDataInFirebase(BuildContext context) async {
+    /// todo: validation after calculating the price etc
+    selectedStockModel = stockList[selectedStockIndex];
+    stockQuantity = int.tryParse(stockQuantityC.text.trim()) ?? 0;
+    totalAmount = selectedStockModel.stockUnitSellPrice * stockQuantity;
+    if (_formKey.currentState != null) {
+      updateListener(true);
+      if (_formKey.currentState!.validate()) {
+        try {
+          ///todo: add as a customer order,
+          await setNewCustomerStockOrderId();
+          await addCustomerStockOrder();
+
+          ///todo: add an stock order history
+          await setNewStockOrderedHistoryId();
+          await addStockOrderHistoryByCustomer();
+
+          ///todo: add in cashbook
+          await setNewCashbookEntryId();
+          await addCustomerPaymentInCashbook();
+
+          ///todo: reduce the remaining stock quantity
+          updateStock();
+          getAllStock();
+          updateListener(false);
+        } catch (e) {
+          Utils.showMessage('Error: $e');
+          debugPrint('Error found!\nError: $e');
+          updateListener(false);
+        }
+      } else {
+        updateListener(false);
+      }
+    } else {
+      updateListener(false);
+    }
+  }
+
+  updateStock() async {
+    DocumentReference stockDocRef = firestore
+        .collection(uid)
+        .doc('StockData')
+        .collection('AvailableStock')
+        .doc('STOCK-${selectedStockModel.stockId}');
+
+    DocumentSnapshot snapshot = await stockDocRef.get();
+    int previousAvailableStockQuantity = await snapshot.get('availableStock');
+
+    await stockDocRef.update({
+      'availableStock': previousAvailableStockQuantity -
+          (int.tryParse(stockQuantityC.text.trim()))!,
+    }).then(
+      (value) {
+        Utils.showMessage('Stock Updated!');
+        debugPrint('Stock updated successfully');
+
+        updateListener(false);
+      },
+    ).onError(
+      (error, stackTrace) {
+        Utils.showMessage('Error: $error');
+        debugPrint('Stock update failed error....$error');
+        updateListener(false);
+      },
+    );
+  }
+
+  addCustomerStockOrder() async {
+    await firestore
+        .collection(uid)
+        .doc('CustomerData')
+        .collection('CustomerOrders')
+        .doc('CUS-ORDER-$newCustomerOrderId')
+        .set({
+      'customerName': customerNameC.text.trim(),
+      'businessTitle': businessTitleC.text.trim(),
+      'customerContact': int.tryParse(customerContactC.text.trim()),
+      'customerOrderId': newCustomerOrderId,
+      'customerAddress': customerAddressC.text.trim(),
+      'orderDateTime': Timestamp.now(),
+      'orderStatus': 'Pending',
+      'paidAmount': int.tryParse(advancePaymentC.text.trim()),
+      'totalAmount': totalAmount,
+      'stockId': selectedStockModel.stockId,
+      'stockName': selectedStockModel.stockName,
+      'stockCategory': selectedStockModel.stockCategory,
+      'stockUnitSellPrice': selectedStockModel.stockUnitSellPrice,
+      'stockQuantity': stockQuantity,
+    }).then(
+      (value) {
+        Utils.showMessage('Order added!');
+        debugPrint('Customer order added');
+        updateListener(false);
+      },
+    ).onError(
+      (error, stackTrace) {
+        Utils.showMessage('Error: $error');
+        debugPrint('Customer order error....$error');
+        updateListener(false);
+      },
+    );
+  }
+
+  setNewCustomerStockOrderId() async {
+    newCustomerOrderId = 1;
+    final documentRef = firestore
+        .collection(uid)
+        .doc('CustomerData')
+        .collection('CustomerOrders')
+        .doc('0LastCustomerOrderId');
+
+    final documentSnapshot = await documentRef.get();
+
+    var data = documentSnapshot.data();
+
+    if (data?['0LastCustomerOrderId'] == null) {
+      debugPrint(
+          'Order id found to be null --------- ${data?['0LastCustomerOrderId']}');
+      await documentRef.set({'0LastCustomerOrderId': newCustomerOrderId});
+    } else {
+      debugPrint(
+          '\n\n\nOrder id is found to be available. \nOrder id: ${data?['0LastCustomerOrderId']}');
+      newCustomerOrderId = data?['0LastCustomerOrderId'] + 1;
+      await documentRef.set({'0LastCustomerOrderId': newCustomerOrderId});
+    }
+  }
+
+  addStockOrderHistoryByCustomer() async {
+    await firestore
+        .collection(uid)
+        .doc('StockData')
+        .collection('StockOrderHistory')
+        .doc('CUS-ORDER-$newStockOrderedHistoryId')
+        .set({
+      'stockOrderId': newStockOrderedHistoryId,
+      'stockId': selectedStockModel.stockId,
+      'stockName': selectedStockModel.stockName,
+      'stockCategory': selectedStockModel.stockCategory,
+      'stockUnitSellPrice': selectedStockModel.stockUnitSellPrice,
+      'stockQuantity': stockQuantity,
+      'totalAmount': totalAmount,
+      'customerOrderId': newStockOrderedHistoryId,
+      'stockDateOrdered': Timestamp.now(),
+    }).then(
+      (value) {
+        Utils.showMessage('Order history has been added!');
+        debugPrint('\n\n\nCustomer stock order history  added\n\n\n');
+        updateListener(false);
+      },
+    ).onError(
+      (error, stackTrace) {
+        Utils.showMessage('Error: $error');
+        debugPrint('\n\n\nCustomer stock order history error.....$error\n\n\n');
+
+        updateListener(false);
+      },
+    );
+  }
+
+  setNewStockOrderedHistoryId() async {
+    newStockOrderedHistoryId = 1;
+    final documentRef = firestore
+        .collection(auth.currentUser!.uid)
+        .doc('StockData')
+        .collection('StockOrderHistory')
+        .doc('LastStockOrderId');
+
+    final documentSnapshot = await documentRef.get();
+    var data = documentSnapshot.data();
+
+    newStockOrderedHistoryId = data?['LastStockOrderId'] + 1;
+    await documentRef.set({'LastStockOrderId': newStockOrderedHistoryId});
+  }
+
+  addCustomerPaymentInCashbook() async {
+    /// adding the payment history to cashbook
+
+    await firestore
+        .collection(uid)
+        .doc('CashbookData')
+        .collection('CashbookEntry')
+        .doc('SUP-PAY-$newCashbookEntryId')
+        .set({
+      'cashbookEntryId': newCashbookEntryId,
+      'paymentDateTime': Timestamp.now(),
+      'amount': int.tryParse(advancePaymentC.text.trim()),
+      'customerOrderId': newCustomerOrderId,
+      'description': 'Advance Payment',
+      'paymentType': 'CASH-IN',
+    }).then(
+      (value) {
+        Utils.showMessage('Cashbook entry added!');
+        debugPrint('\n\n\nCashbook entry added\n\n\n');
+        updateListener(false);
+      },
+    ).onError(
+      (error, stackTrace) {
+        Utils.showMessage('Error: $error');
+        debugPrint('\n\n\nCashbook entry error.... $error\n\n\n');
+
+        updateListener(false);
+      },
+    );
+  }
+
+  setNewCashbookEntryId() async {
+    newCashbookEntryId = 1;
+    final documentRef = firestore
+        .collection(uid)
+        .doc('CashbookData')
+        .collection('CashbookEntry')
+        .doc('LastCashbookEntryId');
+
+    final documentSnapshot = await documentRef.get();
+
+    var data = documentSnapshot.data();
+
+    if (data?['LastCashbookEntryId'] == null) {
+      debugPrint(
+          'Cashbook entry id found to be null --------- ${data?['LastCashbookEntryId']}');
+      await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
+    } else {
+      debugPrint(
+          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastCashbookEntryId']}');
+      newCashbookEntryId = data?['LastCashbookEntryId'] + 1;
+      await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
+    }
+  }
 
   getAllStock() async {
-    allStockList = [];
     _inStockOrderDataFetched = false;
+    allStockList = [];
+    stockList = [];
     debugPrint('Get all stock called!');
-    allStockList.add('None');
-    stockList.add(Stock(
-        stockId: 0,
-        stockName: 'None',
-        stockQuantity: 0,
-        stockDescription: 'None',
-        stockCategory: 'None',
-        stockUnitBuyPrice: 0,
-        stockUnitSellPrice: 0,
-        availableStock: 0,
-        stockColor: 'None',
-        manufacturedBy: 'None',
-        supplierId: 0,
-        stockDateAdded: Timestamp.now()));
-    selectedStockIndex = 0;
-    selectedStock = allStockList[0];
-    var querySnapshot = await FirebaseFirestore.instance
+    // allStockList.add('None');
+    // stockList.add(Stock(
+    //     stockId: 0,
+    //     stockName: 'None',
+    //     stockQuantity: 0,
+    //     stockDescription: 'None',
+    //     stockCategory: 'None',
+    //     stockUnitBuyPrice: 0,
+    //     stockUnitSellPrice: 0,
+    //     availableStock: 0,
+    //     stockColor: 'None',
+    //     manufacturedBy: 'None',
+    //     supplierId: 0,
+    //     stockDateAdded: Timestamp.now()));
+    var querySnapshot = await firestore
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('StockData')
         .collection('AvailableStock')
         .get();
     var docs = querySnapshot.docs;
-    if (docs.length >= 2) {
+    if (docs.isNotEmpty) {
       for (int index = 1; index < docs.length; index++) {
         stockList.add(Stock.fromJson(docs[index].data()));
         allStockList.add(docs[index].get('stockName'));
       }
+      selectedStockIndex = 0;
+      selectedStock = allStockList[0];
     }
     _inStockOrderDataFetched = true;
-    updateListener();
+    notifyListeners();
   }
 
-  updateListener() {
+  updateListener(bool load) {
+    _loading = load;
     notifyListeners();
   }
 
@@ -95,106 +325,9 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     if (newVal != null) {
       selectedStock = newVal;
       selectedStockIndex = allStockList.indexOf(selectedStock);
-      updateListener();
-
-      if (newVal == 'None') {
-        debugPrint("No stock selected");
-      } else {
-        debugPrint('Stock Rate: ');
-      }
+      notifyListeners();
     } else {
       notifyListeners();
-    }
-  }
-
-  // addCustomerStockOrder() async {
-  //   if (_formKey.currentState != null) {
-  //     if (_formKey.currentState!.validate()) {
-  //       {
-  //         setNewStockOrderedId();
-  //         stockId = int.tryParse(stockIdC.text.trim()) ?? 1;
-  //
-  //         ///todo: get the details of the stock using the stock id or stock name
-  //
-  //         /// Adding the history of the stock
-  //         await firestore
-  //             .collection(auth.currentUser!.uid)
-  //             .doc('StockData')
-  //             .collection('StockOrdered')
-  //             .doc('CUS-ORDER-$newStockOrderedId')
-  //             .set({
-  //           'stockOrderId': newStockOrderedId,
-  //           'stockId': stockId,
-  //           'stockName': stockNameC.text.trim(),
-  //           'stockCategory': stockCategoryC.text.trim(),
-  //           'stockUnitBuyPrice':
-  //               int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
-  //           'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-  //           'totalAmount': newTotalAmount,
-  //           'customerOrderId': int.tryParse(supplierIdC.text.trim()),
-  //           'stockDateAdded': Timestamp.now(),
-  //         });
-  //
-  //         /// update the supplier total amount
-  //         supplierId = int.tryParse(supplierIdC.text.trim())!;
-  //
-  //         debugPrint(
-  //             '\n\n\n\n\nSupplier id while updating the total amount: $supplierId \n\n\n\n\n');
-  //         DocumentReference supplierRef = fireStore
-  //             .collection(uid)
-  //             .doc('SuppliersData')
-  //             .collection('Suppliers')
-  //
-  //             /// todo: create a method which will find the supplier id by using supplier name
-  //             .doc('SUP-$supplierId');
-  //
-  //         DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
-  //
-  //         supplierPreviousTotalAmount = supplierDocSnapshot.get('totalAmount');
-  //
-  //         debugPrint(
-  //             '\n\n\n\n\nSupplier previous total amount: $supplierPreviousTotalAmount \n\n\n\n\n');
-  //         debugPrint(
-  //             '\n\n\n\n\nSupplier new total amount: $newTotalAmount \n\n\n\n\n');
-  //
-  //         supplierRef.update({
-  //           'totalAmount': supplierPreviousTotalAmount + newTotalAmount,
-  //         });
-  //
-  //         Utils.showMessage('Successfully user stock order Added');
-  //         debugPrint('New stock added!!!!!!!!!!!!!!!!!');
-  //
-  //         updateListener();
-  //       }
-  //     } else {
-  //       updateListener();
-  //     }
-  //   } else {
-  //     updateListener();
-  //   }
-  // }
-
-  setNewStockOrderedId() async {
-    newStockOrderedId = 1;
-    final documentRef = FirebaseFirestore.instance
-        .collection(auth.currentUser!.uid)
-        .doc('StockData')
-        .collection('StockOrdered')
-        .doc('LastStockOrderedId');
-
-    final documentSnapshot = await documentRef.get();
-
-    var data = documentSnapshot.data();
-
-    if (data?['LastStockOrderedId'] == null) {
-      debugPrint(
-          'Stock ordered id found to be null --------- ${data?['LastStockOrderedId']}');
-      await documentRef.set({'LastStockOrderedId': newStockOrderedId});
-    } else {
-      debugPrint(
-          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderedId']}');
-      newStockOrderedId = data?['LastStockOrderedId'] + 1;
-      await documentRef.set({'LastStockOrderedId': newStockOrderedId});
     }
   }
 }

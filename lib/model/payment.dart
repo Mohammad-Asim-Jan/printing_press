@@ -7,7 +7,7 @@ class Payment {
   final int? supplierId;
 
   /// only for customer order, for supplier this will be null or even it won't exist
-   int? orderId;
+   int? customerOrderId;
 
   /// this is either cash-in or cash-out
   final String paymentType;
@@ -19,7 +19,7 @@ class Payment {
 
   Payment({
     required this.paymentId,
-    this.orderId,
+    this.customerOrderId,
     required this.paymentDateTime,
     required this.amount,
     this.supplierId,
@@ -31,7 +31,7 @@ class Payment {
   factory Payment.fromJson(Map<String, dynamic> jsonData) {
     return Payment(
       paymentId: jsonData['paymentId'],
-      orderId: jsonData['orderId'],
+      customerOrderId: jsonData['customerOrderId'],
       paymentDateTime: jsonData['paymentDateTime'],
       amount: jsonData['amount'],
       supplierId: jsonData['supplierId'],
@@ -44,7 +44,7 @@ class Payment {
   Map<String, dynamic> toMap() {
     return {
       'paymentId': paymentId,
-      'orderId': orderId,
+      'orderId': customerOrderId,
       'paymentDateTime': paymentDateTime,
       'amount': amount,
       'supplierId': supplierId,

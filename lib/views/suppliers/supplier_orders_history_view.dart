@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:printing_press/components/round_button.dart';
+import 'package:printing_press/model/cashbook_entry.dart';
 import 'package:printing_press/view_model/suppliers/supplier_orders_history_view_model.dart';
 import 'package:printing_press/views/payment/payment_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../colors/color_palette.dart';
 import '../../model/payment.dart';
-import '../../model/stock_order_to_supplier.dart';
+import '../../model/stock_order_history_to_supplier.dart';
 
 class SupplierOrdersHistoryView extends StatefulWidget {
   const SupplierOrdersHistoryView({
@@ -93,8 +94,9 @@ class _SupplierOrdersHistoryViewState extends State<SupplierOrdersHistoryView> {
                             itemCount: value.allStockOrderHistoryList.length,
                             itemBuilder: (BuildContext context, int index) {
                               if (value.allStockOrderHistoryList[index]
-                                  is Payment) {
+                                  is CashbookEntry) {
                                 /// todo: change the list tile to custom design
+                                /// todo: add more details as well after clicking on it
                                 return ListTile(
                                   trailing: SizedBox(
                                     width: 100,
@@ -129,12 +131,13 @@ class _SupplierOrdersHistoryViewState extends State<SupplierOrdersHistoryView> {
                                     'Payment Method: ${value.allStockOrderHistoryList[index].paymentMethod}\nAmount: ${value.allStockOrderHistoryList[index].amount}',
                                   ),
                                   leading: Text(value
-                                      .allStockOrderHistoryList[index].paymentId
+                                      .allStockOrderHistoryList[index].supplierPaymentId
                                       .toString()),
                                 );
                               } else if (value.allStockOrderHistoryList[index]
-                                  is StockOrderToSupplier) {
+                                  is StockOrderHistoryToSupplier) {
                                 /// todo: change the list tile to custom design
+                                /// todo: add more details as well after clicking on it
                                 return ListTile(
                                   trailing: SizedBox(
                                     width: 100,

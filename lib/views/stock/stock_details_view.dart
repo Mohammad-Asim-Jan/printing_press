@@ -21,9 +21,11 @@ class _StockDetailsViewState extends State<StockDetailsView> {
         title: const Text('Stock Details'),
       ),
       body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Stock Id: '),
               Text('Name: '),
@@ -40,7 +42,8 @@ class _StockDetailsViewState extends State<StockDetailsView> {
             ],
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('${widget.stock.stockId}'),
               Text(widget.stock.stockName),

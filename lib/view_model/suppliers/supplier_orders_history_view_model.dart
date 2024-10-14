@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:printing_press/model/payment.dart';
+import 'package:printing_press/model/cashbook_entry.dart';
 import 'package:printing_press/utils/toast_message.dart';
-import '../../model/stock_order_to_supplier.dart';
+import '../../model/stock_order_history_to_supplier.dart';
 
 class SupplierOrdersHistoryViewModel with ChangeNotifier {
   late bool dataFetched;
@@ -46,12 +46,13 @@ class SupplierOrdersHistoryViewModel with ChangeNotifier {
               '\n\n\n\nthis the stock id in each entry : ${data['stockId']}');
           // debugPrint(
           //     'hellooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo${data.toString()}');
-          if (data['stockId'] == null ) {
+          if (data['stockId'] == null) {
             /// Here there is a payment document
-            allStockOrderHistoryList.add(Payment.fromJson(data));
+            allStockOrderHistoryList.add(CashbookEntry.fromJson(data));
           } else {
             /// Here there is a stock order document
-            allStockOrderHistoryList.add(StockOrderToSupplier.fromJson(data));
+            allStockOrderHistoryList
+                .add(StockOrderHistoryToSupplier.fromJson(data));
           }
         }
 
