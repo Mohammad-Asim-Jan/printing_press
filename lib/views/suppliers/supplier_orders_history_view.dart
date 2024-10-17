@@ -4,9 +4,7 @@ import 'package:printing_press/model/cashbook_entry.dart';
 import 'package:printing_press/view_model/suppliers/supplier_orders_history_view_model.dart';
 import 'package:printing_press/views/payment/payment_view.dart';
 import 'package:provider/provider.dart';
-
 import '../../colors/color_palette.dart';
-import '../../model/payment.dart';
 import '../../model/stock_order_history_to_supplier.dart';
 
 class SupplierOrdersHistoryView extends StatefulWidget {
@@ -95,24 +93,27 @@ class _SupplierOrdersHistoryViewState extends State<SupplierOrdersHistoryView> {
                             itemBuilder: (BuildContext context, int index) {
                               if (value.allStockOrderHistoryList[index]
                                   is CashbookEntry) {
+                                CashbookEntry cashbookEntry =
+                                    value.allStockOrderHistoryList[index];
+
                                 /// todo: change the list tile to custom design
                                 /// todo: add more details as well after clicking on it
                                 return ListTile(
-                                  trailing: SizedBox(
-                                    width: 100,
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {},
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete),
-                                          onPressed: () {},
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  // trailing: SizedBox(
+                                  //   width: 100,
+                                  //   child: Row(
+                                  //     children: [
+                                  //       IconButton(
+                                  //         icon: const Icon(Icons.edit),
+                                  //         onPressed: () {},
+                                  //       ),
+                                  //       IconButton(
+                                  //         icon: const Icon(Icons.delete),
+                                  //         onPressed: () {},
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
                                   shape:
                                       Border.all(width: 2, color: kPrimeColor),
                                   // titleAlignment: ListTileTitleAlignment.threeLine,
@@ -120,40 +121,42 @@ class _SupplierOrdersHistoryViewState extends State<SupplierOrdersHistoryView> {
                                       color: kThirdColor,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500),
-                                  title: Text(value
-                                      .allStockOrderHistoryList[index]
-                                      .description),
+                                  title: Text(cashbookEntry.description ??
+                                      'No description'),
                                   tileColor: kSecColor,
                                   subtitleTextStyle: const TextStyle(
                                       color: Colors.black,
                                       fontStyle: FontStyle.italic),
                                   subtitle: Text(
-                                    'Payment Method: ${value.allStockOrderHistoryList[index].paymentMethod}\nAmount: ${value.allStockOrderHistoryList[index].amount}',
+                                    'Payment Method: ${cashbookEntry.paymentMethod}\nAmount: ${cashbookEntry.amount}',
                                   ),
-                                  leading: Text(value
-                                      .allStockOrderHistoryList[index].supplierPaymentId
-                                      .toString()),
+                                  leading: Text(
+                                      cashbookEntry.newStockOrderId.toString()),
                                 );
                               } else if (value.allStockOrderHistoryList[index]
                                   is StockOrderHistoryToSupplier) {
+                                StockOrderHistoryToSupplier
+                                    stockOrderHistoryToSupplier =
+                                    value.allStockOrderHistoryList[index];
+
                                 /// todo: change the list tile to custom design
                                 /// todo: add more details as well after clicking on it
                                 return ListTile(
-                                  trailing: SizedBox(
-                                    width: 100,
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {},
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete),
-                                          onPressed: () {},
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  // trailing: SizedBox(
+                                  //   width: 100,
+                                  //   child: Row(
+                                  //     children: [
+                                  //       IconButton(
+                                  //         icon: const Icon(Icons.edit),
+                                  //         onPressed: () {},
+                                  //       ),
+                                  //       IconButton(
+                                  //         icon: const Icon(Icons.delete),
+                                  //         onPressed: () {},
+                                  //       ),
+                                  //     ],
+                                  //   ),
+                                  // ),
                                   shape:
                                       Border.all(width: 2, color: kPrimeColor),
                                   // titleAlignment: ListTileTitleAlignment.threeLine,
@@ -161,18 +164,16 @@ class _SupplierOrdersHistoryViewState extends State<SupplierOrdersHistoryView> {
                                       color: kThirdColor,
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500),
-                                  title: Text(value
-                                      .allStockOrderHistoryList[index]
-                                      .stockName),
+                                  title: Text(
+                                      stockOrderHistoryToSupplier.stockName),
                                   tileColor: kTwo,
                                   subtitleTextStyle: const TextStyle(
                                       color: Colors.black,
                                       fontStyle: FontStyle.italic),
                                   subtitle: Text(
-                                    'Stock Category: ${value.allStockOrderHistoryList[index].stockCategory}\nTotal: ${value.allStockOrderHistoryList[index].totalAmount}',
+                                    'Stock Category: ${stockOrderHistoryToSupplier.stockCategory}\nTotal: ${stockOrderHistoryToSupplier.totalAmount}',
                                   ),
-                                  leading: Text(value
-                                      .allStockOrderHistoryList[index]
+                                  leading: Text(stockOrderHistoryToSupplier
                                       .stockQuantity
                                       .toString()),
                                 );

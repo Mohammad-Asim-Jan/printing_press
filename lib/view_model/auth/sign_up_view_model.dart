@@ -9,6 +9,13 @@ import '../../utils/toast_message.dart';
 class SignUpViewModel with ChangeNotifier {
   bool _loading = false;
 
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
+
+  get obscureText1 => _obscureText1;
+
+  get obscureText2 => _obscureText2;
+
   get loading => _loading;
 
   final _formKey = GlobalKey<FormState>();
@@ -59,6 +66,16 @@ class SignUpViewModel with ChangeNotifier {
     }
   }
 
+  swap1() {
+    _obscureText1 = !_obscureText1;
+    notifyListeners();
+  }
+
+  swap2() {
+    _obscureText2 = !_obscureText2;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -66,5 +83,4 @@ class SignUpViewModel with ChangeNotifier {
     emailC.dispose();
     passwordC.dispose();
   }
-
 }

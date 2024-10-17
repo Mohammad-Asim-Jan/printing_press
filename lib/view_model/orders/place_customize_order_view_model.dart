@@ -13,7 +13,6 @@ import '../../model/rate_list.dart';
 
 class PlaceCustomizeOrderViewModel with ChangeNotifier {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   get formKey => _formKey;
 
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,6 +23,9 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   bool _customOrderDataFetched = false;
 
   get customOrderDataFetched => _customOrderDataFetched;
+  bool _dataFound = false;
+
+  get dataFound => _dataFound;
 
   // design
   List<String> designNames = [];
@@ -124,8 +126,8 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   // carriage to hangu
   // result = paper quantity depends on cutting + carriage +
 
-  checkData() {
-    fetchData();
+  checkData() async {
+    await fetchData();
     List<List<dynamic>> lists = [
       bindings,
       designs,
@@ -136,34 +138,34 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
       paperCuttings,
       profits
     ];
-    Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-      if (!lists.any((element) => element.isEmpty)) {
-        debugPrint('data is not null anymore...');
-        // setFirebaseDataLocally();
 
-        ///todo: if there is any element empty (like design, paper etc), it will always shows progressindicator on the view, this is a problem that need to be solved
-        setDesignData();
-        setPaperSizeData();
-        setPaperQualityData();
-        setPaperCuttingData();
-        setBasicCuttingUnit();
-        setCopyVariants();
-        setBindingData();
-        setNewsPaperSizeData();
-        setNewsPaperQualityData();
-        setNumberingData();
-        setBackSide();
+    if (!lists.any((element) => element.isEmpty) && _customOrderDataFetched) {
+      debugPrint('data is not null anymore...');
+      // setFirebaseDataLocally();
 
-        _customOrderDataFetched = true;
-        timer.cancel();
-        updateListener();
-      } else {
-        ///todo: let the user know that there is something not set
-        ///for ex if there is no design or binding or anything, then show the user that go to add some
-        debugPrint('data is null');
-        updateListener();
-      }
-    });
+      ///todo: if there is any element empty (like design, paper etc),
+      ///it will always shows progress indicator on the view,
+      ///this is a problem that need to be solved
+      setDesignData();
+      setPaperSizeData();
+      setPaperQualityData();
+      setPaperCuttingData();
+      setBasicCuttingUnit();
+      setCopyVariants();
+      setBindingData();
+      setNewsPaperSizeData();
+      setNewsPaperQualityData();
+      setNumberingData();
+      setBackSide();
+
+      _dataFound = true;
+      updateListener();
+    } else {
+      ///todo: let the user know that there is something not set
+      ///for ex if there is no design or binding or anything, then show the user that go to add some
+      debugPrint('data is null');
+      updateListener();
+    }
   }
 
   List<Binding> bindings = [];
@@ -186,28 +188,6 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
       'PaperCutting',
       'Profit',
     ];
-
-    // Map<String, dynamic> modelListMap = {
-    //   'Binding': bindings,
-    //   'Design': designs,
-    //   'Machine': machines,
-    //   'NewsPaper': newsPapers,
-    //   'Numbering': numberings,
-    //   'Paper': papers,
-    //   'PaperCutting': paperCuttings,
-    //   'Profit': profits,
-    // };
-
-    // Map<String, dynamic> classMap = {
-    //   'Binding': Binding.fromJson,
-    //   'Design': Design.fromJson,
-    //   'Machine': Machine.fromJson,
-    //   'NewsPaper': Paper.fromJson,
-    //   'Numbering': Numbering.fromJson,
-    //   'Paper': Paper.fromJson,
-    //   'PaperCutting': PaperCutting.fromJson,
-    //   'Profit': Profit.fromJson,
-    // };
 
     DocumentReference docRef =
         firestore.collection(auth.currentUser!.uid).doc('RateList');
@@ -255,6 +235,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
         }
       }
     }
+    _customOrderDataFetched = true;
   }
 
   setDesignData() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:printing_press/components/custom_text_field.dart';
+import 'package:printing_press/utils/email_validation.dart';
 import 'package:printing_press/view_model/auth/log_in_view_model.dart';
 import 'package:printing_press/views/auth/sign_up.dart';
 import 'package:provider/provider.dart';
@@ -56,19 +57,85 @@ class _LogInState extends State<LogIn> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    CustomTextField(
+                    TextFormField(
                       controller: logInViewModel.emailC,
-                      textInputType: TextInputType.emailAddress,
-                      iconData: Icons.email_outlined,
-                      hint: 'Email',
-                      validatorText: 'Please provide email',
+                      keyboardType: TextInputType.emailAddress,
+                      cursorColor: kPrimeColor,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(
+                          Icons.email,
+                          size: 24,
+                        ),
+                        hintText: 'Email',
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(
+                            width: 2,
+                            color: kPrimeColor,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: kSecColor,
+                          ),
+                        ),
+                      ),
+                      validator: (text) {
+                        if (text == '' || text == null) {
+                          return 'Provide supplier email';
+                        } else if (!EmailValidation.isEmailValid(text)) {
+                          return 'Please provide a valid email address';
+                        }
+                        return null;
+                      },
                     ),
-                    CustomTextField(
-                      controller: logInViewModel.passwordC,
-                      textInputType: TextInputType.emailAddress,
-                      iconData: Icons.lock_outline_rounded,
-                      hint: 'Password',
-                      validatorText: 'Please provide password',
+                    Consumer<LogInViewModel>(
+                      builder: (context, value, child) {
+                        return TextFormField(
+                          controller: logInViewModel.passwordC,
+                          cursorColor: kPrimeColor,
+                          obscureText: value.obscureText,
+                          keyboardType: TextInputType.emailAddress,
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                value.swap();
+                              },
+                              icon: Icon(value.obscureText
+                                  ? Icons.visibility_off_rounded
+                                  : Icons.visibility_rounded),
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.lock,
+                              size: 24,
+                            ),
+                            hintText: 'Password',
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(
+                                width: 2,
+                                color: kPrimeColor,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: kSecColor,
+                              ),
+                            ),
+                          ),
+                          validator: (text) {
+                            if (text == '' || text == null) {
+                              return 'Please provide password';
+                            }
+                            return null;
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),

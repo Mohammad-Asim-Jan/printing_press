@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/colors/color_palette.dart';
+import 'package:printing_press/model/rate_list/design.dart';
 import 'package:printing_press/view_model/rate_list/design/design_view_model.dart';
 import 'package:printing_press/views/rate_list/design/add_design_view.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +21,6 @@ class _DesignViewState extends State<DesignView> {
     // TODO: implement initState
     super.initState();
     designViewModel = Provider.of<DesignViewModel>(context, listen: false);
-    designViewModel.fetchDesignsData();
   }
 
   @override
@@ -41,54 +42,121 @@ class _DesignViewState extends State<DesignView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<DesignViewModel>(
-          builder: (context, value, child) => value.dataFetched
-              ? value.designList.isEmpty
-                  ? const Center(
-                      child: Text('No record found!'),
-                    )
-
-                  ///todo: change listview.builder to streams builder or future builder
-                  : ListView.builder(
-                      itemCount: value.designList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        /// todo: change the list tile to custom design
-                        return ListTile(
-                          trailing: SizedBox(
-                            width: 100,
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () {},
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {},
-                                ),
-                              ],
+        child: Consumer<DesignViewModel>(builder: (context, value, child) {
+          return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: value.getDesignsData(),
+            builder: (BuildContext context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              if (snapshot.hasData) {
+                value.designList = snapshot.data!.docs.skip(1).map(
+                  (e) {
+                    return Design.fromJson(e.data());
+                  },
+                ).toList();
+                if (value.designList.isEmpty) {
+                  return const Center(
+                    child: Text('No design found!'),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: value.designList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    /// todo: change the list tile to custom design
+                    return ListTile(
+                      trailing: SizedBox(
+                        width: 100,
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {},
                             ),
-                          ),
-                          shape: Border.all(width: 2, color: kPrimeColor),
-                          // titleAlignment: ListTileTitleAlignment.threeLine,
-                          titleTextStyle: TextStyle(
-                              color: kThirdColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500),
-                          title: Text(value.designList[index].name),
-                          tileColor: kTwo,
-                          subtitleTextStyle: const TextStyle(
-                              color: Colors.black, fontStyle: FontStyle.italic),
-                          subtitle: Text(
-                            'Rate: ${value.designList[index].rate}',
-                          ),
-                          leading:
-                              Text(value.designList[index].designId.toString()),
-                        );
-                      },
-                    )
-              : const Center(child: CircularProgressIndicator()),
-        ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                      shape: Border.all(width: 2, color: kPrimeColor),
+                      // titleAlignment: ListTileTitleAlignment.threeLine,
+                      titleTextStyle: TextStyle(
+                          color: kThirdColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                      title: Text(value.designList[index].name),
+                      tileColor: kTwo,
+                      subtitleTextStyle: const TextStyle(
+                          color: Colors.black, fontStyle: FontStyle.italic),
+                      subtitle: Text(
+                        'Rate: ${value.designList[index].rate}',
+                      ),
+                      leading:
+                          Text(value.designList[index].designId.toString()),
+                    );
+                  },
+                );
+              }
+
+              return const Text('No data!');
+            },
+          );
+
+          // value.dataFetched
+          //     ? value.designList.isEmpty
+          //         ? const Center(
+          //             child: Text('No record found!'),
+          //           )
+          //
+          //         ///todo: change listview.builder to streams builder or future builder
+          //         : ListView.builder(
+          //             itemCount: value.designList.length,
+          //             itemBuilder: (BuildContext context, int index) {
+          //               /// todo: change the list tile to custom design
+          //               return ListTile(
+          //                 trailing: SizedBox(
+          //                   width: 100,
+          //                   child: Row(
+          //                     children: [
+          //                       IconButton(
+          //                         icon: const Icon(Icons.edit),
+          //                         onPressed: () {},
+          //                       ),
+          //                       IconButton(
+          //                         icon: const Icon(Icons.delete),
+          //                         onPressed: () {},
+          //                       ),
+          //                     ],
+          //                   ),
+          //                 ),
+          //                 shape:
+          //                     Border.all(width: 2, color: kPrimeColor),
+          //                 // titleAlignment: ListTileTitleAlignment.threeLine,
+          //                 titleTextStyle: TextStyle(
+          //                     color: kThirdColor,
+          //                     fontSize: 18,
+          //                     fontWeight: FontWeight.w500),
+          //                 title: Text(value.designList[index].name),
+          //                 tileColor: kTwo,
+          //                 subtitleTextStyle: const TextStyle(
+          //                     color: Colors.black,
+          //                     fontStyle: FontStyle.italic),
+          //                 subtitle: Text(
+          //                   'Rate: ${value.designList[index].rate}',
+          //                 ),
+          //                 leading: Text(value.designList[index].designId
+          //                     .toString()),
+          //               );
+          //             },
+          //           )
+          //     : const Center(child: CircularProgressIndicator()),
+        }),
       ),
     );
   }

@@ -20,7 +20,7 @@ class CustomTextField extends StatefulWidget {
     required this.validatorText,
     this.textInputType = TextInputType.text,
     this.inputFormatter,
-  });
+    });
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -37,8 +37,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       inputFormatters: widget.inputFormatter == null
           ? null
           : <TextInputFormatter>[
-              widget.inputFormatter!,
-            ],
+        widget.inputFormatter!,
+      ],
       decoration: InputDecoration(
         prefixIcon: Icon(
           widget.iconData,

@@ -4,39 +4,48 @@ import 'package:flutter/material.dart';
 import 'package:printing_press/model/rate_list/machine.dart';
 
 class MachineViewModel with ChangeNotifier {
-  late bool dataFetched;
+  // late bool dataFetched;
   late List<Machine> machineList;
 
-  void fetchMachineData() async {
-    dataFetched = false;
-    machineList = [];
-
-    final collectionReference = FirebaseFirestore.instance
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMachinesData() {
+    return FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('RateList')
-        .collection('Machine');
-
-    final querySnapshot = await collectionReference.get();
-
-    final listQueryDocumentSnapshot = querySnapshot.docs;
-
-    if (listQueryDocumentSnapshot.length <= 1) {
-      debugPrint('No records found !');
-      dataFetched = true;
-      updateListener();
-    } else {
-      for (int i = 1; i < listQueryDocumentSnapshot.length; i++) {
-        var data = listQueryDocumentSnapshot[i].data();
-        debugPrint('hello        ${data.toString()}');
-        machineList.add(Machine.fromJson(data));
-      }
-
-      dataFetched = true;
-      updateListener();
-    }
+        .collection('Machine')
+        .snapshots();
   }
 
-  updateListener() {
-    notifyListeners();
-  }
+//
+// void fetchMachineData() async {
+//   dataFetched = false;
+//   machineList = [];
+//
+//   final collectionReference = FirebaseFirestore.instance
+//       .collection(FirebaseAuth.instance.currentUser!.uid)
+//       .doc('RateList')
+//       .collection('Machine');
+//
+//   final querySnapshot = await collectionReference.get();
+//
+//   final listQueryDocumentSnapshot = querySnapshot.docs;
+//
+//   if (listQueryDocumentSnapshot.length <= 1) {
+//     debugPrint('No records found !');
+//     dataFetched = true;
+//     updateListener();
+//   } else {
+//     for (int i = 1; i < listQueryDocumentSnapshot.length; i++) {
+//       var data = listQueryDocumentSnapshot[i].data();
+//       debugPrint('hello        ${data.toString()}');
+//       machineList.add(Machine.fromJson(data));
+//     }
+//
+//     dataFetched = true;
+//     updateListener();
+//   }
+// }
+//
+// updateListener() {
+//   notifyListeners();
+// }
 }

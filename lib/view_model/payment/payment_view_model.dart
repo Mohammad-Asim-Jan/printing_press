@@ -53,23 +53,25 @@ class PaymentViewModel with ChangeNotifier {
         debugPrint('Form key is valid\n');
         Timestamp timestamp = Timestamp.now();
         await setNewStockOrderHistoryId();
+
         await setNewCashbookEntryId();
         await FirebaseFirestore.instance
             .collection(uid)
             .doc('StockData')
             .collection('StockOrderHistory')
-            .doc('SUP-PAY-$newStockOrderId')
+            .doc('$newStockOrderId')
             .set({
-          'paymentId': newStockOrderId,
-          'paymentDateTime': timestamp,
-          'amount': int.tryParse(amountC.text.trim()),
+          'stockOrderId': newStockOrderId,
+          'cashbookEntryId': newCashbookEntryId,
           'supplierId': supplierId,
+          'amount': int.tryParse(amountC.text.trim()),
           'description': descriptionC.text.trim(),
           'paymentType': 'CASH-OUT',
 
           ///todo: do we need to have a bank ref?
           ///for supplier, there has to be a payment method dropdown
           'paymentMethod': paymentMethodC.text.trim(),
+          'paymentDateTime': timestamp,
         }).then((value) async {
           Utils.showMessage('Supplier payment added !');
 
@@ -78,26 +80,25 @@ class PaymentViewModel with ChangeNotifier {
               .collection(uid)
               .doc('CashbookData')
               .collection('CashbookEntry')
-              .doc('SUP-PAY-$newCashbookEntryId')
+              .doc('$newCashbookEntryId')
               .set({
-            'paymentId': newStockOrderId,
+            'stockOrderId': newStockOrderId,
             'cashbookEntryId': newCashbookEntryId,
-            'paymentDateTime': timestamp,
-            'amount': int.tryParse(amountC.text.trim()),
             'supplierId': supplierId,
+            'amount': int.tryParse(amountC.text.trim()),
             'description': descriptionC.text.trim(),
             'paymentType': 'CASH-OUT',
 
             ///todo: do we need to have a bank ref?
-            /// this denotes either the payment is done physically or through bank acc
+            ///for supplier, there has to be a payment method dropdown
             'paymentMethod': paymentMethodC.text.trim(),
+            'paymentDateTime': timestamp,
           }).then(
             (value) async {
               Utils.showMessage('Cashbook Entry added!');
               debugPrint('\n\n\nCashbook Entry added!\n\n\n');
 
               /// update the supplier remaining amount and total amount paid
-
               DocumentReference supplierRef = FirebaseFirestore.instance
                   .collection(uid)
                   .doc('SuppliersData')
@@ -114,7 +115,7 @@ class PaymentViewModel with ChangeNotifier {
               supplierRef.update({
                 'totalPaidAmount': supplierPreviousAmountPaid +
                     int.tryParse(amountC.text.trim())!,
-                'amountRemaining': supplierPreviousRemainingAmount +
+                'amountRemaining': supplierPreviousRemainingAmount -
                     int.tryParse(amountC.text.trim())!
               }).then(
                 (value) {
@@ -161,19 +162,19 @@ class PaymentViewModel with ChangeNotifier {
         .collection(uid)
         .doc('StockData')
         .collection('StockOrderHistory')
-        .doc('LastStockOrderId');
+        .doc('0LastStockOrderId');
 
     final documentSnapshot = await documentRef.get();
 
     var data = documentSnapshot.data();
 
     if (data?['LastStockOrderId'] == null) {
-      debugPrint(
-          'Stock ordered id found to be null --------- ${data?['LastStockOrderId']}');
+      // debugPrint(
+      //     'Stock ordered id found to be null --------- ${data?['LastStockOrderId']}');
       await documentRef.set({'LastStockOrderId': newStockOrderId});
     } else {
-      debugPrint(
-          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderId']}');
+      // debugPrint(
+      //     '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastStockOrderId']}');
       newStockOrderId = data?['LastStockOrderId'] + 1;
       await documentRef.set({'LastStockOrderId': newStockOrderId});
     }
@@ -185,19 +186,19 @@ class PaymentViewModel with ChangeNotifier {
         .collection(uid)
         .doc('CashbookData')
         .collection('CashbookEntry')
-        .doc('LastCashbookEntryId');
+        .doc('0LastCashbookEntryId');
 
     final documentSnapshot = await documentRef.get();
 
     var data = documentSnapshot.data();
 
     if (data?['LastCashbookEntryId'] == null) {
-      debugPrint(
-          'Cashbook entry id found to be null --------- ${data?['LastCashbookEntryId']}');
+      // debugPrint(
+      //     'Cashbook entry id found to be null --------- ${data?['LastCashbookEntryId']}');
       await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
     } else {
-      debugPrint(
-          '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastCashbookEntryId']}');
+      // debugPrint(
+      //     '\n\n\nStock ordered id is found to be available. \nStock id: ${data?['LastCashbookEntryId']}');
       newCashbookEntryId = data?['LastCashbookEntryId'] + 1;
       await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
     }

@@ -41,9 +41,9 @@ class AddCashbookEntryViewModel with ChangeNotifier {
             .collection(uId)
             .doc('CashbookData')
             .collection('CashbookEntry')
-            .doc('RND-PAY-$newCashbookEntryId')
+            .doc(newCashbookEntryId.toString())
             .set({
-          'paymentId': newCashbookEntryId,
+          'cashbookEntryId': newCashbookEntryId,
           'paymentDateTime': Timestamp.now(),
           'amount': int.tryParse(amountC.text.trim()),
           'description': descriptionC.text.trim(),
@@ -73,7 +73,7 @@ class AddCashbookEntryViewModel with ChangeNotifier {
         .collection(uId)
         .doc('CashbookData')
         .collection('CashbookEntry')
-        .doc('LastCashbookEntryId');
+        .doc('0LastCashbookEntryId');
 
     final documentSnapshot = await documentRef.get();
 

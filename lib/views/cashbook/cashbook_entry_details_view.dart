@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:printing_press/model/payment.dart';
+import 'package:printing_press/model/cashbook_entry.dart';
 
 class CashbookEntryDetailsView extends StatefulWidget {
   const CashbookEntryDetailsView({
     super.key,
-    required this.payment,
+    required this.cashbookEntry,
   });
 
-  final Payment payment;
+  final CashbookEntry cashbookEntry;
 
   @override
   State<CashbookEntryDetailsView> createState() =>
@@ -24,7 +24,7 @@ class _CashbookEntryDetailsViewState extends State<CashbookEntryDetailsView> {
     super.initState();
 
     formattedDateTime = DateFormat('dd MMMM yyyy, hh:mm a')
-        .format(widget.payment.paymentDateTime.toDate());
+        .format(widget.cashbookEntry.paymentDateTime.toDate());
   }
 
   @override
@@ -40,22 +40,22 @@ class _CashbookEntryDetailsViewState extends State<CashbookEntryDetailsView> {
             Row(
               children: [
                 const Text('Payment Id: '),
-                Text(widget.payment.paymentId.toString()),
+                Text(widget.cashbookEntry.cashbookEntryId.toString()),
               ],
             ),
             Row(
-              children: widget.payment.customerOrderId == null
-                  ? widget.payment.supplierId == null
+              children: widget.cashbookEntry.customerOrderId == null
+                  ? widget.cashbookEntry.supplierId == null
                       ? [
                           const Text('RANDOM ENTRY'),
                         ]
                       : [
                           const Text('Supplier Id: '),
-                          Text(widget.payment.supplierId.toString()),
+                          Text(widget.cashbookEntry.supplierId.toString()),
                         ]
                   : [
                       const Text('Order Id: '),
-                      Text(widget.payment.customerOrderId.toString()),
+                      Text(widget.cashbookEntry.customerOrderId.toString()),
                     ],
             ),
             Row(
@@ -67,25 +67,25 @@ class _CashbookEntryDetailsViewState extends State<CashbookEntryDetailsView> {
             Row(
               children: [
                 const Text('Paid Amount: '),
-                Text(widget.payment.amount.toString()),
+                Text(widget.cashbookEntry.amount.toString()),
               ],
             ),
             Row(
               children: [
                 const Text('Payment type: '),
-                Text(widget.payment.paymentType.toString()),
+                Text(widget.cashbookEntry.paymentType.toString()),
               ],
             ),
             Row(
               children: [
                 const Text('Payment Method: '),
-                Text(widget.payment.paymentMethod.toString()),
+                Text(widget.cashbookEntry.paymentMethod.toString()),
               ],
             ),
             Row(
               children: [
                 const Text('Description: '),
-                Text(widget.payment.description.toString()),
+                Text(widget.cashbookEntry.description.toString()),
               ],
             ),
           ],

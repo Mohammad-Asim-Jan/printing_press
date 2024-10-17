@@ -20,6 +20,7 @@ import 'package:printing_press/view_model/rate_list/profit/add_profit_view_model
 import 'package:printing_press/view_model/rate_list/profit/profit_view_model.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:printing_press/view_model/stock/all_stock_view_model.dart';
+import 'package:printing_press/view_model/stock/stock_history_view_model.dart';
 import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';
 import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
 import 'package:printing_press/view_model/suppliers/supplier_orders_history_view_model.dart';
@@ -59,8 +60,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AddSupplierViewModel()),
         ChangeNotifierProvider(create: (_) => AllStockViewModel()),
         ChangeNotifierProvider(create: (_) => AddStockViewModel()),
+        ChangeNotifierProvider(create: (_) => StockOrderHistoryViewModel()),
         ChangeNotifierProvider(create: (_) => SupplierOrdersHistoryViewModel()),
-        // ChangeNotifierProvider(create: (_) => RateListViewModel()),
         ChangeNotifierProvider(create: (_) => PaymentViewModel()),
         ChangeNotifierProvider(create: (_) => CashbookViewModel()),
         ChangeNotifierProvider(create: (_) => AddBindingViewModel()),

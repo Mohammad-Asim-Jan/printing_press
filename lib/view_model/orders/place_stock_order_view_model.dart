@@ -85,7 +85,6 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     }
   }
 
-
   setNewCustomerStockOrderId() async {
     newCustomerOrderId = 1;
     final documentRef = firestore
@@ -98,15 +97,15 @@ class PlaceStockOrderViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['0LastCustomerOrderId'] == null) {
+    if (data?['LastCustomerOrderId'] == null) {
       debugPrint(
-          'Order id found to be null --------- ${data?['0LastCustomerOrderId']}');
-      await documentRef.set({'0LastCustomerOrderId': newCustomerOrderId});
+          'Order id found to be null --------- ${data?['LastCustomerOrderId']}');
+      await documentRef.set({'LastCustomerOrderId': newCustomerOrderId});
     } else {
       debugPrint(
-          '\n\n\nOrder id is found to be available. \nOrder id: ${data?['0LastCustomerOrderId']}');
-      newCustomerOrderId = data?['0LastCustomerOrderId'] + 1;
-      await documentRef.set({'0LastCustomerOrderId': newCustomerOrderId});
+          '\n\n\nOrder id is found to be available. \nOrder id: ${data?['LastCustomerOrderId']}');
+      newCustomerOrderId = data?['LastCustomerOrderId'] + 1;
+      await documentRef.set({'LastCustomerOrderId': newCustomerOrderId});
     }
   }
   addCustomerStockOrder() async {
@@ -114,7 +113,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
         .collection(uid)
         .doc('CustomerData')
         .collection('CustomerOrders')
-        .doc('CUS-ORDER-$newCustomerOrderId')
+        .doc('$newCustomerOrderId')
         .set({
       'customerName': customerNameC.text.trim(),
       'businessTitle': businessTitleC.text.trim(),
@@ -151,7 +150,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
         .collection(auth.currentUser!.uid)
         .doc('StockData')
         .collection('StockOrderHistory')
-        .doc('LastStockOrderId');
+        .doc('0LastStockOrderId');
 
     final documentSnapshot = await documentRef.get();
     var data = documentSnapshot.data();
@@ -164,7 +163,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
         .collection(uid)
         .doc('StockData')
         .collection('StockOrderHistory')
-        .doc('CUS-ORDER-$newStockOrderedHistoryId')
+        .doc('$newStockOrderedHistoryId')
         .set({
       'stockOrderId': newStockOrderedHistoryId,
       'stockId': selectedStockModel.stockId,
@@ -173,7 +172,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       'stockUnitSellPrice': selectedStockModel.stockUnitSellPrice,
       'stockQuantity': stockQuantity,
       'totalAmount': totalAmount,
-      'customerOrderId': newStockOrderedHistoryId,
+      'customerOrderId': newCustomerOrderId,
       'stockDateOrdered': Timestamp.now(),
     }).then(
       (value) {
@@ -198,7 +197,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
         .collection(uid)
         .doc('CashbookData')
         .collection('CashbookEntry')
-        .doc('LastCashbookEntryId');
+        .doc('0LastCashbookEntryId');
 
     final documentSnapshot = await documentRef.get();
 
@@ -222,7 +221,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
         .collection(uid)
         .doc('CashbookData')
         .collection('CashbookEntry')
-        .doc('SUP-PAY-$newCashbookEntryId')
+        .doc('$newCashbookEntryId')
         .set({
       'cashbookEntryId': newCashbookEntryId,
       'paymentDateTime': Timestamp.now(),

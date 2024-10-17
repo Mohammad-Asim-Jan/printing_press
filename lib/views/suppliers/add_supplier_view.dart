@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/components/custom_text_field.dart';
+import 'package:printing_press/utils/email_validation.dart';
 import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../components/round_button.dart';
@@ -90,7 +91,7 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                             validator: (text) {
                               if (text == '' || text == null) {
                                 return 'Provide supplier email';
-                              } else if (!val3.isEmailValid(text)) {
+                              } else if (!EmailValidation.isEmailValid(text)) {
                                 return 'Invalid email';
                               }
                               return null;

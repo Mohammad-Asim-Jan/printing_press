@@ -5,15 +5,15 @@ class Stock {
   final String stockName;
   final String stockCategory;
   final String stockDescription;
+  final int availableStock;
   final int stockUnitBuyPrice;
   final int stockUnitSellPrice;
   final int stockQuantity;
-  final int availableStock;
 
   // final Size stockSize;
   final String stockColor;
-  int? totalAmount;
   final String manufacturedBy;
+  int? totalAmount;
   final int supplierId;
   final Timestamp stockDateAdded;
 
@@ -26,7 +26,7 @@ class Stock {
     required this.stockUnitBuyPrice,
     required this.stockUnitSellPrice,
     required this.availableStock,
-    this.totalAmount,
+             this.totalAmount,
     // required this.stockSize,
     required this.stockColor,
     required this.manufacturedBy,

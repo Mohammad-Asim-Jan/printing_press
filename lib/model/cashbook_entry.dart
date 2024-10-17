@@ -1,22 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CashbookEntry {
-  int? supplierPaymentId;
   final int cashbookEntryId;
-  final Timestamp paymentDateTime;
+  final int? supplierId;
+  final int? customerOrderId;
+  final int? newStockOrderId;
+  // final int? supplierPaymentId;
   final int amount;
-  int? supplierId;
-  int? customerOrderId;
-  String? description;
-  String? paymentType;
-  final String paymentMethod;
+  final String? description;
+  final String paymentType;
+  final String? paymentMethod;
+  final Timestamp paymentDateTime;
 
   CashbookEntry({
-    this.supplierPaymentId,
+    // this.supplierPaymentId,
     required this.cashbookEntryId,
     required this.paymentDateTime,
     required this.amount,
     this.supplierId,
+    this.newStockOrderId,
     this.customerOrderId,
     this.description,
     required this.paymentType,
@@ -25,9 +27,10 @@ class CashbookEntry {
 
   factory CashbookEntry.fromJson(Map<String, dynamic> jsonData) {
     return CashbookEntry(
-      supplierPaymentId: jsonData['supplierPaymentId'],
+      // supplierPaymentId: jsonData['supplierPaymentId'],
       cashbookEntryId: jsonData['cashbookEntryId'],
       paymentDateTime: jsonData['paymentDateTime'],
+      newStockOrderId: jsonData['newStockOrderId'],
       amount: jsonData['amount'],
       supplierId: jsonData['supplierId'],
       customerOrderId: jsonData['customerOrderId'],

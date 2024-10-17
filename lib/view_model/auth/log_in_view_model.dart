@@ -5,8 +5,10 @@ import '../../utils/toast_message.dart';
 
 class LogInViewModel with ChangeNotifier {
   bool _loading = false;
-
   bool get loading => _loading;
+
+  bool _obscureText = true;
+  get obscureText => _obscureText;
 
   setLoading(bool value) {
     _loading = value;
@@ -55,5 +57,10 @@ class LogInViewModel with ChangeNotifier {
       }
     }
     setLoading(false);
+  }
+
+  swap() {
+    _obscureText = !_obscureText;
+    notifyListeners();
   }
 }

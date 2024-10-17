@@ -44,6 +44,7 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                           builder: (context, val1, child) {
                             return CustomTextField(
                                 controller: val1.amountC,
+                                textInputType: TextInputType.number,
                                 iconData: Icons.monetization_on_rounded,
                                 inputFormatter:
                                     FilteringTextInputFormatter.digitsOnly,

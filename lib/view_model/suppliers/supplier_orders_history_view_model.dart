@@ -44,8 +44,6 @@ class SupplierOrdersHistoryViewModel with ChangeNotifier {
           Map<String, dynamic> data = listQueryDocumentSnapshot[i].data();
           debugPrint(
               '\n\n\n\nthis the stock id in each entry : ${data['stockId']}');
-          // debugPrint(
-          //     'hellooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo${data.toString()}');
           if (data['stockId'] == null) {
             /// Here there is a payment document
             allStockOrderHistoryList.add(CashbookEntry.fromJson(data));
