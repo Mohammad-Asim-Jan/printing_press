@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:printing_press/colors/color_palette.dart';
-import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
 import 'package:printing_press/views/auth/log_in.dart';
 import 'package:provider/provider.dart';

@@ -6,6 +6,7 @@ import 'package:printing_press/view_model/orders/place_customize_order_view_mode
 import 'package:printing_press/views/rate_list/rate_list_view.dart';
 import 'package:printing_press/views/stock/add_stock_view.dart';
 import 'package:provider/provider.dart';
+
 import '../../colors/color_palette.dart';
 import '../../components/round_button.dart';
 import '../../view_model/orders/place_stock_order_view_model.dart';
@@ -545,10 +546,10 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 onChanged: (newVal) {
                                                   val2.selectedPaperSize =
                                                       newVal!;
-                                                  val2.selectedPaperSizePaperQualities
-                                                      .clear();
-                                                  val2.selectedPaperSizeIndexes
-                                                      .clear();
+                                                  val2.selectedPaperSizePaperQualities =
+                                                      [];
+                                                  val2.selectedPaperSizeIndexes =
+                                                      [];
                                                   // change the next dropdown according to the selected paper size
 
                                                   if (val2.selectedPaperSize ==
@@ -561,14 +562,15 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                             0];
                                                     debugPrint(
                                                         'Selected Paper Quality: ${val2.selectedPaperQuality}');
+                                                    val2.updateListener();
                                                   } else {
                                                     int index = 0;
                                                     for (var paper
                                                         in val2.papers) {
-                                                      // debugPrint(
-                                                      //     '\n selected Paper size : $selectedPaperSize');
-                                                      // debugPrint(
-                                                      //     'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
+                                                      debugPrint(
+                                                          '\n selected Paper size : ${val2.selectedPaperSize}');
+                                                      debugPrint(
+                                                          'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
                                                       if (val2.selectedPaperSize ==
                                                               '${paper.size.width} x ${paper.size.height}' ||
                                                           val2.selectedPaperSize ==
@@ -669,6 +671,10 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                       val4.booksQuantityC,
                                                   keyboardType:
                                                       TextInputType.number,
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly
+                                                  ],
                                                   cursorColor: kPrimeColor,
                                                   decoration: InputDecoration(
                                                     hintText: 'Books',
@@ -705,6 +711,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                             ),
                                           ],
                                         ),
+
                                         Row(
                                           children: [
                                             const Text('Paper Cutting'),
@@ -738,6 +745,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                             ),
                                           ],
                                         ),
+
                                         Row(
                                           children: [
                                             const Text('Unit'),
@@ -829,9 +837,15 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                           .selectedCopyVariant,
                                                       hint: val7
                                                           .selectedCopyVariant,
-                                                      onChanged: (newVal) =>
-                                                          val7.copyVariantOnChange!(
-                                                              newVal)),
+                                                      onChanged: (newVal) {
+                                                        val7.selectedCopyVariant =
+                                                            newVal!;
+                                                        val7.selectedCopyVariantIndex =
+                                                            val7.copyVariant
+                                                                .indexOf(val7
+                                                                    .selectedCopyVariant);
+                                                        val7.updateListener();
+                                                      }),
                                             ),
                                           ],
                                         ),
@@ -842,7 +856,9 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                             return const SizedBox.shrink();
                                           } else {
                                             return Column(
-                                              children: [
+                                              children: val.selectedCopyVariant ==
+                                                  'news'
+                                                  ? [
                                                 Row(
                                                   children: [
                                                     const Text('Copy Printing'),
@@ -862,9 +878,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         }),
                                                   ],
                                                 ),
-                                                val.selectedCopyVariant ==
-                                                        'news'
-                                                    ? Column(
+                                                Column(
                                                         children: [
                                                           Row(
                                                             children: [
@@ -989,14 +1003,14 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                                                 val10.newsPapers[val10.selectedNewsPaperSizeIndexes[val10.selectedNewsPaperSizePaperQualities.indexOf(val10.selectedNewsPaperQuality)]].rate;
                                                                             debugPrint('Rate of the selected News paper quality is : $rate');
                                                                           }
-                                                                        }),
+                                                                        },),
                                                               ),
                                                             ],
                                                           ),
                                                         ],
                                                       )
-                                                    : const SizedBox.shrink(),
-                                              ],
+
+                                              ] : [const SizedBox.shrink()],
                                             );
                                           }
                                         }),

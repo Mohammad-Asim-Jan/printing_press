@@ -253,6 +253,7 @@ class _AddStockViewState extends State<AddStockView> {
                                 loading: value.loading,
                                 onPress: () {
                                   ///todo: validations
+
                                   value.addStockInFirebase();
                                 },
                               ),

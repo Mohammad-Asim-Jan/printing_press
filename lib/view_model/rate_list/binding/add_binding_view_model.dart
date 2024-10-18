@@ -17,6 +17,8 @@ class AddBindingViewModel with ChangeNotifier {
   TextEditingController bindingNameC = TextEditingController();
   TextEditingController rateC = TextEditingController();
 
+  late String bindingName;
+  late int rate;
   addBindingInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
@@ -25,12 +27,13 @@ class AddBindingViewModel with ChangeNotifier {
       if (_formKey.currentState!.validate()) {
         ///todo: check if the quantity is null or zero, then don't update
         /// check if binding is already available
-
+        bindingName = bindingNameC.text.trim();
+        rate =int.tryParse(rateC.text.trim())!;
         QuerySnapshot bindingQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Binding')
-            .where('name', isEqualTo: bindingNameC.text.trim())
+            .where('name', isEqualTo: bindingName)
             .limit(1)
             .get();
 
@@ -80,8 +83,8 @@ class AddBindingViewModel with ChangeNotifier {
               .doc('BIND-$newBindingId')
               .set({
             'bindingId': newBindingId,
-            'name': bindingNameC.text.trim(),
-            'rate': int.tryParse(rateC.text.trim()) ?? 0,
+            'name': bindingName,
+            'rate': rate,
           }).then((value) async {
             Utils.showMessage('New Binding added');
             debugPrint('New binding added!!!!!!!!!!!!!!!!!');

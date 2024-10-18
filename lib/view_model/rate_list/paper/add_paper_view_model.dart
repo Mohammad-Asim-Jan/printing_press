@@ -21,6 +21,12 @@ class AddPaperViewModel with ChangeNotifier {
   TextEditingController qualityC = TextEditingController();
   TextEditingController rateC = TextEditingController();
 
+  late String paperName;
+  late int sizeWidth;
+  late int sizeHeight;
+  late int quality;
+  late int rate;
+
   addPaperInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
@@ -30,11 +36,17 @@ class AddPaperViewModel with ChangeNotifier {
         ///todo: check if the quantity is null or zero, then don't update
         /// check if paper is already available
 
+        paperName = paperNameC.text.trim();
+        sizeWidth = int.tryParse(sizeWidthC.text.trim())!;
+        sizeHeight = int.tryParse(sizeHeightC.text.trim())!;
+        quality = int.tryParse(qualityC.text.trim())!;
+        rate = int.tryParse(rateC.text.trim())!;
+
         QuerySnapshot paperQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Paper')
-            .where('name', isEqualTo: paperNameC.text.trim())
+            .where('name', isEqualTo: paperName)
             .limit(1)
             .get();
 
@@ -55,13 +67,13 @@ class AddPaperViewModel with ChangeNotifier {
               .doc('PAPER-$newPaperId')
               .set({
             'paperId': newPaperId,
-            'name': paperNameC.text.trim(),
+            'name': paperName,
             'size': {
-              'width': int.tryParse(sizeWidthC.text.trim()),
-              'height': int.tryParse(sizeHeightC.text.trim())
+              'width':sizeWidth,
+              'height': sizeHeight
             },
-            'quality': int.tryParse(qualityC.text.trim()),
-            'rate': int.tryParse(rateC.text.trim())
+            'quality': quality,
+            'rate':rate
           }).then((value) async {
             Utils.showMessage('New paper added');
             debugPrint('New paper added!!!!!!!!!!!!!!!!!');
@@ -84,8 +96,8 @@ class AddPaperViewModel with ChangeNotifier {
         .doc('RateList')
         .collection('Paper')
 
-        /// 0 is added so that the last paper id document appears to the top
-        /// because when we are getting the data, we ignore the first doc because it is always of id
+    /// 0 is added so that the last paper id document appears to the top
+    /// because when we are getting the data, we ignore the first doc because it is always of id
         .doc('0LastPaperId');
 
     final documentSnapshot = await documentRef.get();

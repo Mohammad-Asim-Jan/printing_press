@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/toast_message.dart';
 
-
 class AddProfitViewModel with ChangeNotifier {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
   String uid = FirebaseAuth.instance.currentUser!.uid;
@@ -19,6 +18,9 @@ class AddProfitViewModel with ChangeNotifier {
   TextEditingController profitNameC = TextEditingController();
   TextEditingController percentageC = TextEditingController();
 
+  late String profitName;
+  late int percentage;
+
   addProfitInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
@@ -28,11 +30,13 @@ class AddProfitViewModel with ChangeNotifier {
         ///todo: check if the quantity is null or zero, then don't update
         /// check if profit is already available
 
+        profitName = profitNameC.text.trim();
+        percentage = int.tryParse(percentageC.text.trim())!;
         QuerySnapshot profitQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Profit')
-            .where('name', isEqualTo: profitNameC.text.trim())
+            .where('name', isEqualTo: profitName)
             .limit(1)
             .get();
 
@@ -79,8 +83,8 @@ class AddProfitViewModel with ChangeNotifier {
               .doc('PROFIT-$newProfitId')
               .set({
             'profitId': newProfitId,
-            'name': profitNameC.text.trim(),
-            'percentage': int.tryParse(percentageC.text.trim()) ?? 0,
+            'name': profitName,
+            'percentage': percentage,
           }).then((value) async {
             Utils.showMessage('New Profit added');
             debugPrint('New Profit added!!!!!!!!!!!!!!!!!');

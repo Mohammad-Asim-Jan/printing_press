@@ -117,7 +117,7 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                 title: 'Add',
                 loading: value.loading,
                 onPress: () {
-                  ///todo: validations
+
                   value.addCashbookEntryInFirebase();
                 },
               ),

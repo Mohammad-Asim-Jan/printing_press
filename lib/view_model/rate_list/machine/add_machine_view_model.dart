@@ -21,6 +21,12 @@ class AddMachineViewModel with ChangeNotifier {
   TextEditingController plateRateC = TextEditingController();
   TextEditingController printingRateC = TextEditingController();
 
+  late String machineName;
+  late int sizeWidth;
+  late int sizeHeight;
+  late int plateRate;
+  late int printingRate;
+
   addMachineInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
@@ -30,11 +36,18 @@ class AddMachineViewModel with ChangeNotifier {
         ///todo: check if the quantity is null or zero, then don't update
         /// check if machine is already available
 
+        machineName = machineNameC.text.trim();
+        sizeWidth = int.tryParse(sizeWidthC.text.trim())!;
+        sizeHeight = int.tryParse(sizeHeightC.text.trim())!;
+        plateRate = int.tryParse(plateRateC.text.trim())!;
+        printingRate = int.tryParse(printingRateC.text.trim())!;
+
+
         QuerySnapshot machineQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Machine')
-            .where('name', isEqualTo: machineNameC.text.trim())
+            .where('name', isEqualTo: machineName)
             .limit(1)
             .get();
 
@@ -55,13 +68,13 @@ class AddMachineViewModel with ChangeNotifier {
               .doc('MAC-$newMachineId')
               .set({
             'machineId': newMachineId,
-            'name': machineNameC.text.trim(),
+            'name': machineName,
             'size': {
-              'width': int.tryParse(sizeWidthC.text.trim()),
-              'height': int.tryParse(sizeHeightC.text.trim())
+              'width': sizeWidth,
+              'height': sizeHeight
             },
-            'plateRate': int.tryParse(plateRateC.text.trim()),
-            'printingRate': int.tryParse(printingRateC.text.trim())
+            'plateRate': plateRate,
+            'printingRate': printingRate
           }).then((value) async {
             Utils.showMessage('New Machine added');
             debugPrint('New Machine added!!!!!!!!!!!!!!!!!');

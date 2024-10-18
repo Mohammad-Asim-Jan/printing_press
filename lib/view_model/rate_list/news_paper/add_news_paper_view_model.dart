@@ -21,6 +21,12 @@ class AddNewsPaperViewModel with ChangeNotifier {
   TextEditingController qualityC = TextEditingController();
   TextEditingController rateC = TextEditingController();
 
+  late String newsPaperName;
+  late int sizeWidth;
+  late int sizeHeight;
+  late int quality;
+  late int rate;
+
   addNewsPaperInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
@@ -30,11 +36,17 @@ class AddNewsPaperViewModel with ChangeNotifier {
         ///todo: check if the quantity is null or zero, then don't update
         /// check if newsPaper is already available
 
+        newsPaperName = newsPaperNameC.text.trim();
+        sizeWidth = int.tryParse(sizeWidthC.text.trim())!;
+        sizeHeight = int.tryParse(sizeHeightC.text.trim())!;
+        quality = int.tryParse(qualityC.text.trim())!;
+        rate = int.tryParse(rateC.text.trim())!;
+
         QuerySnapshot newsPaperQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('NewsPaper')
-            .where('name', isEqualTo: newsPaperNameC.text.trim())
+            .where('name', isEqualTo: newsPaperName)
             .limit(1)
             .get();
 
@@ -55,13 +67,10 @@ class AddNewsPaperViewModel with ChangeNotifier {
               .doc('NEWS-$newNewsPaperId')
               .set({
             'paperId': newNewsPaperId,
-            'name': newsPaperNameC.text.trim(),
-            'size': {
-              'width': int.tryParse(sizeWidthC.text.trim()),
-              'height': int.tryParse(sizeHeightC.text.trim())
-            },
-            'quality': int.tryParse(qualityC.text.trim()),
-            'rate': int.tryParse(rateC.text.trim())
+            'name': newsPaperName,
+            'size': {'width': sizeWidth, 'height': sizeHeight},
+            'quality': quality,
+            'rate': rate
           }).then((value) async {
             Utils.showMessage('New NewsPaper added');
             debugPrint('New NewsPaper added!!!!!!!!!!!!!!!!!');

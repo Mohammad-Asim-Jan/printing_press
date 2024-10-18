@@ -29,43 +29,47 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      maxLength: widget.maxLength,
-      controller: widget.controller,
-      keyboardType: widget.textInputType,
-      cursorColor: kPrimeColor,
-      inputFormatters: widget.inputFormatter == null
-          ? null
-          : <TextInputFormatter>[
-        widget.inputFormatter!,
-      ],
-      decoration: InputDecoration(
-        prefixIcon: Icon(
-          widget.iconData,
-          size: 24,
-        ),
-        hintText: widget.hint,
-        filled: true,
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(
-            width: 2,
-            color: kPrimeColor,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: TextFormField(
+        maxLength: widget.maxLength,
+        controller: widget.controller,
+        keyboardType: widget.textInputType,
+        cursorColor: kPrimeColor,
+        inputFormatters: widget.inputFormatter == null
+            ? null
+            : <TextInputFormatter>[
+          widget.inputFormatter!,
+        ],
+        decoration: InputDecoration(
+          labelText: 'Name',
+          prefixIcon: Icon(
+            widget.iconData,
+            size: 24,
+          ),
+          hintText: widget.hint,
+          filled: true,
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(
+              width: 2,
+              color: kPrimeColor,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: kSecColor,
+            ),
           ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: kSecColor,
-          ),
-        ),
+        validator: (text) {
+          if (text == '' || text == null) {
+            return widget.validatorText;
+          }
+          return null;
+        },
       ),
-      validator: (text) {
-        if (text == '' || text == null) {
-          return widget.validatorText;
-        }
-        return null;
-      },
     );
   }
 }

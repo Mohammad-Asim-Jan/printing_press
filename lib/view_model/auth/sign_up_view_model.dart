@@ -25,6 +25,9 @@ class SignUpViewModel with ChangeNotifier {
   TextEditingController emailC = TextEditingController();
   TextEditingController passwordC = TextEditingController();
 
+  late String email;
+  late String password;
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   setLoading(bool value) {
@@ -36,27 +39,27 @@ class SignUpViewModel with ChangeNotifier {
     setLoading(true);
     if (_formKey.currentState != null) {
       if (_formKey.currentState!.validate()) {
-        try {
-          await _auth
-              .createUserWithEmailAndPassword(
-            email: emailC.text.trim(),
-            password: passwordC.text.trim(),
-          )
-              .then((value) {
-            Utils.showMessage(_auth.currentUser!.email.toString());
-            // FirebaseFirestoreServices firestoreServices =
-            //     FirebaseFirestoreServices(auth: _auth);
-            // firestoreServices.initialData();
-            SignOut().signOut(context);
-            setLoading(false);
-          }).onError((error, stackTrace) {
-            Utils.showMessage(error.toString());
-            setLoading(false);
-          });
-        } catch (e) {
-          Utils.showMessage(e.toString());
+        email = emailC.text.trim();
+        password = passwordC.text.trim();
+
+        // try {
+        await _auth
+            .createUserWithEmailAndPassword(email: email, password: password)
+            .then((value) {
+          Utils.showMessage(_auth.currentUser!.email.toString());
+          // FirebaseFirestoreServices firestoreServices =
+          //     FirebaseFirestoreServices(auth: _auth);
+          // firestoreServices.initialData();
+          SignOut().signOut(context);
           setLoading(false);
-        }
+        }).onError((error, stackTrace) {
+          Utils.showMessage(error.toString());
+          setLoading(false);
+        });
+        // } catch (e) {
+        //   Utils.showMessage(e.toString());
+        //   setLoading(false);
+        // }
       } else {
         setLoading(false);
       }

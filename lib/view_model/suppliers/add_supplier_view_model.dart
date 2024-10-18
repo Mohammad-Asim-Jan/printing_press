@@ -22,6 +22,13 @@ class AddSupplierViewModel with ChangeNotifier {
   TextEditingController accountTypeC = TextEditingController();
   TextEditingController bankAccountNumberC = TextEditingController();
 
+  late String supplierName;
+  late int supplierPhoneNo;
+  late String supplierEmail;
+  late String supplierAddress;
+  late String accountType;
+  late String bankAccountNumber;
+
   addSupplierInFirebase() async {
     // updateListeners(true);
     /// scenarios: 1. Already exist 2. New Supplier
@@ -30,14 +37,19 @@ class AddSupplierViewModel with ChangeNotifier {
 
       if (_formKey.currentState!.validate()) {
         /// check if supplier is already available
+
+        supplierName = supplierNameC.text.trim();
+        supplierPhoneNo = int.tryParse(supplierPhoneNoC.text.trim())!;
+        supplierEmail = supplierEmailC.text.trim();
+        supplierAddress = supplierAddressC.text.trim();
+        accountType = accountTypeC.text.trim();
+        bankAccountNumber = bankAccountNumberC.text.trim();
+
         QuerySnapshot supplierQuerySnapshot = await fireStore
             .collection(uid)
             .doc('SuppliersData')
             .collection('Suppliers')
-            .where(
-              'supplierName',
-              isEqualTo: supplierNameC.text.trim(),
-            )
+            .where('supplierName', isEqualTo: supplierName)
             .limit(1)
             .get();
 
@@ -176,11 +188,10 @@ class AddSupplierViewModel with ChangeNotifier {
               .doc('SUP-$newSupplierId')
               .set({
             'supplierId': newSupplierId,
-            'supplierName': supplierNameC.text.trim(),
-            'supplierPhoneNo':
-                int.tryParse(supplierPhoneNoC.text.trim()) ?? 00000000000,
-            'supplierEmail': supplierEmailC.text.trim(),
-            'supplierAddress': supplierAddressC.text.trim(),
+            'supplierName': supplierName,
+            'supplierPhoneNo': supplierPhoneNo,
+            'supplierEmail': supplierEmail,
+            'supplierAddress': supplierAddress,
             'totalAmount': 0,
             'amountRemaining': 0,
             'totalPaidAmount': 0,
@@ -196,8 +207,8 @@ class AddSupplierViewModel with ChangeNotifier {
               'bankAccounts': [
                 {
                   'bankAccountNumberId': newBankAccountNumberId,
-                  'bankAccountNumber': bankAccountNumberC.text.trim(),
-                  'accountType': accountTypeC.text.trim(),
+                  'bankAccountNumber': bankAccountNumber,
+                  'accountType': accountType
                 }
               ]
             });
@@ -269,5 +280,4 @@ class AddSupplierViewModel with ChangeNotifier {
       documentRef.set({'bankAccountNumberId': newBankAccountNumberId});
     }
   }
-
 }

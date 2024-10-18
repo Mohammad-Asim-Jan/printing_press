@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class StockOrderHistoryViewModel with ChangeNotifier {
   // late bool dataFetched;
-  late List allStockOrderHistoryList;
+  List allStockOrderHistoryList = [];
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getStockHistoryData(int stockId) {
     return FirebaseFirestore.instance

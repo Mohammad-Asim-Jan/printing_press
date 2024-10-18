@@ -17,6 +17,9 @@ class AddNumberingViewModel with ChangeNotifier {
   TextEditingController numberingNameC = TextEditingController();
   TextEditingController rateC = TextEditingController();
 
+  late String numberingName;
+  late int rate;
+
   addNumberingInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
@@ -26,11 +29,14 @@ class AddNumberingViewModel with ChangeNotifier {
         ///todo: check if the quantity is null or zero, then don't update
         /// check if Numbering is already available
 
+        numberingName = numberingNameC.text.trim();
+        rate = int.tryParse(rateC.text.trim())!;
+
         QuerySnapshot numberingQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Numbering')
-            .where('name', isEqualTo: numberingNameC.text.trim())
+            .where('name', isEqualTo: numberingName)
             .limit(1)
             .get();
 
@@ -77,8 +83,8 @@ class AddNumberingViewModel with ChangeNotifier {
               .doc('NUM-$newNumberingId')
               .set({
             'numberingId': newNumberingId,
-            'name': numberingNameC.text.trim(),
-            'rate': int.tryParse(rateC.text.trim()) ?? 0,
+            'name': numberingName,
+            'rate': rate,
           }).then((value) async {
             Utils.showMessage('New Numbering added');
             debugPrint('New Numbering added!!!!!!!!!!!!!!!!!');

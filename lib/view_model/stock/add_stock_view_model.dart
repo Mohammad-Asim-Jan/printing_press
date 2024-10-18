@@ -33,8 +33,9 @@ class AddStockViewModel with ChangeNotifier {
   TextEditingController stockUnitBuyPriceC = TextEditingController();
   TextEditingController stockUnitSellPriceC = TextEditingController();
   TextEditingController stockQuantityC = TextEditingController();
-  TextEditingController stockSizeWidthC = TextEditingController();
-  TextEditingController stockSizeHeightC = TextEditingController();
+
+  // TextEditingController stockSizeWidthC = TextEditingController();
+  // TextEditingController stockSizeHeightC = TextEditingController();
   TextEditingController stockColorC = TextEditingController();
   TextEditingController stockManufacturedByC = TextEditingController();
 
@@ -44,6 +45,16 @@ class AddStockViewModel with ChangeNotifier {
   late String selectedSupplierName;
   late int selectedSupplierIndex;
   late List<int> suppliersIdList;
+
+  late String stockName;
+  late String stockCategory;
+  late String stockDescription;
+  late int stockUnitBuyPrice;
+  late int stockUnitSellPrice;
+  late int newStockQuantity;
+  late String stockColor;
+  late String stockManufacturedBy;
+  late Timestamp timeStamp;
 
   getAllSuppliersName() async {
     _dataFetched = false;
@@ -90,22 +101,36 @@ class AddStockViewModel with ChangeNotifier {
     }
   }
 
+  getDataFromTextFields() {
+    stockName = stockNameC.text.trim();
+    stockCategory = stockCategoryC.text.trim();
+    stockDescription = stockDescriptionC.text.trim();
+    stockUnitBuyPrice = int.tryParse(stockUnitBuyPriceC.text.trim())!;
+    stockUnitSellPrice = int.tryParse(stockUnitSellPriceC.text.trim())!;
+    stockColor = stockColorC.text.trim();
+    stockManufacturedBy = stockManufacturedByC.text.trim();
+    timeStamp = Timestamp.now();
+  }
+
   addStockInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
       updateListeners(true);
       if (_formKey.currentState!.validate()) {
         /// todo: checking if the quantity is zero, then don't update
-        if (int.tryParse(stockQuantityC.text.trim()) == 0) {
+        newStockQuantity = int.tryParse(stockQuantityC.text.trim())!;
+
+        if (newStockQuantity == 0) {
           Utils.showMessage('Quantity must be greater than 0');
           updateListeners(false);
         } else {
           /// todo: check if stock is already available
+          await getDataFromTextFields();
           QuerySnapshot stockQuerySnapshot = await firestore
               .collection(uid)
               .doc('StockData')
               .collection('AvailableStock')
-              .where('stockName', isEqualTo: stockNameC.text.trim())
+              .where('stockName', isEqualTo: stockName)
               .get();
 
           if (stockQuerySnapshot.docs.isNotEmpty) {
@@ -116,27 +141,19 @@ class AddStockViewModel with ChangeNotifier {
                 .collection(uid)
                 .doc('StockData')
                 .collection('AvailableStock')
-                .where('stockName', isEqualTo: stockNameC.text.trim())
-                .where('stockCategory', isEqualTo: stockCategoryC.text.trim())
-                .where('stockDescription',
-                    isEqualTo: stockDescriptionC.text.trim())
-                .where('stockUnitBuyPrice',
-                    isEqualTo:
-                        int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0)
-                .where('stockUnitSellPrice',
-                    isEqualTo: int.tryParse(stockUnitSellPriceC.text.trim()) ??
-                        int.tryParse(stockUnitBuyPriceC.text.trim()) ??
-                        1)
-                .where('stockColor', isEqualTo: stockColorC.text.trim())
-                .where('manufacturedBy',
-                    isEqualTo: stockManufacturedByC.text.trim())
+                .where('stockName', isEqualTo: stockName)
+                .where('stockCategory', isEqualTo: stockCategory)
+                .where('stockDescription', isEqualTo: stockDescription)
+                .where('stockUnitBuyPrice', isEqualTo: stockUnitBuyPrice)
+                .where('stockUnitSellPrice', isEqualTo: stockUnitSellPrice)
+                .where('stockColor', isEqualTo: stockColor)
+                .where('manufacturedBy', isEqualTo: stockManufacturedBy)
                 .where('supplierId',
                     isEqualTo: suppliersIdList[selectedSupplierIndex])
                 .limit(1)
                 .get();
             if (stockQuerySnapshot.docs.isNotEmpty) {
-              newTotalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 1) *
-                  (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 1);
+              newTotalAmount = newStockQuantity * stockUnitBuyPrice;
 
               // debugPrint('\n\nNew Total Amount: $newTotalAmount\n\n');
 
@@ -158,14 +175,10 @@ class AddStockViewModel with ChangeNotifier {
                   .doc('STOCK-$newStockId');
 
               await stockDocRef.update({
-                'stockDateAdded': Timestamp.now(),
-                'availableStock': previousAvailableStockQuantity +
-                    (int.tryParse(stockQuantityC.text.trim()) ?? 0),
-                'stockQuantity':
-                    int.tryParse(stockQuantityC.text.trim()) == null
-                        ? previousStockQuantity
-                        : int.tryParse(stockQuantityC.text.trim())! +
-                            previousStockQuantity,
+                'stockDateAdded': timeStamp,
+                'availableStock':
+                    previousAvailableStockQuantity + newStockQuantity,
+                'stockQuantity': newStockQuantity + previousStockQuantity,
                 'totalAmount': totalAmount,
               }).then((value) async {
                 ///todo: add an order history
@@ -183,15 +196,13 @@ class AddStockViewModel with ChangeNotifier {
                     .set({
                   'stockOrderId': newStockOrderId,
                   'stockId': newStockId,
-                  'stockName': stockNameC.text.trim(),
-                  'stockCategory': stockCategoryC.text.trim(),
-                  'stockUnitBuyPrice':
-                      int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
-                  'stockQuantity':
-                      int.tryParse(stockQuantityC.text.trim()) ?? 0,
+                  'stockName': stockName,
+                  'stockCategory': stockCategory,
+                  'stockUnitBuyPrice': stockUnitBuyPrice,
+                  'stockQuantity': newStockQuantity,
                   'totalAmount': newTotalAmount,
                   'supplierId': suppliersIdList[selectedSupplierIndex],
-                  'stockDateAdded': Timestamp.now(),
+                  'stockDateAdded': timeStamp,
                 });
 
                 /// todo: update the supplier total amount and remaining amount
@@ -226,14 +237,14 @@ class AddStockViewModel with ChangeNotifier {
               updateListeners(false);
             } else {
               Utils.showMessage('Change the stock name!');
+              updateListeners(false);
             }
           } else {
             /// todo: stock doesn't exist
             await setNewStockId();
             await setNewStockOrderId();
 
-            newTotalAmount = (int.tryParse(stockQuantityC.text.trim()) ?? 0) *
-                (int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0);
+            newTotalAmount = newStockQuantity * stockUnitBuyPrice;
 
             supplierId = suppliersIdList[selectedSupplierIndex];
 
@@ -245,22 +256,18 @@ class AddStockViewModel with ChangeNotifier {
                 .doc('STOCK-$newStockId')
                 .set({
               'stockId': newStockId,
-              'stockName': stockNameC.text.trim(),
-              'stockCategory': stockCategoryC.text.trim(),
-              'stockDescription': stockDescriptionC.text.trim(),
-              'availableStock': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-              'stockUnitBuyPrice':
-                  int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
-              'stockUnitSellPrice':
-                  int.tryParse(stockUnitSellPriceC.text.trim()) ??
-                      int.tryParse(stockUnitBuyPriceC.text.trim()) ??
-                      1,
-              'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
-              'stockColor': stockColorC.text.trim(),
-              'manufacturedBy': stockManufacturedByC.text.trim(),
+              'stockName': stockName,
+              'stockCategory': stockCategory,
+              'stockDescription': stockDescription,
+              'availableStock': newStockQuantity,
+              'stockUnitBuyPrice': stockUnitBuyPrice,
+              'stockUnitSellPrice': stockUnitSellPrice,
+              'stockQuantity': newStockQuantity,
+              'stockColor': stockColor,
+              'manufacturedBy': stockManufacturedBy,
               'totalAmount': newTotalAmount,
               'supplierId': supplierId,
-              'stockDateAdded': Timestamp.now()
+              'stockDateAdded': timeStamp
             }).then((value) async {
               /// todo: Adding the history of the stock
               await firestore
@@ -271,14 +278,13 @@ class AddStockViewModel with ChangeNotifier {
                   .set({
                 'stockOrderId': newStockOrderId,
                 'stockId': newStockId,
-                'stockName': stockNameC.text.trim(),
-                'stockCategory': stockCategoryC.text.trim(),
-                'stockUnitBuyPrice':
-                    int.tryParse(stockUnitBuyPriceC.text.trim()) ?? 0,
-                'stockQuantity': int.tryParse(stockQuantityC.text.trim()) ?? 0,
+                'stockName': stockName,
+                'stockCategory': stockCategory,
+                'stockUnitBuyPrice': stockUnitBuyPrice,
+                'stockQuantity': newStockQuantity,
                 'totalAmount': newTotalAmount,
                 'supplierId': supplierId,
-                'stockDateAdded': Timestamp.now(),
+                'stockDateAdded': timeStamp,
               }).then(
                 (value) async {
                   /// todo: update the supplier total amount

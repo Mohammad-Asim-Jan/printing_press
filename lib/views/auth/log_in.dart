@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/utils/email_validation.dart';
 import 'package:printing_press/view_model/auth/log_in_view_model.dart';
 import 'package:printing_press/views/auth/sign_up.dart';

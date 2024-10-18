@@ -17,6 +17,10 @@ class AddPaperCuttingViewModel with ChangeNotifier {
   TextEditingController paperCuttingNameC = TextEditingController();
   TextEditingController rateC = TextEditingController();
 
+
+  late String paperCuttingName;
+  late int rate;
+
   addPaperCuttingInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
@@ -26,11 +30,14 @@ class AddPaperCuttingViewModel with ChangeNotifier {
         ///todo: check if the quantity is null or zero, then don't update
         /// check if PaperCutting is already available
 
+        paperCuttingName = paperCuttingNameC.text.trim();
+        rate = int.tryParse(rateC.text.trim())!;
+
         QuerySnapshot bindingQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('PaperCutting')
-            .where('name', isEqualTo: paperCuttingNameC.text.trim())
+            .where('name', isEqualTo: paperCuttingName)
             .limit(1)
             .get();
 
@@ -79,8 +86,8 @@ class AddPaperCuttingViewModel with ChangeNotifier {
               .doc('PAP-CUT-$newPaperCuttingId')
               .set({
             'paperCuttingId': newPaperCuttingId,
-            'name': paperCuttingNameC.text.trim(),
-            'rate': int.tryParse(rateC.text.trim()) ?? 0,
+            'name': paperCuttingName,
+            'rate': rate,
           }).then((value) async {
             Utils.showMessage('New paperCutting added');
             debugPrint('New paperCutting added!!!!!!!!!!!!!!!!!');

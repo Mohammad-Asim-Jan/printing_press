@@ -50,8 +50,11 @@ class PaymentViewModel with ChangeNotifier {
       debugPrint('Form key is not null\n');
       updateListener(true);
       if (_formKey.currentState!.validate()) {
+        int amount = int.tryParse(amountC.text.trim())!;
+        String description = descriptionC.text.trim();
+        String paymentMethod = paymentMethodC.text.trim();
         debugPrint('Form key is valid\n');
-        Timestamp timestamp = Timestamp.now();
+        Timestamp timeStamp = Timestamp.now();
         await setNewStockOrderHistoryId();
 
         await setNewCashbookEntryId();
@@ -64,14 +67,14 @@ class PaymentViewModel with ChangeNotifier {
           'stockOrderId': newStockOrderId,
           'cashbookEntryId': newCashbookEntryId,
           'supplierId': supplierId,
-          'amount': int.tryParse(amountC.text.trim()),
-          'description': descriptionC.text.trim(),
+          'amount': amount,
+          'description': description,
           'paymentType': 'CASH-OUT',
 
           ///todo: do we need to have a bank ref?
           ///for supplier, there has to be a payment method dropdown
-          'paymentMethod': paymentMethodC.text.trim(),
-          'paymentDateTime': timestamp,
+          'paymentMethod': paymentMethod,
+          'paymentDateTime': timeStamp,
         }).then((value) async {
           Utils.showMessage('Supplier payment added !');
 
@@ -85,14 +88,14 @@ class PaymentViewModel with ChangeNotifier {
             'stockOrderId': newStockOrderId,
             'cashbookEntryId': newCashbookEntryId,
             'supplierId': supplierId,
-            'amount': int.tryParse(amountC.text.trim()),
-            'description': descriptionC.text.trim(),
+            'amount': amount,
+            'description': description,
             'paymentType': 'CASH-OUT',
 
             ///todo: do we need to have a bank ref?
             ///for supplier, there has to be a payment method dropdown
-            'paymentMethod': paymentMethodC.text.trim(),
-            'paymentDateTime': timestamp,
+            'paymentMethod': paymentMethod,
+            'paymentDateTime': timeStamp,
           }).then(
             (value) async {
               Utils.showMessage('Cashbook Entry added!');
@@ -114,9 +117,9 @@ class PaymentViewModel with ChangeNotifier {
 
               supplierRef.update({
                 'totalPaidAmount': supplierPreviousAmountPaid +
-                    int.tryParse(amountC.text.trim())!,
+                    amount,
                 'amountRemaining': supplierPreviousRemainingAmount -
-                    int.tryParse(amountC.text.trim())!
+                    amount
               }).then(
                 (value) {
                   Utils.showMessage('Supplier rem and paid amount updated!');

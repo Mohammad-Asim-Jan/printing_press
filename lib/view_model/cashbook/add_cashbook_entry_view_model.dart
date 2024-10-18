@@ -10,7 +10,6 @@ class AddCashbookEntryViewModel with ChangeNotifier {
 
   TextEditingController amountC = TextEditingController();
   TextEditingController descriptionC = TextEditingController();
-
   TextEditingController paymentMethodC = TextEditingController();
 
   get formKey => _formKey;
@@ -22,6 +21,11 @@ class AddCashbookEntryViewModel with ChangeNotifier {
   final uId = FirebaseAuth.instance.currentUser!.uid;
 
   String selectedPaymentType = 'CASH-OUT';
+
+  late Timestamp timeStamp;
+  late int amount;
+  late String description;
+  late String paymentMethod;
 
   changePaymentTypeDropdown(String? newVal) {
     if (newVal != null) {
@@ -36,6 +40,10 @@ class AddCashbookEntryViewModel with ChangeNotifier {
     if (_formKey.currentState != null) {
       updateListeners(true);
       if (_formKey.currentState!.validate()) {
+        amount = int.tryParse(amountC.text.trim())!;
+        description = descriptionC.text.trim();
+        paymentMethod = paymentMethodC.text.trim();
+        timeStamp = Timestamp.now();
         await setNewCashbookEntryId();
         await FirebaseFirestore.instance
             .collection(uId)
@@ -44,11 +52,11 @@ class AddCashbookEntryViewModel with ChangeNotifier {
             .doc(newCashbookEntryId.toString())
             .set({
           'cashbookEntryId': newCashbookEntryId,
-          'paymentDateTime': Timestamp.now(),
-          'amount': int.tryParse(amountC.text.trim()),
-          'description': descriptionC.text.trim(),
+          'paymentDateTime': timeStamp,
+          'amount': amount,
+          'description': description,
           'paymentType': selectedPaymentType,
-          'paymentMethod': paymentMethodC.text.trim(),
+          'paymentMethod': paymentMethod,
         }).then(
           (value) {
             Utils.showMessage('Entry Added Successfully!');

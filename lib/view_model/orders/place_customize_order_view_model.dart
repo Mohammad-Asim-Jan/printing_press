@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,10 +20,8 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   Map<String, dynamic>? data;
 
   bool _customOrderDataFetched = false;
-
   get customOrderDataFetched => _customOrderDataFetched;
   bool _dataFound = false;
-
   get dataFound => _dataFound;
 
   // design
@@ -125,10 +122,18 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   /// profit
   // carriage to hangu
   // result = paper quantity depends on cutting + carriage +
+  List<Binding> bindings = [];
+  List<Design> designs = [];
+  List<Machine> machines = [];
+  List<Paper> newsPapers = [];
+  List<Numbering> numberings = [];
+  List<Paper> papers = [];
+  List<PaperCutting> paperCuttings = [];
+  List<Profit> profits = [];
 
   checkData() async {
-    await fetchData();
-    List<List<dynamic>> lists = [
+    List<List<dynamic>> lists = [];
+    lists = [
       bindings,
       designs,
       machines,
@@ -138,44 +143,37 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
       paperCuttings,
       profits
     ];
+    if (lists.any((element) => element.isEmpty)) {
+      await fetchData();
+      if (lists.any((element) => element.isNotEmpty) && _customOrderDataFetched) {
+        debugPrint('data is not null anymore...');
+        // setFirebaseDataLocally();
 
-    if (!lists.any((element) => element.isEmpty) && _customOrderDataFetched) {
-      debugPrint('data is not null anymore...');
-      // setFirebaseDataLocally();
+        ///todo: if there is any element empty (like design, paper etc),
+        ///it will always shows progress indicator on the view,
+        ///this is a problem that need to be solved
+        setDesignData();
+        setPaperSizeData();
+        setPaperQualityData();
+        setPaperCuttingData();
+        setBasicCuttingUnit();
+        setCopyVariants();
+        setBindingData();
+        setNewsPaperSizeData();
+        setNewsPaperQualityData();
+        setNumberingData();
+        setBackSide();
 
-      ///todo: if there is any element empty (like design, paper etc),
-      ///it will always shows progress indicator on the view,
-      ///this is a problem that need to be solved
-      setDesignData();
-      setPaperSizeData();
-      setPaperQualityData();
-      setPaperCuttingData();
-      setBasicCuttingUnit();
-      setCopyVariants();
-      setBindingData();
-      setNewsPaperSizeData();
-      setNewsPaperQualityData();
-      setNumberingData();
-      setBackSide();
-
-      _dataFound = true;
-      updateListener();
-    } else {
-      ///todo: let the user know that there is something not set
-      ///for ex if there is no design or binding or anything, then show the user that go to add some
-      debugPrint('data is null');
-      updateListener();
+        _dataFound = true;
+        updateListener();
+      } else {
+        ///todo: let the user know that there is something not set
+        ///for ex if there is no design or binding or anything, then show the user that go to add some
+        debugPrint('data is null');
+        updateListener();
+      }
     }
   }
-
-  List<Binding> bindings = [];
-  List<Design> designs = [];
-  List<Machine> machines = [];
-  List<Paper> newsPapers = [];
-  List<Numbering> numberings = [];
-  List<Paper> papers = [];
-  List<PaperCutting> paperCuttings = [];
-  List<Profit> profits = [];
 
   fetchData() async {
     List<String> subCollectionNames = [
@@ -239,6 +237,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   }
 
   setDesignData() {
+    designNames = [];
     designNames.add('none');
     // design
     for (var design in designs) {
@@ -249,6 +248,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   }
 
   setPaperSizeData() {
+    paperSizes = [];
     paperSizes.add('none');
     // paper size
     for (var paper in papers) {
@@ -266,6 +266,8 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   setPaperQualityData() {
     /// todo: change the list when select any other. use set state or do it through providers
     int index = 0;
+    selectedPaperSizePaperQualities = [];
+    selectedPaperSizeIndexes = [];
     if (selectedPaperSize == 'none') {
       selectedPaperSizePaperQualities.add('none');
     } else {
@@ -301,6 +303,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   }
 
   setPaperCuttingData() {
+    paperCuttingNames = [];
     paperCuttingNames.add('none');
     for (var paperCutting in paperCuttings) {
       paperCuttingNames.add(paperCutting.name);
@@ -311,6 +314,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   }
 
   setBasicCuttingUnit() {
+    basicCuttingUnitsList = [];
     basicCuttingUnitsList.add('none');
     for (String a
         in basicCuttingUnits.map((e) => "1/${e.toString()}").toList()) {
@@ -325,7 +329,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     copyVariant = ['news', 'none', 'dup', 'trip'];
     selectedCopyVariant = 'none';
     selectedCopyVariantIndex = 1;
-    setCopyVariantOnChange();
+    // setCopyVariantOnChange();
   }
 
   setCopyVariantOnChange() {
@@ -337,6 +341,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   }
 
   setNewsPaperSizeData() {
+    newsPaperSizes = [];
     newsPaperSizes.add('none');
     // paper size
     for (var news in newsPapers) {
@@ -356,6 +361,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   setNewsPaperQualityData() {
     /// todo: change the list when select any other. use set state or do it through providers
 
+    selectedNewsPaperSizePaperQualities = [];
     if (selectedNewsPaperSize == 'none') {
       selectedNewsPaperSizePaperQualities.add('none');
     }
@@ -398,6 +404,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   }
 
   setBindingData() {
+    bindingNames = [];
     bindingNames.add('none');
     for (var binding in bindings) {
       bindingNames.add(binding.name);
@@ -415,6 +422,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   }
 
   setNumberingData() {
+    numberingNames = [];
     numberingNames.add('none');
     for (var numbering in numberings) {
       numberingNames.add(numbering.name);

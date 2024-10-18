@@ -17,6 +17,9 @@ class AddDesignViewModel with ChangeNotifier {
   TextEditingController designNameC = TextEditingController();
   TextEditingController rateC = TextEditingController();
 
+  late String designName;
+  late int rate;
+
   addDesignInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
@@ -26,11 +29,14 @@ class AddDesignViewModel with ChangeNotifier {
         ///todo: check if the quantity is null or zero, then don't update
         /// check if design is already available
 
+        designName = designNameC.text.trim();
+        rate = int.tryParse(rateC.text.trim())!;
+
         QuerySnapshot designQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Design')
-            .where('name', isEqualTo: designNameC.text.trim())
+            .where('name', isEqualTo: designName)
             .limit(1)
             .get();
 
@@ -77,8 +83,8 @@ class AddDesignViewModel with ChangeNotifier {
               .doc('DES-$newDesignId')
               .set({
             'designId': newDesignId,
-            'name': designNameC.text.trim(),
-            'rate': int.tryParse(rateC.text.trim()) ?? 0,
+            'name': designName,
+            'rate': rate,
           }).then((value) async {
             Utils.showMessage('New Design added');
             debugPrint('New Design added!!!!!!!!!!!!!!!!!');
