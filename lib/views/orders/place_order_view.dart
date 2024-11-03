@@ -19,8 +19,8 @@ class PlaceOrderView extends StatefulWidget {
 }
 
 class _PlaceOrderViewState extends State<PlaceOrderView> {
-  late final PlaceStockOrderViewModel placeStockOrderViewModel;
   late final PlaceCustomizeOrderViewModel placeCustomizeOrderViewModel;
+  late final PlaceStockOrderViewModel placeStockOrderViewModel;
 
   @override
   void initState() {
@@ -499,6 +499,63 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
                                       child: Column(children: [
+                                        // customerName
+                                        /// text field
+                                        Consumer<PlaceCustomizeOrderViewModel>(
+                                          builder: (context, val1, child) {
+                                            return CustomTextField(
+                                                controller: val1.customerNameC,
+                                                iconData: Icons.person,
+                                                hint: 'Customer name',
+                                                validatorText:
+                                                    'Provide customer name');
+                                          },
+                                        ),
+
+                                        // businessTitle
+                                        /// text field
+                                        Consumer<PlaceCustomizeOrderViewModel>(
+                                          builder: (context, val2, child) {
+                                            return CustomTextField(
+                                                controller: val2.businessTitleC,
+                                                iconData: Icons.business,
+                                                hint: 'Business name',
+                                                validatorText:
+                                                    'Provide business name');
+                                          },
+                                        ),
+
+                                        // customerContact
+                                        /// text field number only
+                                        Consumer<PlaceCustomizeOrderViewModel>(
+                                          builder: (context, val3, child) {
+                                            return CustomTextField(
+                                                maxLength: 11,
+                                                textInputType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    val3.customerContactC,
+                                                inputFormatter:
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                iconData: Icons.phone,
+                                                hint: 'Contact',
+                                                validatorText:
+                                                    'Provide customer phone no.');
+                                          },
+                                        ),
+
+                                        // customerAddress
+                                        /// text field
+                                        Consumer<PlaceCustomizeOrderViewModel>(
+                                            builder: (context, val4, child) {
+                                          return CustomTextField(
+                                              controller: val4.customerAddressC,
+                                              iconData: Icons.home_filled,
+                                              hint: 'Address',
+                                              validatorText:
+                                                  'Provide customer address');
+                                        }),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
@@ -552,39 +609,39 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                       [];
                                                   // change the next dropdown according to the selected paper size
 
-                                                  if (val2.selectedPaperSize ==
-                                                      'none') {
-                                                    val2.selectedPaperSizePaperQualities
-                                                        .add('none');
-
-                                                    val2.selectedPaperQuality =
-                                                        val2.selectedPaperSizePaperQualities[
-                                                            0];
+                                                  // if (val2.selectedPaperSize ==
+                                                  //     'none') {
+                                                  //   val2.selectedPaperSizePaperQualities
+                                                  //       .add('none');
+                                                  //
+                                                  //   val2.selectedPaperQuality =
+                                                  //       val2.selectedPaperSizePaperQualities[
+                                                  //           0];
+                                                  //   debugPrint(
+                                                  //       'Selected Paper Quality: ${val2.selectedPaperQuality}');
+                                                  //   val2.updateListener();
+                                                  // } else {
+                                                  int index = 0;
+                                                  for (var paper
+                                                      in val2.papers) {
                                                     debugPrint(
-                                                        'Selected Paper Quality: ${val2.selectedPaperQuality}');
-                                                    val2.updateListener();
-                                                  } else {
-                                                    int index = 0;
-                                                    for (var paper
-                                                        in val2.papers) {
+                                                        '\n selected Paper size : ${val2.selectedPaperSize}');
+                                                    debugPrint(
+                                                        'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
+                                                    if (val2.selectedPaperSize ==
+                                                            '${paper.size.width} x ${paper.size.height}' ||
+                                                        val2.selectedPaperSize ==
+                                                            '${paper.size.height} x ${paper.size.width}') {
+                                                      val2.selectedPaperSizePaperQualities
+                                                          .add(
+                                                              '${paper.quality}');
+                                                      val2.selectedPaperSizeIndexes
+                                                          .add(index);
                                                       debugPrint(
-                                                          '\n selected Paper size : ${val2.selectedPaperSize}');
-                                                      debugPrint(
-                                                          'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
-                                                      if (val2.selectedPaperSize ==
-                                                              '${paper.size.width} x ${paper.size.height}' ||
-                                                          val2.selectedPaperSize ==
-                                                              '${paper.size.height} x ${paper.size.width}') {
-                                                        val2.selectedPaperSizePaperQualities
-                                                            .add(
-                                                                '${paper.quality}');
-                                                        val2.selectedPaperSizeIndexes
-                                                            .add(index);
-                                                        debugPrint(
-                                                            'paper quality added of index $index');
-                                                      }
-                                                      index++;
+                                                          'paper quality added of index $index');
                                                     }
+                                                    index++;
+                                                    // }
 
                                                     debugPrint(
                                                         'Paper size indexes : ${val2.selectedPaperSizeIndexes}');
@@ -638,18 +695,18 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         debugPrint(
                                                             'All selected Paper size indexes... : ${val3.selectedPaperSizeIndexes}\n\n\n');
 
-                                                        if (val3.selectedPaperQuality !=
-                                                            'none') {
-                                                          // rate of the selected paper size, selected paper quality
-                                                          int rate = val3
-                                                              .papers[val3.selectedPaperSizeIndexes[val3
-                                                                  .selectedPaperSizePaperQualities
-                                                                  .indexOf(val3
-                                                                      .selectedPaperQuality)]]
-                                                              .rate;
-                                                          debugPrint(
-                                                              'Rate of the selected paper quality is : $rate');
-                                                        }
+                                                        // if (val3.selectedPaperQuality !=
+                                                        // 'none') {
+                                                        // rate of the selected paper size, selected paper quality
+                                                        int rate = val3
+                                                            .papers[val3.selectedPaperSizeIndexes[val3
+                                                                .selectedPaperSizePaperQualities
+                                                                .indexOf(val3
+                                                                    .selectedPaperQuality)]]
+                                                            .rate;
+                                                        debugPrint(
+                                                            'Rate of the selected paper quality is : $rate');
+                                                        // }
                                                       }),
                                             ),
                                           ],
@@ -711,7 +768,63 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                             ),
                                           ],
                                         ),
-
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            const Text('Pages per book'),
+                                            SizedBox(
+                                              height: 60,
+                                              width: 150,
+                                              child: Consumer<
+                                                  PlaceCustomizeOrderViewModel>(
+                                                builder:
+                                                    (context, val0, child) =>
+                                                        TextFormField(
+                                                  controller:
+                                                      val0.pagesPerBookC,
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly
+                                                  ],
+                                                  cursorColor: kPrimeColor,
+                                                  decoration: InputDecoration(
+                                                    hintText: 'Pages per book',
+                                                    filled: true,
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      borderSide: BorderSide(
+                                                        width: 2,
+                                                        color: kPrimeColor,
+                                                      ),
+                                                    ),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      borderSide: BorderSide(
+                                                        color: kSecColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  validator: (text) {
+                                                    if (text == '' ||
+                                                        text == null) {
+                                                      return 'Please provide pages per book';
+                                                    }
+                                                    return null;
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                         Row(
                                           children: [
                                             const Text('Paper Cutting'),
@@ -739,13 +852,12 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                               "No paper cutting");
                                                         } else {
                                                           debugPrint(
-                                                              'Paper cutting Rate: ${val5.paperCuttings[val5.selectedPaperCuttingIndex - 1].rate}');
+                                                              'Paper cutting Rate: ${val5.paperCuttings[val5.selectedPaperCuttingIndex].rate}');
                                                         }
                                                       }),
                                             ),
                                           ],
                                         ),
-
                                         Row(
                                           children: [
                                             const Text('Unit'),
@@ -765,25 +877,28 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         newVal!;
                                                     debugPrint(
                                                         'New value is $newVal');
-                                                    if (val6.selectedBasicCuttingUnit ==
-                                                        'none') {
-                                                      val6.selectedBasicCuttingUnitIndex =
-                                                          0;
-                                                      debugPrint(
-                                                          'No cutting unit');
-                                                    } else {
-                                                      val6.selectedBasicCuttingUnitIndex =
-                                                          val6.basicCuttingUnitsList
-                                                              .indexOf(newVal);
+                                                    // if (val6.selectedBasicCuttingUnit ==
+                                                    //     'none') {
+                                                    //   val6.selectedBasicCuttingUnitIndex =
+                                                    //       0;
+                                                    //   debugPrint(
+                                                    //       'No cutting unit');
+                                                    // } else {
+                                                    val6.selectedBasicCuttingUnitIndex =
+                                                        val6.basicCuttingUnitsList
+                                                            .indexOf(newVal);
 
-                                                      int? cuttingUnit =
-                                                          int.tryParse(val6
-                                                              .selectedBasicCuttingUnit
-                                                              .substring(2));
+                                                    int? cuttingUnit =
+                                                        int.tryParse(val6
+                                                            .selectedBasicCuttingUnit
+                                                            .substring(2));
 
-                                                      debugPrint(
-                                                          "Selected basic cutting unit (int): $cuttingUnit");
-                                                    }
+                                                    debugPrint(
+                                                        "Selected basic cutting unit: $cuttingUnit");
+                                                    debugPrint(
+                                                        "Selected basic cutting unit (int): ${val6.basicCuttingUnits[val6.selectedBasicCuttingUnitIndex]}");
+
+                                                    // }
 
                                                     debugPrint(
                                                         'Index of basic paper cutting is ${val6.selectedBasicCuttingUnitIndex}');
@@ -832,7 +947,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 PlaceCustomizeOrderViewModel>(
                                               builder: (context, val7, child) =>
                                                   CustomDropDown(
-                                                      list: val7.copyVariant,
+                                                      list:
+                                                          val7.copyVariantNames,
                                                       value: val7
                                                           .selectedCopyVariant,
                                                       hint: val7
@@ -840,10 +956,10 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                       onChanged: (newVal) {
                                                         val7.selectedCopyVariant =
                                                             newVal!;
-                                                        val7.selectedCopyVariantIndex =
-                                                            val7.copyVariant
-                                                                .indexOf(val7
-                                                                    .selectedCopyVariant);
+                                                        val7.selectedCopyVariantIndex = val7
+                                                            .copyVariantNames
+                                                            .indexOf(val7
+                                                                .selectedCopyVariant);
                                                         val7.updateListener();
                                                       }),
                                             ),
@@ -854,164 +970,263 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           if (val.selectedCopyVariant ==
                                               'none') {
                                             return const SizedBox.shrink();
-                                          } else {
+                                          } else if (val.selectedCopyVariant ==
+                                              'news') {
+                                            return Column(children: [
+                                              Row(
+                                                children: [
+                                                  const Text('Copy Printing'),
+                                                  CustomDropDown(
+                                                      list: val8.copyPrint,
+                                                      value: val8
+                                                          .selectedCopyPrint,
+                                                      hint: val8
+                                                          .selectedCopyPrint,
+                                                      onChanged: (newVal) {
+                                                        val8.selectedCopyPrint =
+                                                            newVal!;
+                                                        val8.selectedCopyPrintIndex =
+                                                            val8.copyPrint
+                                                                .indexOf(val8
+                                                                    .selectedCopyPrint);
+                                                      }),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text('News Size'),
+                                                  Consumer<
+                                                      PlaceCustomizeOrderViewModel>(
+                                                    builder: (context, val9,
+                                                            child) =>
+                                                        CustomDropDown(
+                                                      list: val9.newsPaperSizes,
+                                                      value: val9
+                                                          .selectedNewsPaperSize,
+                                                      hint: val9
+                                                          .selectedNewsPaperSize,
+                                                      onChanged: (newVal) {
+                                                        val9.selectedNewsPaperSize =
+                                                            newVal!;
+                                                        val9.selectedNewsPaperSizePaperQualities
+                                                            .clear();
+                                                        val9.selectedNewsPaperSizeIndexes
+                                                            .clear();
+                                                        // change the next dropdown according to the selected news paper size
+
+                                                        if (newVal == 'none') {
+                                                          val9.selectedNewsPaperSizePaperQualities
+                                                              .add('none');
+
+                                                          val9.selectedNewsPaperQuality =
+                                                              val9.selectedNewsPaperSizePaperQualities[
+                                                                  0];
+                                                          debugPrint(
+                                                              'Selected News Paper Quality: ${val9.selectedNewsPaperQuality}');
+                                                        } else {
+                                                          int index = 0;
+                                                          for (var news in val9
+                                                              .newsPapers) {
+                                                            // debugPrint(
+                                                            //     '\n selected news Paper size : $selectedNewsPaperSize');
+                                                            // debugPrint(
+                                                            //     'checking the news paper size in firebase: ${news.size.width} x ${news.size.height}');
+                                                            if (newVal ==
+                                                                    '${news.size.width} x ${news.size.height}' ||
+                                                                newVal ==
+                                                                    '${news.size.height} x ${news.size.width}') {
+                                                              val9.selectedNewsPaperSizePaperQualities
+                                                                  .add(
+                                                                      '${news.quality}');
+                                                              val9.selectedNewsPaperSizeIndexes
+                                                                  .add(index);
+                                                              debugPrint(
+                                                                  'news paper quality added of index $index');
+                                                            }
+                                                            index++;
+                                                          }
+
+                                                          debugPrint(
+                                                              'News Paper size indexes : ${val9.selectedNewsPaperSizeIndexes}');
+                                                          debugPrint(
+                                                              'News Paper Qualities: ${val9.selectedNewsPaperSizePaperQualities}');
+                                                          val9.selectedNewsPaperQuality =
+                                                              val9.selectedNewsPaperSizePaperQualities[
+                                                                  0];
+                                                          debugPrint(
+                                                              'Selected News Paper Quality: ${val9.selectedNewsPaperQuality}');
+
+                                                          // rate of the selected News paper size, selected News paper quality
+                                                          int rate = val9
+                                                              .newsPapers[val9
+                                                                      .selectedNewsPaperSizeIndexes[
+                                                                  val9.selectedNewsPaperSizePaperQualities
+                                                                      .indexOf(val9
+                                                                          .selectedNewsPaperQuality)]]
+                                                              .rate;
+                                                          debugPrint(
+                                                              'Rate of the selected news paper quality is : $rate');
+                                                        }
+                                                        val9.updateListener();
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  const Text('News Quality'),
+                                                  Consumer<
+                                                      PlaceCustomizeOrderViewModel>(
+                                                    builder: (context, val10,
+                                                            child) =>
+                                                        CustomDropDown(
+                                                      list: val10
+                                                          .selectedNewsPaperSizePaperQualities,
+                                                      value: val10
+                                                          .selectedNewsPaperQuality,
+                                                      hint: val10
+                                                          .selectedNewsPaperQuality,
+                                                      onChanged: (newVal) {
+                                                        val10.selectedNewsPaperQuality =
+                                                            newVal!;
+
+                                                        debugPrint(
+                                                            '\n\n\nSelected News Paper size... : ${val10.selectedNewsPaperSize}');
+                                                        debugPrint(
+                                                            'All News Paper Qualities... : ${val10.selectedNewsPaperSizePaperQualities}');
+                                                        debugPrint(
+                                                            'Selected News Paper quality... : ${val10.selectedNewsPaperQuality}');
+                                                        debugPrint(
+                                                            'All selected News Paper size indexes... : ${val10.selectedNewsPaperSizeIndexes}\n\n\n');
+
+                                                        if (val10
+                                                                .selectedNewsPaperQuality !=
+                                                            'none') {
+                                                          // rate of the selected News paper size, selected News paper quality
+                                                          int rate = val10
+                                                              .newsPapers[val10
+                                                                      .selectedNewsPaperSizeIndexes[
+                                                                  val10
+                                                                      .selectedNewsPaperSizePaperQualities
+                                                                      .indexOf(val10
+                                                                          .selectedNewsPaperQuality)]]
+                                                              .rate;
+                                                          debugPrint(
+                                                              'Rate of the selected News paper quality is : $rate');
+                                                        }
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ]);
+                                          } else if (val.selectedCopyVariant ==
+                                              'carbon') {
                                             return Column(
-                                              children: val.selectedCopyVariant ==
-                                                  'news'
-                                                  ? [
+                                              children: [
                                                 Row(
                                                   children: [
-                                                    const Text('Copy Printing'),
-                                                    CustomDropDown(
-                                                        list: val8.copyPrint,
-                                                        value: val8
-                                                            .selectedCopyPrint,
-                                                        hint: val8
-                                                            .selectedCopyPrint,
-                                                        onChanged: (newVal) {
-                                                          val8.selectedCopyPrint =
-                                                              newVal!;
-                                                          val8.selectedCopyPrintIndex =
-                                                              val8.copyPrint
-                                                                  .indexOf(val8
-                                                                      .selectedCopyPrint);
-                                                        }),
+                                                    const Text(
+                                                        'Variant Quality'),
+                                                    Consumer<
+                                                        PlaceCustomizeOrderViewModel>(
+                                                      builder: (context, val3,
+                                                              child) =>
+                                                          CustomDropDown(
+                                                              list: val3
+                                                                  .selectedPaperSizePaperQualities,
+                                                              value: val3
+                                                                  .selectedCopyVariantPaperQuality,
+                                                              hint: val3
+                                                                  .selectedCopyVariantPaperQuality,
+                                                              onChanged:
+                                                                  (newVal) {
+                                                                val3.selectedCopyVariantPaperQuality =
+                                                                    newVal!;
+
+                                                                debugPrint(
+                                                                    '\n\n\nSelected Paper size... : ${val3.selectedPaperSize}');
+                                                                debugPrint(
+                                                                    'All Paper Qualities... : ${val3.selectedPaperSizePaperQualities}');
+                                                                debugPrint(
+                                                                    'Selected variant Paper quality... : ${val3.selectedCopyVariantPaperQuality}');
+                                                                debugPrint(
+                                                                    'All selected Paper size indexes... : ${val3.selectedPaperSizeIndexes}\n\n\n');
+
+                                                                // if (val3.selectedPaperQuality !=
+                                                                // 'none') {
+                                                                // rate of the selected paper size, selected paper quality
+                                                                int rate = val3
+                                                                    .papers[val3.selectedPaperSizeIndexes[val3
+                                                                        .selectedPaperSizePaperQualities
+                                                                        .indexOf(
+                                                                            val3.selectedCopyVariantPaperQuality)]]
+                                                                    .rate;
+                                                                debugPrint(
+                                                                    'Rate of the selected paper variant quality is : $rate');
+                                                                // }
+                                                              }),
+                                                    ),
                                                   ],
                                                 ),
-                                                Column(
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              const Text(
-                                                                  'News Size'),
-                                                              Consumer<
-                                                                  PlaceCustomizeOrderViewModel>(
-                                                                builder: (context,
-                                                                        val9,
-                                                                        child) =>
-                                                                    CustomDropDown(
-                                                                  list: val9
-                                                                      .newsPaperSizes,
-                                                                  value: val9
-                                                                      .selectedNewsPaperSize,
-                                                                  hint: val9
-                                                                      .selectedNewsPaperSize,
-                                                                  onChanged:
-                                                                      (newVal) {
-                                                                    val9.selectedNewsPaperSize =
-                                                                        newVal!;
-                                                                    val9.selectedNewsPaperSizePaperQualities
-                                                                        .clear();
-                                                                    val9.selectedNewsPaperSizeIndexes
-                                                                        .clear();
-                                                                    // change the next dropdown according to the selected news paper size
-
-                                                                    if (newVal ==
-                                                                        'none') {
-                                                                      val9.selectedNewsPaperSizePaperQualities
-                                                                          .add(
-                                                                              'none');
-
-                                                                      val9.selectedNewsPaperQuality =
-                                                                          val9.selectedNewsPaperSizePaperQualities[
-                                                                              0];
-                                                                      debugPrint(
-                                                                          'Selected News Paper Quality: ${val9.selectedNewsPaperQuality}');
-                                                                    } else {
-                                                                      int index =
-                                                                          0;
-                                                                      for (var news
-                                                                          in val9
-                                                                              .newsPapers) {
-                                                                        // debugPrint(
-                                                                        //     '\n selected news Paper size : $selectedNewsPaperSize');
-                                                                        // debugPrint(
-                                                                        //     'checking the news paper size in firebase: ${news.size.width} x ${news.size.height}');
-                                                                        if (newVal ==
-                                                                                '${news.size.width} x ${news.size.height}' ||
-                                                                            newVal ==
-                                                                                '${news.size.height} x ${news.size.width}') {
-                                                                          val9.selectedNewsPaperSizePaperQualities
-                                                                              .add('${news.quality}');
-                                                                          val9.selectedNewsPaperSizeIndexes
-                                                                              .add(index);
-                                                                          debugPrint(
-                                                                              'news paper quality added of index $index');
-                                                                        }
-                                                                        index++;
-                                                                      }
-
-                                                                      debugPrint(
-                                                                          'News Paper size indexes : ${val9.selectedNewsPaperSizeIndexes}');
-                                                                      debugPrint(
-                                                                          'News Paper Qualities: ${val9.selectedNewsPaperSizePaperQualities}');
-                                                                      val9.selectedNewsPaperQuality =
-                                                                          val9.selectedNewsPaperSizePaperQualities[
-                                                                              0];
-                                                                      debugPrint(
-                                                                          'Selected News Paper Quality: ${val9.selectedNewsPaperQuality}');
-
-                                                                      // rate of the selected News paper size, selected News paper quality
-                                                                      int rate = val9
-                                                                          .newsPapers[val9.selectedNewsPaperSizeIndexes[val9
-                                                                              .selectedNewsPaperSizePaperQualities
-                                                                              .indexOf(val9.selectedNewsPaperQuality)]]
-                                                                          .rate;
-                                                                      debugPrint(
-                                                                          'Rate of the selected news paper quality is : $rate');
-                                                                    }
-                                                                    val9.updateListener();
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              const Text(
-                                                                  'News Quality'),
-                                                              Consumer<
-                                                                  PlaceCustomizeOrderViewModel>(
-                                                                builder: (context,
-                                                                        val10,
-                                                                        child) =>
-                                                                    CustomDropDown(
-                                                                        list: val10
-                                                                            .selectedNewsPaperSizePaperQualities,
-                                                                        value: val10
-                                                                            .selectedNewsPaperQuality,
-                                                                        hint: val10
-                                                                            .selectedNewsPaperQuality,
-                                                                        onChanged:
-                                                                            (newVal) {
-                                                                          val10.selectedNewsPaperQuality =
-                                                                              newVal!;
-
-                                                                          debugPrint(
-                                                                              '\n\n\nSelected News Paper size... : ${val10.selectedNewsPaperSize}');
-                                                                          debugPrint(
-                                                                              'All News Paper Qualities... : ${val10.selectedNewsPaperSizePaperQualities}');
-                                                                          debugPrint(
-                                                                              'Selected News Paper quality... : ${val10.selectedNewsPaperQuality}');
-                                                                          debugPrint(
-                                                                              'All selected News Paper size indexes... : ${val10.selectedNewsPaperSizeIndexes}\n\n\n');
-
-                                                                          if (val10.selectedNewsPaperQuality !=
-                                                                              'none') {
-                                                                            // rate of the selected News paper size, selected News paper quality
-                                                                            int rate =
-                                                                                val10.newsPapers[val10.selectedNewsPaperSizeIndexes[val10.selectedNewsPaperSizePaperQualities.indexOf(val10.selectedNewsPaperQuality)]].rate;
-                                                                            debugPrint('Rate of the selected News paper quality is : $rate');
-                                                                          }
-                                                                        },),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      )
-
-                                              ] : [const SizedBox.shrink()],
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    const Text(
+                                                        'Variant Print Type'),
+                                                    Consumer<
+                                                        PlaceCustomizeOrderViewModel>(
+                                                      builder: (context, val12,
+                                                              child) =>
+                                                          CustomDropDown(
+                                                              list: val12
+                                                                  .printNames,
+                                                              value: val12
+                                                                  .selectedVariantPrint,
+                                                              hint: val12
+                                                                  .selectedVariantPrint,
+                                                              onChanged:
+                                                                  (newVal) {
+                                                                val12.selectedVariantPrint =
+                                                                    newVal!;
+                                                                debugPrint(
+                                                                    'Variant Print: ${int.tryParse(val12.selectedVariantPrint.substring(0, 1))}');
+                                                              }),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             );
+                                          } else {
+                                            /// it means carbon-less
+                                            return Column(children: [
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    const Text('Variant Type'),
+                                                    Consumer<
+                                                            PlaceCustomizeOrderViewModel>(
+                                                        builder: (context,
+                                                                val12, child) =>
+                                                            CustomDropDown(
+                                                                list: val12
+                                                                    .carbonLessVariantTypeNames,
+                                                                value: val12
+                                                                    .selectedCarbonLessVariantType,
+                                                                hint: val12
+                                                                    .selectedCarbonLessVariantType,
+                                                                onChanged:
+                                                                    (newVal) {
+                                                                  val12.selectedCarbonLessVariantType =
+                                                                      newVal!;
+                                                                }))
+                                                  ])
+                                            ]);
                                           }
                                         }),
                                         Row(
@@ -1093,21 +1308,50 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
                                           children: [
-                                            const Text('Backside'),
+                                            const Text('Backside Print'),
                                             Consumer<
                                                 PlaceCustomizeOrderViewModel>(
-                                              builder:
-                                                  (context, val13, child) =>
-                                                      CustomDropDown(
-                                                          list: val13.backSide,
-                                                          value: val13
-                                                              .selectedBackSide,
-                                                          hint: val13
-                                                              .selectedBackSide,
-                                                          onChanged: (newVal) {
-                                                            val13.selectedBackSide =
-                                                                newVal!;
-                                                          }),
+                                              builder: (context, val13,
+                                                      child) =>
+                                                  CustomDropDown(
+                                                      list: val13
+                                                          .backSidePrintingList,
+                                                      value: val13
+                                                          .selectedBackSide,
+                                                      hint: val13
+                                                          .selectedBackSide,
+                                                      onChanged: (newVal) {
+                                                        val13.selectedBackSide =
+                                                            newVal!;
+                                                        debugPrint(
+                                                            'Back side Print: ${int.tryParse(val13.selectedBackSide.substring(0, 1))}');
+                                                      }),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            const Text('Profit'),
+                                            Consumer<
+                                                PlaceCustomizeOrderViewModel>(
+                                              builder: (context, val14,
+                                                      child) =>
+                                                  CustomDropDown(
+                                                      list: val14.profitNames,
+                                                      value:
+                                                          val14.selectedProfit,
+                                                      hint:
+                                                          val14.selectedProfit,
+                                                      onChanged: (newVal) {
+                                                        val14.selectedProfit =
+                                                            newVal!;
+                                                        val14.selectedProfitIndex =
+                                                            val14.profitNames
+                                                                .indexOf(val14
+                                                                    .selectedProfit);
+                                                      }),
                                             ),
                                           ],
                                         ),
@@ -1123,10 +1367,10 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               child: Consumer<
                                                   PlaceCustomizeOrderViewModel>(
                                                 builder:
-                                                    (context, val14, child) =>
+                                                    (context, val15, child) =>
                                                         TextFormField(
                                                   controller:
-                                                      val14.otherExpensesC,
+                                                      val15.otherExpensesC,
                                                   inputFormatters: [
                                                     FilteringTextInputFormatter
                                                         .digitsOnly,
@@ -1162,34 +1406,82 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                             ),
                                           ],
                                         ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            const Text('Advance Payment'),
+                                            SizedBox(
+                                              height: 60,
+                                              width: 100,
+                                              child: Consumer<
+                                                  PlaceCustomizeOrderViewModel>(
+                                                builder:
+                                                    (context, val15, child) =>
+                                                        TextFormField(
+                                                  controller:
+                                                      val15.advancePaymentC,
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                  ],
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  cursorColor: kPrimeColor,
+                                                  decoration: InputDecoration(
+                                                    hintText: 'Payment',
+                                                    filled: true,
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      borderSide: BorderSide(
+                                                        width: 2,
+                                                        color: kPrimeColor,
+                                                      ),
+                                                    ),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      borderSide: BorderSide(
+                                                        color: kSecColor,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ]),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: TextButton(
+                                        onPressed: () {},
+                                        child: const Text(
+                                          'Calculate',
+                                          style: TextStyle(fontSize: 18),
+                                        ))),
+                                const Expanded(
+                                    child: Center(child: Text('000'))),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             RoundButton(
                               title: 'Place Order',
                               onPress: () {
-                                /// todo:
-                                // Updating data to the firebase, but you have to fetch the data first,
-                                // then you alter the data, and then update that data to the firebase firestore
-                                // FirebaseFirestore.instance
-                                //     .collection(auth.currentUser!.uid)
-                                //     .doc("RateList")
-                                //     .update({
-                                //   "paper": [data]
-                                // });
-
-                                // debugPrint(
-                                //     'The rate of the standard is : ${rateList.designs[selectedDesignIndex].rate}');
-                                // debugPrint(
-                                //     'The rate of the standard is : ${rateList.paper[selectedPaperSizeIndex].rate}');
-                                // debugPrint(
-                                //     'The paper quantity : ${paperQuantityC.text.trim}');
-                                /// todo: Converting textEditingController text to int for calculations + round the "divide by 500" value to upper value
-                                // debugPrint(
-                                //       'The rate of paper cutting : ${paperQuantityC.text.trim() / 500*rateList.paperCutting[selectedPaperCuttingIndex].rate}');
+                                val.paperLogic();
                               },
                             ),
                           ],
@@ -1219,16 +1511,3 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
     );
   }
 }
-
-/// todo: paper sized or any other rate list things must not be same as available in the firebase
-/// if design with name "standard" is available, then user can't add a design with name "standard"
-/// anything that is in the dropdown menu has to be different as it would give you errors
-/// design name must not be same
-/// paper size are only some... they are hard coded, can't have any other size
-
-// Navigate here from all orders view through floating action button
-// Having two tabs
-// 1. Service
-//  Get list of services from all services
-// 2. Product
-//  Get list of products from available

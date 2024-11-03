@@ -42,7 +42,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           widget.inputFormatter!,
         ],
         decoration: InputDecoration(
-          labelText: 'Name',
+          labelText: widget.hint,
           prefixIcon: Icon(
             widget.iconData,
             size: 24,

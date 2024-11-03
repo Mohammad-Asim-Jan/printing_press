@@ -8,20 +8,29 @@ import 'package:printing_press/model/rate_list/design.dart';
 import 'package:printing_press/model/rate_list/numbering.dart';
 import 'package:printing_press/model/rate_list/paper_cutting.dart';
 import 'package:printing_press/model/rate_list/profit.dart';
+import 'package:printing_press/utils/toast_message.dart';
 import '../../model/rate_list.dart';
 
 class PlaceCustomizeOrderViewModel with ChangeNotifier {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   get formKey => _formKey;
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  TextEditingController customerAddressC = TextEditingController();
+  TextEditingController customerContactC = TextEditingController();
+  TextEditingController businessTitleC = TextEditingController();
+  TextEditingController customerNameC = TextEditingController();
+
   Map<String, dynamic>? data;
 
   bool _customOrderDataFetched = false;
+
   get customOrderDataFetched => _customOrderDataFetched;
   bool _dataFound = false;
+
   get dataFound => _dataFound;
 
   // design
@@ -41,7 +50,10 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   late String selectedPaperQuality;
 
   // books quantity
-  TextEditingController booksQuantityC = TextEditingController();
+  TextEditingController booksQuantityC = TextEditingController(text: '10');
+
+  // pages per book
+  TextEditingController pagesPerBookC = TextEditingController(text: '100');
 
   // paper cutting
   List<String> paperCuttingNames = [];
@@ -49,19 +61,27 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   late int selectedPaperCuttingIndex;
 
   // basic paper cutting units
-  List<int> basicCuttingUnits = [2, 3, 4, 6, 8, 12, 16, 32, 64, 128];
+  List<int> basicCuttingUnits = [1, 2, 3, 4, 6, 8, 12, 16, 32, 64, 128];
   List<String> basicCuttingUnitsList = [];
   late String selectedBasicCuttingUnit;
   int selectedBasicCuttingUnitIndex = 0;
 
   // single, dup, trip, news - copy variants
-  List<String> copyVariant = [];
+  List<String> copyVariantNames = [];
   late String selectedCopyVariant;
   late int selectedCopyVariantIndex;
+
+  // variant paper quality
+  late String selectedCopyVariantPaperQuality;
 
   // print type
   List<String> printNames = ['1C', '2C', '3C', '4C'];
   String selectedPrint = '1C';
+  String selectedVariantPrint ='1C';
+
+  // variant type
+  List<String> carbonLessVariantTypeNames = ['dup', 'trip', 'quad'];
+  String selectedCarbonLessVariantType = 'dup';
 
   // copy printing
   List<String> copyPrint = ['none', 'printed'];
@@ -90,38 +110,24 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   late String selectedNumbering;
   late int selectedNumberingIndex;
 
+  // Profits
+  List<String> profitNames = [];
+  late String selectedProfit;
+  late int selectedProfitIndex;
+
   // back side printing
-  List<String> backSide = ['yes', 'no'];
+  List<String> backSidePrintingList = ['none', '1C', '2C', '3C', '4C'];
   late String selectedBackSide;
 
   // other expenses
   TextEditingController otherExpensesC = TextEditingController();
 
+  // advance payment
+  TextEditingController advancePaymentC = TextEditingController();
+
   // Quantity
   TextEditingController quantityC = TextEditingController();
 
-  /// todo: paper sized or any other rate list things must not be same as available in the firebase
-  /// if design with name "standard" is available, then user can't add a design with name "standard"
-  /// anything that is in the dropdown menu has to be different else it would give you errors
-  /// design name must not be same
-  /// paper size are only some... they are hard coded, can't have any other size
-
-  ///todo: rating
-  /// paper + extra sheet
-  // binding yes or no -- binding rate * paper quantity / 1000 ?? maybe...
-  // Printing 1c, 2c, 3c, 4c
-  // numbering yes or no -- numbering rate * paper quantity / 1000 correct if per thousand rate
-  // cutting 1/2, 1/4...
-  // b/s ...
-  // other expenses
-  /// machine selection based on paper size, if there could be two plates on it, check for that too
-  /// for ex, if a machine size is a4, and your design is a4/2, then you can divide the paper quantity by 2
-  /// if you have 1000 papers to be printed, you will divide it by 2, hence only 500 prints are there
-  /// now if for each 500 prints, the machine has its rate of 300
-  /// you will divide the paper quantity by 500, hence 1 is the output, that will be multiplied by 300 (the rate of the machine)
-  /// profit
-  // carriage to hangu
-  // result = paper quantity depends on cutting + carriage +
   List<Binding> bindings = [];
   List<Design> designs = [];
   List<Machine> machines = [];
@@ -145,7 +151,8 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     ];
     if (lists.any((element) => element.isEmpty)) {
       await fetchData();
-      if (lists.any((element) => element.isNotEmpty) && _customOrderDataFetched) {
+      if (lists.any((element) => element.isNotEmpty) &&
+          _customOrderDataFetched) {
         debugPrint('data is not null anymore...');
         // setFirebaseDataLocally();
 
@@ -162,6 +169,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
         setNewsPaperSizeData();
         setNewsPaperQualityData();
         setNumberingData();
+        setProfitData();
         setBackSide();
 
         _dataFound = true;
@@ -190,50 +198,55 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     DocumentReference docRef =
         firestore.collection(auth.currentUser!.uid).doc('RateList');
 
-    /// it is used for separate collection
-    for (String subCollectionName in subCollectionNames) {
-      CollectionReference<Map<String, dynamic>> subCollectionRef =
-          docRef.collection(subCollectionName);
+    try {
+      /// it is used for separate collection
+      for (String subCollectionName in subCollectionNames) {
+        CollectionReference<Map<String, dynamic>> subCollectionRef =
+            docRef.collection(subCollectionName);
 
-      // Fetch documents in the sub-collection
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await subCollectionRef.get();
+        // Fetch documents in the sub-collection
+        QuerySnapshot<Map<String, dynamic>> querySnapshot =
+            await subCollectionRef.get();
 
-      if (querySnapshot.size > 1) {
-        /// it is used for separate document in a collection
-        for (int index = 1; index < querySnapshot.docs.length; index++) {
-          Map<String, dynamic> data = querySnapshot.docs[index].data();
+        if (querySnapshot.size > 1) {
+          /// it is used for separate document in a collection
+          for (int index = 1; index < querySnapshot.docs.length; index++) {
+            Map<String, dynamic> data = querySnapshot.docs[index].data();
 
-          switch (subCollectionName) {
-            case 'Binding':
-              bindings.add(Binding.fromJson(data));
-              break;
-            case 'Design':
-              designs.add(Design.fromJson(data));
-              break;
-            case 'Machine':
-              machines.add(Machine.fromJson(data));
-              break;
-            case 'NewsPaper':
-              newsPapers.add(Paper.fromJson(data));
-              break;
-            case 'Numbering':
-              numberings.add(Numbering.fromJson(data));
-              break;
-            case 'Paper':
-              papers.add(Paper.fromJson(data));
-              break;
-            case 'PaperCutting':
-              paperCuttings.add(PaperCutting.fromJson(data));
-              break;
-            case 'Profit':
-              profits.add(Profit.fromJson(data));
-              break;
+            switch (subCollectionName) {
+              case 'Binding':
+                bindings.add(Binding.fromJson(data));
+                break;
+              case 'Design':
+                designs.add(Design.fromJson(data));
+                break;
+              case 'Machine':
+                machines.add(Machine.fromJson(data));
+                break;
+              case 'NewsPaper':
+                newsPapers.add(Paper.fromJson(data));
+                break;
+              case 'Numbering':
+                numberings.add(Numbering.fromJson(data));
+                break;
+              case 'Paper':
+                papers.add(Paper.fromJson(data));
+                break;
+              case 'PaperCutting':
+                paperCuttings.add(PaperCutting.fromJson(data));
+                break;
+              case 'Profit':
+                profits.add(Profit.fromJson(data));
+                break;
+            }
           }
         }
       }
+      _customOrderDataFetched = true;
+    } catch (e) {
+      Utils.showMessage('Error: $e');
+      _customOrderDataFetched = true;
     }
-    _customOrderDataFetched = true;
   }
 
   setDesignData() {
@@ -249,7 +262,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
 
   setPaperSizeData() {
     paperSizes = [];
-    paperSizes.add('none');
+    // paperSizes.add('none');
     // paper size
     for (var paper in papers) {
       /// TODO: if this or opposite to this
@@ -268,26 +281,27 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     int index = 0;
     selectedPaperSizePaperQualities = [];
     selectedPaperSizeIndexes = [];
-    if (selectedPaperSize == 'none') {
-      selectedPaperSizePaperQualities.add('none');
-    } else {
-      for (var paper in papers) {
-        debugPrint('\nselected Paper size : $selectedPaperSize');
-        debugPrint(
-            'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
+    // if (selectedPaperSize == 'none') {
+    //   selectedPaperSizePaperQualities.add('none');
+    // } else {
+    for (var paper in papers) {
+      debugPrint('\nselected Paper size : $selectedPaperSize');
+      debugPrint(
+          'checking the paper size in firebase: ${paper.size.width} x ${paper.size.height}');
 
-        if (selectedPaperSize == '${paper.size.width} x ${paper.size.height}' ||
-            selectedPaperSize == '${paper.size.height} x ${paper.size.width}') {
-          selectedPaperSizePaperQualities.add('${paper.quality}');
-          selectedPaperSizeIndexes.add(index);
-        }
-        debugPrint('paper quality added, index no: $index');
-        index++;
+      if (selectedPaperSize == '${paper.size.width} x ${paper.size.height}' ||
+          selectedPaperSize == '${paper.size.height} x ${paper.size.width}') {
+        selectedPaperSizePaperQualities.add('${paper.quality}');
+        selectedPaperSizeIndexes.add(index);
       }
+      debugPrint('paper quality added, index no: $index');
+      index++;
     }
+    // }
 
     debugPrint(selectedPaperSizePaperQualities.toString());
     selectedPaperQuality = selectedPaperSizePaperQualities[0];
+    selectedCopyVariantPaperQuality = selectedPaperSizePaperQualities[0];
 
     // selected paper quality index ? selectedPaperSizeIndexes[paperQualities.indexOf(selectedPaperQuality)]
 
@@ -297,8 +311,6 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
               selectedPaperSizePaperQualities.indexOf(selectedPaperQuality)]]
           .rate;
       debugPrint('Rate of the selected paper quality is : $rate');
-    } else {
-      debugPrint('No paper size selected.');
     }
   }
 
@@ -315,7 +327,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
 
   setBasicCuttingUnit() {
     basicCuttingUnitsList = [];
-    basicCuttingUnitsList.add('none');
+    // basicCuttingUnitsList.add('none');
     for (String a
         in basicCuttingUnits.map((e) => "1/${e.toString()}").toList()) {
       basicCuttingUnitsList.add(a);
@@ -326,7 +338,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   }
 
   setCopyVariants() {
-    copyVariant = ['news', 'none', 'dup', 'trip'];
+    copyVariantNames = ['news', 'none', 'carbon', 'carbon-less'];
     selectedCopyVariant = 'none';
     selectedCopyVariantIndex = 1;
     // setCopyVariantOnChange();
@@ -335,14 +347,14 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   setCopyVariantOnChange() {
     copyVariantOnChange = (String? newVal) {
       selectedCopyVariant = newVal!;
-      selectedCopyVariantIndex = copyVariant.indexOf(selectedCopyVariant);
+      selectedCopyVariantIndex = copyVariantNames.indexOf(selectedCopyVariant);
       updateListener();
     };
   }
 
   setNewsPaperSizeData() {
     newsPaperSizes = [];
-    newsPaperSizes.add('none');
+    // newsPaperSizes.add('none');
     // paper size
     for (var news in newsPapers) {
       /// TODO: if this or opposite to this
@@ -362,29 +374,27 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     /// todo: change the list when select any other. use set state or do it through providers
 
     selectedNewsPaperSizePaperQualities = [];
-    if (selectedNewsPaperSize == 'none') {
-      selectedNewsPaperSizePaperQualities.add('none');
-    }
+    // if (selectedNewsPaperSize == 'none') {
+    //   selectedNewsPaperSizePaperQualities.add('none');
+    // }
+    //
+    // ///todo: remove the else block because data in the initial stage is always none
+    // else {
+    int index = 0;
+    for (var news in newsPapers) {
+      debugPrint('\nselected news Paper size : $selectedNewsPaperSize');
+      debugPrint(
+          'checking the news paper size in firebase: ${news.size.width} x ${news.size.height}');
 
-    ///todo: remove the else block because data in the initial stage is always none
-    else {
-      int index = 0;
-      for (var news in newsPapers) {
-        debugPrint('\nselected news Paper size : $selectedNewsPaperSize');
-        debugPrint(
-            'checking the news paper size in firebase: ${news.size.width} x ${news.size.height}');
-
-        if (selectedNewsPaperSize ==
-                '${news.size.width} x ${news.size.height}' ||
-            selectedNewsPaperSize ==
-                '${news.size.height} x ${news.size.width}') {
-          selectedNewsPaperSizePaperQualities.add('${news.quality}');
-          selectedNewsPaperSizeIndexes.add(index);
-        }
-        debugPrint('News paper quality added, index no: $index');
-        index++;
+      if (selectedNewsPaperSize == '${news.size.width} x ${news.size.height}' ||
+          selectedNewsPaperSize == '${news.size.height} x ${news.size.width}') {
+        selectedNewsPaperSizePaperQualities.add('${news.quality}');
+        selectedNewsPaperSizeIndexes.add(index);
       }
+      debugPrint('News paper quality added, index no: $index');
+      index++;
     }
+    // }
 
     debugPrint(selectedNewsPaperSizePaperQualities.toString());
     selectedNewsPaperQuality = selectedNewsPaperSizePaperQualities[0];
@@ -392,15 +402,15 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     // selected news paper quality index ? selectedNewsPaperSizeIndexes[newsPaperQualities.indexOf(selectedNewsPaperQuality)]
 
     // rate of the selected news paper size, selected paper quality
-    if (selectedNewsPaperSize != 'none') {
-      int rate = newsPapers[selectedNewsPaperSizeIndexes[
-              selectedNewsPaperSizePaperQualities
-                  .indexOf(selectedNewsPaperQuality)]]
-          .rate;
-      debugPrint('Rate of the selected paper quality is : $rate');
-    } else {
-      debugPrint('No paper size selected.');
-    }
+    // if (selectedNewsPaperSize != 'none') {
+    int rate = newsPapers[selectedNewsPaperSizeIndexes[
+            selectedNewsPaperSizePaperQualities
+                .indexOf(selectedNewsPaperQuality)]]
+        .rate;
+    debugPrint('Rate of the selected paper quality is : $rate');
+    // } else {
+    //   debugPrint('No paper size selected.');
+    // }
   }
 
   setBindingData() {
@@ -440,6 +450,15 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     }
   }
 
+  setProfitData() {
+    profitNames = [];
+    for (var profit in profits) {
+      profitNames.add(profit.name);
+    }
+    selectedProfit = profitNames[0];
+    selectedProfitIndex = 0;
+  }
+
   setPrintData() {
     // print
     selectedPrint = printNames[0];
@@ -447,25 +466,21 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   }
 
   setBackSide() {
-    selectedBackSide = 'no';
+    selectedBackSide = 'none';
   }
 
   updateListener() {
     notifyListeners();
   }
 
-// Function to find the closest factors of a number
   List<int> closestFactors(int n) {
-    int minDiff = double.infinity.toInt(); // Initialize minimum difference
-    List<int> closestPair = [1, n]; // Default closest pair
+    int minDiff = double.maxFinite.toInt();
+    List<int> closestPair = [1, n];
 
-    // Iterate over possible factors from 1 up to the square root of n
-    for (int i = 1; i <= (sqrt(n)).toInt(); i++) {
+    for (int i = 1; i <= sqrt(n).toInt(); i++) {
       if (n % i == 0) {
-        // Check if i is a factor of n
-        int j = n ~/ i; // The corresponding pair factor
-        int diff = (i - j).abs(); // Calculate the difference
-        // Update the closest pair if the current difference is smaller
+        int j = n ~/ i;
+        int diff = (i - j).abs();
         if (diff < minDiff) {
           minDiff = diff;
           closestPair = [i, j];
@@ -475,4 +490,309 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
 
     return closestPair;
   }
+
+  int calculateFit(int machineWidth, int machineHeight, double paperWidth,
+      double paperHeight) {
+    int fitWidth = (machineWidth / paperWidth).floor();
+    int fitHeight = (machineHeight / paperHeight).floor();
+    return fitWidth * fitHeight;
+  }
+
+  List<int?> calculateMachineSize(int n, int basicWidth, int basicHeight) {
+    // Example values
+    // int n = 6; // Given number for closest factors
+
+    // paper size
+    // int basicWidth = 23;
+    // int basicHeight = 36;
+
+    // find the closest factor
+    List<int> factors = closestFactors(n);
+
+    // sort it so that higher dimension of the page can be divided by highest factor and vice versa
+    factors.sort((a, b) => b.compareTo(a));
+    debugPrint('Factors are: $factors');
+
+    // Actual paper size
+    double newWidth = basicHeight / factors[0]; // Big factor
+    double newHeight = basicWidth / factors[1]; // Small factor
+    debugPrint('Paper Size: ${newWidth.ceil()} x ${newHeight.ceil()}');
+
+    // how many pages can be fit to each machine
+    List<int?> fits = [];
+
+    for (var machine in machines) {
+      int machineWidth = machine.size.width;
+      int machineHeight = machine.size.height;
+
+      int normalFit =
+          calculateFit(machineWidth, machineHeight, newWidth, newHeight);
+      int rotatedFit =
+          calculateFit(machineWidth, machineHeight, newHeight, newWidth);
+      // debugPrint(
+      //     'Machine ${machineWidth}x$machineHeight: Normal Fit = $normalFit, Rotated Fit = $rotatedFit');
+      if (normalFit != 0 || rotatedFit != 0) {
+        fits.add(normalFit > rotatedFit ? normalFit : rotatedFit);
+      } else {
+        fits.add(null);
+      }
+    }
+    return fits;
+  }
+
+  int noOfPlates = 0;
+  int noOfPrintings = 0;
+
+  // late int basicWidth;
+  // late int basicHeight;
+  int designRate = 0;
+  int paperSizePaperQualityRate = 0;
+  int paperCuttingRate = 0;
+  int cuttingUnit = 1;
+  int totalPages = 0;
+  int extraPages = 0;
+  int grandTotalPages = 0;
+  int profit = 0;
+  int expenses = 0;
+  int advancePayment = 0;
+  int pagesPerBook = 0;
+  int bookQuantity = 0;
+  int backsidePrint = 0;
+  int printType = 1;
+  int numberingRate = 0;
+
+  // plates
+  int totalPlates = 0;
+
+  int noOfPrinting = 0;
+
+  calculateRate() {
+    // cutting unit
+    cuttingUnit = basicCuttingUnits[selectedBasicCuttingUnitIndex];
+
+    // advance payment
+    advancePayment = int.tryParse(advancePaymentC.text.trim())!;
+
+    // expenses
+    expenses = int.tryParse(otherExpensesC.text.trim())!;
+
+    // pages per book
+    pagesPerBook = int.tryParse(pagesPerBookC.text.trim())!;
+
+    // books quantity
+    bookQuantity = int.tryParse(booksQuantityC.text.trim())!;
+
+    // paper rate
+    paperSizePaperQualityRate = papers[selectedPaperSizeIndexes[
+            selectedPaperSizePaperQualities.indexOf(selectedPaperQuality)]]
+        .rate;
+
+    // profit
+    profit = profits[selectedProfitIndex].percentage;
+
+    // print type
+    /// print type x machine print rate and plate rate
+    printType = int.tryParse(selectedPrint.substring(0, 1))!;
+    noOfPrinting = printType;
+
+    // totalPages
+    totalPages = bookQuantity * pagesPerBook;
+    debugPrint("Total pages: $totalPages");
+
+    /// 3 extra sheets (basic large sheet) per 10 books or 1000 prints
+    extraPages = (totalPages * 0.003).ceil();
+    debugPrint("Extra Sheets: $extraPages");
+
+    // backside print
+    /// (machine plate + printing ) x following
+    backsidePrint = int.tryParse(selectedBackSide.substring(0, 1)) ?? 0;
+
+    // design rate
+    if (selectedDesign == 'none') {
+      designRate = 0;
+      debugPrint("No design");
+      debugPrint('Design Rate: $designRate');
+    } else {
+      designRate = designs[selectedDesignIndex - 1].rate;
+
+      /// double the design if selected backside
+      // if(backsidePrint != 0 ){
+      //   designRate *=2;
+      // }
+      debugPrint('Design Rate: $designRate');
+    }
+
+    // paper cutting
+    if (selectedPaperCutting == 'none') {
+      paperCuttingRate = 0;
+      debugPrint("No paper cutting");
+    } else {
+      paperCuttingRate = paperCuttings[selectedPaperCuttingIndex].rate;
+      debugPrint('Paper cutting Rate: $paperCuttingRate');
+    }
+
+    // binding
+    if (selectedBinding == 'none') {
+      debugPrint("No binding");
+    } else {
+      debugPrint('Binding Rate: ${bindings[selectedBindingIndex - 1].rate}');
+
+      /// todo: calculate according to book quantity
+    }
+
+    // Numbering
+    if (selectedNumbering == 'none') {
+      numberingRate = 0;
+      debugPrint("No numbering");
+    } else {
+      numberingRate = numberings[selectedNumberingIndex - 1].rate;
+      debugPrint('Numbering Rate: $numberingRate');
+
+      /// todo: calculate according to book quantity
+    }
+
+    // copy variant
+    // remove selectedCopyVariantIndex
+    // remove selectedCopyPrintIndex
+    switch (selectedCopyVariant) {
+      case 'none':
+        // no copy variant
+        int result = designRate;
+        break;
+      case 'news':
+        // printing expense
+        /// todo: selectedCopyPrint == 'none' ? 0 :  printing rate from machine + numbering x 2;
+        // rate of the selected News paper size, selected News paper quality
+        int rate = newsPapers[selectedNewsPaperSizeIndexes[
+                selectedNewsPaperSizePaperQualities
+                    .indexOf(selectedNewsPaperQuality)]]
+            .rate;
+        break;
+      case 'dup':
+
+        /// machine print rate + numbering x 2
+        break;
+      case 'trip':
+
+        /// machine print rate + numbering x 3
+        break;
+    }
+
+    if (selectedCopyVariant == 'news' &&
+        selectedPaperSize == selectedNewsPaperSize) {
+    } else {
+      Utils.showMessage('Select compatible news paper!');
+    }
+  }
+
+  paperLogic() {
+    if (_formKey.currentState!.validate()) {
+      // cutting unit
+      int cuttingUnit = basicCuttingUnits[selectedBasicCuttingUnitIndex];
+
+      // paper width
+      int basicWidth = papers[selectedPaperSizeIndexes[
+              selectedPaperSizePaperQualities.indexOf(selectedPaperQuality)]]
+          .size
+          .width;
+
+      // paper height
+      int basicHeight = papers[selectedPaperSizeIndexes[
+              selectedPaperSizePaperQualities.indexOf(selectedPaperQuality)]]
+          .size
+          .height;
+
+      // pages per book
+      int pagesPerBook = int.tryParse(pagesPerBookC.text.trim())!;
+
+      // books quantity
+      int bookQuantity = int.tryParse(booksQuantityC.text.trim())!;
+
+      // totalPages
+      int totalPages = bookQuantity * pagesPerBook;
+      debugPrint("Total pages: $totalPages");
+
+      /// 3 extra sheets (basic large sheet) per 10 books or 1000 prints
+      int extraPages = (totalPages * 0.003).ceil();
+      debugPrint("Extra Sheets: $extraPages");
+
+      // List<List<int>> machinesSizesList = [];
+      List<int> machineBasicPriceList = [];
+      List<String> machineSizes = [];
+
+      for (var element in machines) {
+        // machinesSizesList.add([element.size.width, element.size.height]);
+        machineBasicPriceList.add(element.plate + element.printing);
+        machineSizes.add('${element.size.width} x ${element.size.height}');
+      }
+      debugPrint('Machine sizes list: $machineSizes');
+      debugPrint('Machine basic price list: $machineBasicPriceList');
+
+      List<int?> fits =
+          calculateMachineSize(cuttingUnit, basicWidth, basicHeight);
+
+      debugPrint('Fits of machines are: $fits');
+
+      if (fits.every((element) => element == null)) {
+        // no machine is suitable
+        Utils.showMessage('No machine is suitable!');
+        debugPrint('No machine is suitable!');
+      } else {
+        int grandTotalPages = totalPages + extraPages;
+
+        int selectedMachineIndex = -1;
+        if (grandTotalPages <= 1010) {
+          int? smallest;
+          for (int i = 0; i < fits.length; i++) {
+            if (fits[i] != null) {
+              // Check if the first list has a non-null value
+              if (smallest == null || machineBasicPriceList[i] < smallest) {
+                smallest = machineBasicPriceList[i];
+                selectedMachineIndex = i;
+              }
+            }
+          }
+          debugPrint(
+              'Selected machine rate for less than 1010 pages: ${machineBasicPriceList[selectedMachineIndex]}');
+        } else {
+          // calculate each machine expense
+          // int selectedMachineIndex;
+          List<int?> machinePriceListAccordingToFits = [];
+          for (int i = 0; i < fits.length; i++) {
+            if (fits[i] != null) {
+              // Check if the first list has a non-null value
+              machinePriceListAccordingToFits.add(
+                  ((((grandTotalPages / fits[i]!) / 1010).ceil()) *
+                      machineBasicPriceList[i]));
+            } else {
+              machinePriceListAccordingToFits.add(null);
+            }
+          }
+          debugPrint(
+              'Resultant machines price list according to fits: $machinePriceListAccordingToFits');
+
+          // find the minimum rate
+          int? smallest = machinePriceListAccordingToFits
+              .whereType<int>()
+              .reduce((a, b) => a < b ? a : b);
+
+          selectedMachineIndex =
+              machinePriceListAccordingToFits.indexOf(smallest);
+        }
+        debugPrint(
+            'Ultimate selected machine is: ${machines[selectedMachineIndex].name}');
+      }
+
+      // int totalBasicPages = (totalPages / n).ceil() + extraSheets;
+      // debugPrint("Total Basic Pages: $totalBasicPages");
+
+      // int rate = papers[selectedPaperSizeIndexes[
+      //         selectedPaperSizePaperQualities.indexOf(selectedPaperQuality)]]
+      //     .rate;
+      // debugPrint("Rate of 500 pages: $rate");
+
+      // debugPrint("Rate of $totalBasicPages pages: ${((rate/500)*totalBasicPages).ceil()}");
+    }
+  }
+
 }
