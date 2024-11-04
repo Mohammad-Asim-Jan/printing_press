@@ -77,17 +77,18 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   // print type
   List<String> printNames = ['1C', '2C', '3C', '4C'];
   String selectedPrint = '1C';
-  String selectedVariantPrint ='1C';
+  String selectedVariantPrint = '1C';
 
   // variant type
   List<String> carbonLessVariantTypeNames = ['dup', 'trip', 'quad'];
   String selectedCarbonLessVariantType = 'dup';
+  int noOfSelectedCarbonLessVariant = 2;
 
   // copy printing
-  List<String> copyPrint = ['none', 'printed'];
-  String selectedCopyPrint = 'none';
-  int selectedCopyPrintIndex = 0;
-  late final void Function(String? s)? copyVariantOnChange;
+  // List<String> copyPrint = ['none', 'printed'];
+  // String selectedCopyPrint = 'none';
+  // int selectedCopyPrintIndex = 0;
+  // late final void Function(String? s)? copyVariantOnChange;
 
   // News paper
   List<int> selectedNewsPaperSizeIndexes = [];
@@ -116,7 +117,14 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   late int selectedProfitIndex;
 
   // back side printing
-  List<String> backSidePrintingList = ['none', '1C', '2C', '3C', '4C'];
+  List<String> backSidePrintingList = [
+    'none',
+    'lot-pot',
+    '1C',
+    '2C',
+    '3C',
+    '4C'
+  ];
   late String selectedBackSide;
 
   // other expenses
@@ -344,13 +352,13 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     // setCopyVariantOnChange();
   }
 
-  setCopyVariantOnChange() {
-    copyVariantOnChange = (String? newVal) {
-      selectedCopyVariant = newVal!;
-      selectedCopyVariantIndex = copyVariantNames.indexOf(selectedCopyVariant);
-      updateListener();
-    };
-  }
+  // setCopyVariantOnChange() {
+  //   copyVariantOnChange = (String? newVal) {
+  //     selectedCopyVariant = newVal!;
+  //     selectedCopyVariantIndex = copyVariantNames.indexOf(selectedCopyVariant);
+  //     updateListener();
+  //   };
+  // }
 
   setNewsPaperSizeData() {
     newsPaperSizes = [];
@@ -540,72 +548,103 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     return fits;
   }
 
-  int noOfPlates = 0;
-  int noOfPrintings = 0;
+  late int noOfPlates;
+  late int noOfPrintings;
 
-  // late int basicWidth;
-  // late int basicHeight;
-  int designRate = 0;
-  int paperSizePaperQualityRate = 0;
-  int paperCuttingRate = 0;
-  int cuttingUnit = 1;
-  int totalPages = 0;
-  int extraPages = 0;
-  int grandTotalPages = 0;
-  int profit = 0;
-  int expenses = 0;
-  int advancePayment = 0;
-  int pagesPerBook = 0;
-  int bookQuantity = 0;
-  int backsidePrint = 0;
-  int printType = 1;
-  int numberingRate = 0;
+  late int designRate;
 
-  // plates
-  int totalPlates = 0;
+  late int paperSizePaperQualityRate;
 
-  int noOfPrinting = 0;
+  late int paperCuttingRate;
+
+  late int cuttingUnit;
+  late int noOfPages;
+  late int noOfCopyPages;
+  late int extraPages;
+
+  late int grandTotalPages;
+
+  late int profit;
+  late int expenses;
+  late int advancePayment;
+  late int pagesPerBook;
+  late int bookQuantity;
+  late int backsidePrint;
+  late int printType;
+  late int numberingExpense;
+  late int bindingExpense;
 
   calculateRate() {
+    designRate = 0;
+    paperCuttingRate = 0;
+    paperSizePaperQualityRate = 0;
+    cuttingUnit = 0;
+    profit = 0;
+    expenses = 0;
+    advancePayment = 0;
+    pagesPerBook = 0;
+    bookQuantity = 0;
+    printType = 0;
+    numberingExpense = 0;
+    bindingExpense = 0;
+
+    noOfPlates = 0;
+
+    backsidePrint = 0;
+
+    noOfPages = 0;
+    noOfCopyPages = 0;
+    grandTotalPages = 0;
+    // extraPages = 0;
+
+    // noOfPrintings = 0;
+
     // cutting unit
     cuttingUnit = basicCuttingUnits[selectedBasicCuttingUnitIndex];
-
     // advance payment
     advancePayment = int.tryParse(advancePaymentC.text.trim())!;
-
     // expenses
     expenses = int.tryParse(otherExpensesC.text.trim())!;
-
     // pages per book
     pagesPerBook = int.tryParse(pagesPerBookC.text.trim())!;
-
     // books quantity
     bookQuantity = int.tryParse(booksQuantityC.text.trim())!;
-
     // paper rate
     paperSizePaperQualityRate = papers[selectedPaperSizeIndexes[
             selectedPaperSizePaperQualities.indexOf(selectedPaperQuality)]]
         .rate;
-
     // profit
     profit = profits[selectedProfitIndex].percentage;
 
     // print type
     /// print type x machine print rate and plate rate
     printType = int.tryParse(selectedPrint.substring(0, 1))!;
-    noOfPrinting = printType;
+    noOfPlates += printType;
+
+    ///todo:
+    noOfPrintings += printType;
 
     // totalPages
-    totalPages = bookQuantity * pagesPerBook;
-    debugPrint("Total pages: $totalPages");
+    noOfPages = bookQuantity * pagesPerBook;
+    debugPrint("Total pages: $noOfPages");
 
     /// 3 extra sheets (basic large sheet) per 10 books or 1000 prints
-    extraPages = (totalPages * 0.003).ceil();
+    extraPages = (noOfPages * 0.003).ceil();
     debugPrint("Extra Sheets: $extraPages");
+
+    grandTotalPages = noOfPages + extraPages;
 
     // backside print
     /// (machine plate + printing ) x following
-    backsidePrint = int.tryParse(selectedBackSide.substring(0, 1)) ?? 0;
+    if (selectedBackSide == 'lot-pot') {
+      noOfPrintings += 1;
+    } else if (selectedBackSide != 'none') {
+      backsidePrint = int.tryParse(selectedBackSide.substring(0, 1))!;
+      noOfPlates += backsidePrint;
+      noOfPrintings += backsidePrint;
+    }else {
+      debugPrint("No backside selected!");
+    }
 
     // design rate
     if (selectedDesign == 'none') {
@@ -614,41 +653,24 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
       debugPrint('Design Rate: $designRate');
     } else {
       designRate = designs[selectedDesignIndex - 1].rate;
-
-      /// double the design if selected backside
-      // if(backsidePrint != 0 ){
-      //   designRate *=2;
-      // }
       debugPrint('Design Rate: $designRate');
-    }
-
-    // paper cutting
-    if (selectedPaperCutting == 'none') {
-      paperCuttingRate = 0;
-      debugPrint("No paper cutting");
-    } else {
-      paperCuttingRate = paperCuttings[selectedPaperCuttingIndex].rate;
-      debugPrint('Paper cutting Rate: $paperCuttingRate');
     }
 
     // binding
     if (selectedBinding == 'none') {
       debugPrint("No binding");
     } else {
-      debugPrint('Binding Rate: ${bindings[selectedBindingIndex - 1].rate}');
-
-      /// todo: calculate according to book quantity
+      bindingExpense = (bindings[selectedBindingIndex - 1].rate) * bookQuantity;
+      debugPrint('Binding Rate: $bindingExpense');
     }
 
     // Numbering
     if (selectedNumbering == 'none') {
-      numberingRate = 0;
       debugPrint("No numbering");
     } else {
-      numberingRate = numberings[selectedNumberingIndex - 1].rate;
-      debugPrint('Numbering Rate: $numberingRate');
-
-      /// todo: calculate according to book quantity
+      numberingExpense =
+          (numberings[selectedNumberingIndex - 1].rate) * bookQuantity;
+      debugPrint('Numbering Expenses: $numberingExpense');
     }
 
     // copy variant
@@ -656,26 +678,39 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
     // remove selectedCopyPrintIndex
     switch (selectedCopyVariant) {
       case 'none':
-        // no copy variant
-        int result = designRate;
         break;
       case 'news':
         // printing expense
         /// todo: selectedCopyPrint == 'none' ? 0 :  printing rate from machine + numbering x 2;
         // rate of the selected News paper size, selected News paper quality
+
+        noOfCopyPages = grandTotalPages;
         int rate = newsPapers[selectedNewsPaperSizeIndexes[
                 selectedNewsPaperSizePaperQualities
                     .indexOf(selectedNewsPaperQuality)]]
             .rate;
         break;
-      case 'dup':
-
-        /// machine print rate + numbering x 2
+      case 'carbon':
+        if (selectedVariantPrint == selectedPrint) {
+          noOfPrintings * int.tryParse(selectedVariantPrint.substring(0, 1))!;
+        } else {
+          noOfPrintings * int.tryParse(selectedVariantPrint.substring(0, 1))!;
+          noOfPlates += int.tryParse(selectedVariantPrint.substring(0, 1))!;
+        }
+        /// machine print rate
         break;
-      case 'trip':
-
-        /// machine print rate + numbering x 3
+      case 'carbon-less':
+        noOfPrintings += noOfSelectedCarbonLessVariant;
+        /// machine print rate
         break;
+    }
+
+    // paper cutting
+    if (selectedPaperCutting == 'none') {
+      debugPrint("No paper cutting");
+    } else {
+      paperCuttingRate = paperCuttings[selectedPaperCuttingIndex].rate;
+      debugPrint('Paper cutting Rate: $paperCuttingRate');
     }
 
     if (selectedCopyVariant == 'news' &&
@@ -702,20 +737,6 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
           .size
           .height;
 
-      // pages per book
-      int pagesPerBook = int.tryParse(pagesPerBookC.text.trim())!;
-
-      // books quantity
-      int bookQuantity = int.tryParse(booksQuantityC.text.trim())!;
-
-      // totalPages
-      int totalPages = bookQuantity * pagesPerBook;
-      debugPrint("Total pages: $totalPages");
-
-      /// 3 extra sheets (basic large sheet) per 10 books or 1000 prints
-      int extraPages = (totalPages * 0.003).ceil();
-      debugPrint("Extra Sheets: $extraPages");
-
       // List<List<int>> machinesSizesList = [];
       List<int> machineBasicPriceList = [];
       List<String> machineSizes = [];
@@ -738,7 +759,32 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
         Utils.showMessage('No machine is suitable!');
         debugPrint('No machine is suitable!');
       } else {
+        // pages per book
+        int pagesPerBook = int.tryParse(pagesPerBookC.text.trim())!;
+
+        // books quantity
+        int bookQuantity = int.tryParse(booksQuantityC.text.trim())!;
+
+        // totalPages
+        int totalPages = bookQuantity * pagesPerBook;
+        debugPrint("Total pages: $totalPages");
+
+        /// 3 extra sheets (basic large sheet) per 10 books or 1000 prints
+        int extraPages = (totalPages * 0.003).ceil();
+        debugPrint("Extra Sheets: $extraPages");
+
         int grandTotalPages = totalPages + extraPages;
+
+        debugPrint("Grand total page before : $grandTotalPages");
+
+        if(selectedCopyVariant == 'carbon'){
+          if(selectedVariantPrint == selectedPrint){
+            grandTotalPages *= 2;
+          }
+        } else if (selectedCopyVariant == 'carbon-less'){
+          grandTotalPages *= noOfSelectedCarbonLessVariant;
+        }
+        debugPrint("Grand total page before : $grandTotalPages");
 
         int selectedMachineIndex = -1;
         if (grandTotalPages <= 1010) {
@@ -780,9 +826,8 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
               machinePriceListAccordingToFits.indexOf(smallest);
         }
         debugPrint(
-            'Ultimate selected machine is: ${machines[selectedMachineIndex].name}');
+            'Ultimate selected machine is: ${machines[selectedMachineIndex].name}\t\tIndex: ${selectedMachineIndex+1}');
       }
-
       // int totalBasicPages = (totalPages / n).ceil() + extraSheets;
       // debugPrint("Total Basic Pages: $totalBasicPages");
 
@@ -792,7 +837,8 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
       // debugPrint("Rate of 500 pages: $rate");
 
       // debugPrint("Rate of $totalBasicPages pages: ${((rate/500)*totalBasicPages).ceil()}");
+    } else {
+      Utils.showMessage('Provide details!');
     }
   }
-
 }

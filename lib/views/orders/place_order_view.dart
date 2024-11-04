@@ -973,25 +973,25 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           } else if (val.selectedCopyVariant ==
                                               'news') {
                                             return Column(children: [
-                                              Row(
-                                                children: [
-                                                  const Text('Copy Printing'),
-                                                  CustomDropDown(
-                                                      list: val8.copyPrint,
-                                                      value: val8
-                                                          .selectedCopyPrint,
-                                                      hint: val8
-                                                          .selectedCopyPrint,
-                                                      onChanged: (newVal) {
-                                                        val8.selectedCopyPrint =
-                                                            newVal!;
-                                                        val8.selectedCopyPrintIndex =
-                                                            val8.copyPrint
-                                                                .indexOf(val8
-                                                                    .selectedCopyPrint);
-                                                      }),
-                                                ],
-                                              ),
+                                              // Row(
+                                              //   children: [
+                                              //     const Text('Copy Printing'),
+                                              //     CustomDropDown(
+                                              //         list: val8.copyPrint,
+                                              //         value: val8
+                                              //             .selectedCopyPrint,
+                                              //         hint: val8
+                                              //             .selectedCopyPrint,
+                                              //         onChanged: (newVal) {
+                                              //           val8.selectedCopyPrint =
+                                              //               newVal!;
+                                              //           val8.selectedCopyPrintIndex =
+                                              //               val8.copyPrint
+                                              //                   .indexOf(val8
+                                              //                       .selectedCopyPrint);
+                                              //         }),
+                                              //   ],
+                                              // ),
                                               Row(
                                                 children: [
                                                   const Text('News Size'),
@@ -1224,6 +1224,17 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                                     (newVal) {
                                                                   val12.selectedCarbonLessVariantType =
                                                                       newVal!;
+                                                                  switch(newVal){
+                                                                    case 'dup':
+                                                                      val12.noOfSelectedCarbonLessVariant = 2;
+                                                                      break;
+                                                                    case 'trip':
+                                                                      val12.noOfSelectedCarbonLessVariant = 3;
+                                                                      break;
+                                                                    case 'quad':
+                                                                      val12.noOfSelectedCarbonLessVariant = 4;
+                                                                      break;
+                                                                  }
                                                                 }))
                                                   ])
                                             ]);
@@ -1324,7 +1335,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         val13.selectedBackSide =
                                                             newVal!;
                                                         debugPrint(
-                                                            'Back side Print: ${int.tryParse(val13.selectedBackSide.substring(0, 1))}');
+                                                            'Back side Print: ${int.tryParse(val13.selectedBackSide.substring(0, 1))??val13.selectedBackSide}');
                                                       }),
                                             ),
                                           ],
