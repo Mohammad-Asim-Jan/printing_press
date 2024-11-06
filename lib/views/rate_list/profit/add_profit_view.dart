@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
 import 'package:printing_press/view_model/rate_list/profit/add_profit_view_model.dart';
@@ -51,14 +52,49 @@ class _AddProfitViewState extends State<AddProfitView> {
                         ),
                         Consumer<AddProfitViewModel>(
                           builder: (context, val2, child) {
-                            return CustomTextField(
-                                textInputType: TextInputType.number,
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: TextFormField(
+                                maxLength: 2,
                                 controller: val2.percentageC,
-                                inputFormatter:
-                                    FilteringTextInputFormatter.digitsOnly,
-                                iconData: Icons.percent_rounded,
-                                hint: 'Profit percentage',
-                                validatorText: 'Provide profit percentage');
+                                keyboardType: TextInputType.number,
+                                cursorColor: kPrimeColor,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                decoration: InputDecoration(
+                                  labelText: 'Profit percentage',
+                                  prefixIcon: const Icon(
+                                    Icons.percent_rounded,
+                                    size: 24,
+                                  ),
+                                  hintText: 'Profit percentage',
+                                  filled: true,
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      width: 2,
+                                      color: kPrimeColor,
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(
+                                      color: kSecColor,
+                                    ),
+                                  ),
+                                ),
+                                validator: (text) {
+                                  if (text == '' || text == null) {
+                                    return 'Provide profit percentage';
+                                  }
+                                  else if (int.tryParse(text)! < 1 ) {
+                                    return 'Provide between 1-99';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            );
                           },
                         ),
                       ],

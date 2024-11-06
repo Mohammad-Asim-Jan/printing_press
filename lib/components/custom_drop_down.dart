@@ -9,12 +9,14 @@ class CustomDropDown extends StatefulWidget {
     required this.hint,
     required this.onChanged,
     required this.value,
+    required this.validator
   });
 
   List<String> list = [];
   String hint;
   final void Function(String? s)? onChanged;
   String value;
+  String? Function(String?)? validator;
 
   @override
   State<CustomDropDown> createState() => _CustomDropDownState();
@@ -27,6 +29,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
       height: 60,
       width: 140,
       child: DropdownButtonFormField<String>(
+        validator: widget.validator,
           dropdownColor: kSecColor,
           style: const TextStyle(fontSize: 14, color: Colors.black),
           decoration: InputDecoration(

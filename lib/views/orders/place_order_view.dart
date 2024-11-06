@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:printing_press/components/custom_drop_down.dart';
 import 'package:printing_press/components/custom_text_field.dart';
+import 'package:printing_press/utils/toast_message.dart';
 import 'package:printing_press/view_model/orders/place_customize_order_view_model.dart';
 import 'package:printing_press/views/rate_list/rate_list_view.dart';
 import 'package:printing_press/views/stock/add_stock_view.dart';
@@ -200,6 +201,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 return Expanded(
                                                   flex: 2,
                                                   child: CustomDropDown(
+                                                    validator: null,
                                                     list: val1.allStockList,
                                                     value: val1.selectedStock,
                                                     hint: val1.selectedStock,
@@ -565,6 +567,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 PlaceCustomizeOrderViewModel>(
                                               builder: (context, val1, child) =>
                                                   CustomDropDown(
+                                                      validator: null,
                                                       list: val1.designNames,
                                                       value:
                                                           val1.selectedDesign,
@@ -597,6 +600,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 PlaceCustomizeOrderViewModel>(
                                               builder: (context, val2, child) =>
                                                   CustomDropDown(
+                                                validator: null,
                                                 list: val2.paperSizes,
                                                 value: val2.selectedPaperSize,
                                                 hint: val2.selectedPaperSize,
@@ -676,6 +680,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 PlaceCustomizeOrderViewModel>(
                                               builder: (context, val3, child) =>
                                                   CustomDropDown(
+                                                      validator: null,
                                                       list: val3
                                                           .selectedPaperSizePaperQualities,
                                                       value: val3
@@ -832,6 +837,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 PlaceCustomizeOrderViewModel>(
                                               builder: (context, val5, child) =>
                                                   CustomDropDown(
+                                                      validator: null,
                                                       list: val5
                                                           .paperCuttingNames,
                                                       value: val5
@@ -846,13 +852,13 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                             .indexOf(val5
                                                                 .selectedPaperCutting);
 
-                                                        if (val5.selectedPaperCutting ==
+                                                        if (newVal ==
                                                             'none') {
                                                           debugPrint(
                                                               "No paper cutting");
                                                         } else {
                                                           debugPrint(
-                                                              'Paper cutting Rate: ${val5.paperCuttings[val5.selectedPaperCuttingIndex].rate}');
+                                                              'Paper cutting Rate: ${val5.paperCuttings[val5.selectedPaperCuttingIndex - 1].rate}');
                                                         }
                                                       }),
                                             ),
@@ -866,6 +872,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 builder:
                                                     (context, val6, child) {
                                               return CustomDropDown(
+                                                  validator: null,
                                                   list: val6
                                                       .basicCuttingUnitsList,
                                                   value: val6
@@ -947,6 +954,17 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 PlaceCustomizeOrderViewModel>(
                                               builder: (context, val7, child) =>
                                                   CustomDropDown(
+                                                      validator: null
+                                                      //     (value) {
+                                                      //   if (value ==
+                                                      //           'carbon-less' &&
+                                                      //       val7.selectedPrint !=
+                                                      //           '1C') {
+                                                      //     return 'Carbon-less can\'t be printed more than once';
+                                                      //   }
+                                                      //   return null;
+                                                      // }
+                                                      ,
                                                       list:
                                                           val7.copyVariantNames,
                                                       value: val7
@@ -1000,6 +1018,15 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     builder: (context, val9,
                                                             child) =>
                                                         CustomDropDown(
+                                                      validator: (value) {
+                                                        if (val9.selectedCopyVariant ==
+                                                            'news' &&
+                                                            value != val9.selectedPaperSize) {
+                                                          Utils.showMessage('Select compatible news paper!');
+                                                          return 'Incompatible news size';
+                                                        }
+                                                        return null;
+                                                      },
                                                       list: val9.newsPaperSizes,
                                                       value: val9
                                                           .selectedNewsPaperSize,
@@ -1081,6 +1108,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     builder: (context, val10,
                                                             child) =>
                                                         CustomDropDown(
+                                                      validator: null,
                                                       list: val10
                                                           .selectedNewsPaperSizePaperQualities,
                                                       value: val10
@@ -1134,6 +1162,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                       builder: (context, val3,
                                                               child) =>
                                                           CustomDropDown(
+                                                              validator: null,
                                                               list: val3
                                                                   .selectedPaperSizePaperQualities,
                                                               value: val3
@@ -1182,6 +1211,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                       builder: (context, val12,
                                                               child) =>
                                                           CustomDropDown(
+                                                              validator: null,
                                                               list: val12
                                                                   .printNames,
                                                               value: val12
@@ -1214,6 +1244,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         builder: (context,
                                                                 val12, child) =>
                                                             CustomDropDown(
+                                                                validator: null,
                                                                 list: val12
                                                                     .carbonLessVariantTypeNames,
                                                                 value: val12
@@ -1224,15 +1255,19 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                                     (newVal) {
                                                                   val12.selectedCarbonLessVariantType =
                                                                       newVal!;
-                                                                  switch(newVal){
+                                                                  switch (
+                                                                      newVal) {
                                                                     case 'dup':
-                                                                      val12.noOfSelectedCarbonLessVariant = 2;
+                                                                      val12.noOfSelectedCarbonLessVariant =
+                                                                          2;
                                                                       break;
                                                                     case 'trip':
-                                                                      val12.noOfSelectedCarbonLessVariant = 3;
+                                                                      val12.noOfSelectedCarbonLessVariant =
+                                                                          3;
                                                                       break;
                                                                     case 'quad':
-                                                                      val12.noOfSelectedCarbonLessVariant = 4;
+                                                                      val12.noOfSelectedCarbonLessVariant =
+                                                                          4;
                                                                       break;
                                                                   }
                                                                 }))
@@ -1249,6 +1284,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 PlaceCustomizeOrderViewModel>(
                                               builder: (context, val9, child) =>
                                                   CustomDropDown(
+                                                      validator: null,
                                                       list: val9.bindingNames,
                                                       value:
                                                           val9.selectedBinding,
@@ -1275,6 +1311,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               builder: (context, val11,
                                                       child) =>
                                                   CustomDropDown(
+                                                      validator: null,
                                                       list:
                                                           val11.numberingNames,
                                                       value: val11
@@ -1302,6 +1339,14 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               builder: (context, val12,
                                                       child) =>
                                                   CustomDropDown(
+                                                      validator: (value) {
+                                                        if (val12.selectedCopyVariant ==
+                                                                'carbon-less' &&
+                                                            value != '1C') {
+                                                          return 'Select 1 Color';
+                                                        }
+                                                        return null;
+                                                      },
                                                       list: val12.printNames,
                                                       value:
                                                           val12.selectedPrint,
@@ -1325,6 +1370,14 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               builder: (context, val13,
                                                       child) =>
                                                   CustomDropDown(
+                                                      validator: (value) {
+                                                        if (val13.selectedCopyVariant ==
+                                                            'carbon-less' &&
+                                                            value != 'none') {
+                                                          return 'Select none';
+                                                        }
+                                                        return null;
+                                                      },
                                                       list: val13
                                                           .backSidePrintingList,
                                                       value: val13
@@ -1335,7 +1388,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         val13.selectedBackSide =
                                                             newVal!;
                                                         debugPrint(
-                                                            'Back side Print: ${int.tryParse(val13.selectedBackSide.substring(0, 1))??val13.selectedBackSide}');
+                                                            'Back side Print: ${int.tryParse(val13.selectedBackSide.substring(0, 1)) ?? val13.selectedBackSide}');
                                                       }),
                                             ),
                                           ],
@@ -1350,6 +1403,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               builder: (context, val14,
                                                       child) =>
                                                   CustomDropDown(
+                                                      validator: null,
                                                       list: val14.profitNames,
                                                       value:
                                                           val14.selectedProfit,
@@ -1436,6 +1490,12 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     FilteringTextInputFormatter
                                                         .digitsOnly,
                                                   ],
+                                                  validator: (value){
+                                                    if(value == '' || value!.isEmpty){
+                                                      return 'Provide advance payment!';
+                                                    }
+                                                    return null;
+                                                  },
                                                   keyboardType:
                                                       TextInputType.number,
                                                   cursorColor: kPrimeColor,
@@ -1493,6 +1553,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                               title: 'Place Order',
                               onPress: () {
                                 val.paperLogic();
+                                val.calculateRate();
+
                               },
                             ),
                           ],

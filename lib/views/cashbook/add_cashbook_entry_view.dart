@@ -95,6 +95,7 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                               return Expanded(
                                 flex: 2,
                                 child: CustomDropDown(
+                                  validator: null,
                                   list: const ['CASH-OUT', 'CASH-IN'],
                                   value: val4.selectedPaymentType,
                                   hint: val4.selectedPaymentType,

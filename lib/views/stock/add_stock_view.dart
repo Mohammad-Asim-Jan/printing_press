@@ -223,6 +223,7 @@ class _AddStockViewState extends State<AddStockView> {
                                                 return Expanded(
                                                   flex: 2,
                                                   child: CustomDropDown(
+                                                    validator: null,
                                                     list:
                                                         val9.suppliersNamesList,
                                                     value: val9
