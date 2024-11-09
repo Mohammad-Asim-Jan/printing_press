@@ -5,7 +5,6 @@ import 'package:printing_press/view_model/cashbook/cashbook_view_model.dart';
 import 'package:printing_press/views/cashbook/add_cashbook_entry_view.dart';
 import 'package:printing_press/views/cashbook/cashbook_entry_details_view.dart';
 import 'package:provider/provider.dart';
-
 import '../../colors/color_palette.dart';
 
 class CashbookView extends StatefulWidget {
@@ -83,21 +82,22 @@ class _CashbookViewState extends State<CashbookView> {
                           },
                         ));
                       },
-                      trailing: SizedBox(
-                        width: 100,
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                      ),
+                      trailing: Text(value.allCashbookEntries[index].cashbookEntryId.toString()),
+                      // SizedBox(
+                      //   width: 100,
+                      //   child: Row(
+                      //     children: [
+                      //       IconButton(
+                      //         icon: const Icon(Icons.edit),
+                      //         onPressed: () {},
+                      //       ),
+                      //       IconButton(
+                      //         icon: const Icon(Icons.delete),
+                      //         onPressed: () {},
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       shape: Border.all(width: 2, color: kPrimeColor),
                       // titleAlignment: ListTileTitleAlignment.threeLine,
                       titleTextStyle: TextStyle(

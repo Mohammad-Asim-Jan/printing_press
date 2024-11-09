@@ -78,13 +78,13 @@ class _BindingViewState extends State<BindingView> {
                         child: Row(
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {},
-                            ),
+                                icon: const Icon(Icons.edit),
+                                onPressed: () =>
+                                    value.editBinding(context, index)),
                             IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {},
-                            ),
+                                icon: const Icon(Icons.delete),
+                                onPressed: () =>
+                                    value.confirmDelete(context, index)),
                           ],
                         ),
                       ),

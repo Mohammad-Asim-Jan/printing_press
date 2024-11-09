@@ -130,6 +130,7 @@ class _AddStockViewState extends State<AddStockView> {
                                                     .digitsOnly,
                                               ],
                                               decoration: InputDecoration(
+                                                labelText:'Stock selling price' ,
                                                 prefixIcon: const Icon(
                                                   Icons.monetization_on,
                                                   size: 24,

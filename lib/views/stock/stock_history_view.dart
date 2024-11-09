@@ -126,6 +126,7 @@ class _StockHistoryViewState extends State<StockHistoryView> {
                                   leading: Text(stockOrderHistoryByCustomer
                                       .customerOrderId
                                       .toString()),
+                                  trailing: Text(stockOrderHistoryByCustomer.stockOrderId.toString()),
                                 );
                               } else if (value.allStockOrderHistoryList[index]
                                   is StockOrderHistoryToSupplier) {

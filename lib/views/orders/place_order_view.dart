@@ -7,7 +7,6 @@ import 'package:printing_press/view_model/orders/place_customize_order_view_mode
 import 'package:printing_press/views/rate_list/rate_list_view.dart';
 import 'package:printing_press/views/stock/add_stock_view.dart';
 import 'package:provider/provider.dart';
-
 import '../../colors/color_palette.dart';
 import '../../components/round_button.dart';
 import '../../view_model/orders/place_stock_order_view_model.dart';
@@ -342,77 +341,80 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           const SizedBox(
                                             height: 20,
                                           ),
-                                          Row(
-                                            children: [
-                                              const Expanded(
-                                                  flex: 1,
-                                                  child: Text('Quantity')),
-                                              Expanded(
-                                                flex: 2,
-
-                                                ///todo: add plus icon and minus icon for ease
-                                                child: TextFormField(
-                                                  controller:
-                                                      value.stockQuantityC,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  cursorColor: kPrimeColor,
-                                                  inputFormatters: <TextInputFormatter>[
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly,
-                                                  ],
-                                                  decoration: InputDecoration(
-                                                    prefixIcon: const Icon(
-                                                      Icons.filter_none_rounded,
-                                                      size: 24,
-                                                    ),
-                                                    hintText: 'Quantity',
-                                                    filled: true,
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      borderSide: BorderSide(
-                                                        width: 2,
-                                                        color: kPrimeColor,
-                                                      ),
-                                                    ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12),
-                                                      borderSide: BorderSide(
-                                                        color: kSecColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  validator: (text) {
-                                                    if (text == '' ||
-                                                        text == null) {
-                                                      return 'Provide stock quantity';
-                                                    } else if (int.tryParse(
-                                                            value.stockQuantityC
-                                                                .text)! >
-                                                        value
-                                                            .stockList[value
-                                                                .selectedStockIndex]
-                                                            .stockQuantity) {
-                                                      return 'Out of stock';
-                                                    }
-                                                    return null;
-                                                  },
+                                          TextFormField(
+                                            controller:
+                                            value.stockQuantityC,
+                                            keyboardType:
+                                            TextInputType.number,
+                                            cursorColor: kPrimeColor,
+                                            inputFormatters: <TextInputFormatter>[
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly,
+                                            ],
+                                            decoration: InputDecoration(
+                                              labelText: 'Quantity',
+                                              prefixIcon: const Icon(
+                                                Icons.filter_none_rounded,
+                                                size: 24,
+                                              ),
+                                              hintText: 'Quantity',
+                                              filled: true,
+                                              focusedBorder:
+                                              OutlineInputBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    20),
+                                                borderSide: BorderSide(
+                                                  width: 2,
+                                                  color: kPrimeColor,
                                                 ),
                                               ),
-                                            ],
+                                              enabledBorder:
+                                              OutlineInputBorder(
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    12),
+                                                borderSide: BorderSide(
+                                                  color: kSecColor,
+                                                ),
+                                              ),
+                                            ),
+                                            validator: (text) {
+                                              if (text == '' ||
+                                                  text == null) {
+                                                return 'Provide stock quantity';
+                                              } else if (int.tryParse(
+                                                  value.stockQuantityC
+                                                      .text)! >
+                                                  value
+                                                      .stockList[value
+                                                      .selectedStockIndex]
+                                                      .stockQuantity) {
+                                                return 'Out of stock';
+                                              }
+                                              return null;
+                                            },
                                           ),
+                                          // Row(
+                                          //   children: [
+                                          //     const Expanded(
+                                          //         flex: 1,
+                                          //         child: Text('Quantity')),
+                                          //     Expanded(
+                                          //       flex: 2,
+                                          //
+                                          //       ///todo: add plus icon and minus icon for ease
+                                          //       child:
+                                          //     ),
+                                          //   ],
+                                          // ),
 
                                           // totalAmount
                                           /// text auto generated through calculations
 
                                           // advancePayment
                                           /// text field number only
+                                          SizedBox(height: 20,),
                                           Consumer<PlaceStockOrderViewModel>(
                                               builder: (context, val5, child) {
                                             return TextFormField(
@@ -425,6 +427,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     .digitsOnly,
                                               ],
                                               decoration: InputDecoration(
+                                                labelText: 'Advance payment',
                                                 prefixIcon: const Icon(
                                                   Icons.monetization_on_rounded,
                                                   size: 24,
@@ -765,6 +768,10 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     if (text == '' ||
                                                         text == null) {
                                                       return 'Please provide books quantity';
+                                                    } else if (int.tryParse(
+                                                            text)! <
+                                                        1) {
+                                                      return 'Book quantity should be at least 1';
                                                     }
                                                     return null;
                                                   },
@@ -822,6 +829,10 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     if (text == '' ||
                                                         text == null) {
                                                       return 'Please provide pages per book';
+                                                    } else if (int.tryParse(
+                                                            text)! <
+                                                        10) {
+                                                      return 'Pages should be at least 10';
                                                     }
                                                     return null;
                                                   },
@@ -852,8 +863,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                             .indexOf(val5
                                                                 .selectedPaperCutting);
 
-                                                        if (newVal ==
-                                                            'none') {
+                                                        if (newVal == 'none') {
                                                           debugPrint(
                                                               "No paper cutting");
                                                         } else {
@@ -1020,9 +1030,11 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         CustomDropDown(
                                                       validator: (value) {
                                                         if (val9.selectedCopyVariant ==
-                                                            'news' &&
-                                                            value != val9.selectedPaperSize) {
-                                                          Utils.showMessage('Select compatible news paper!');
+                                                                'news' &&
+                                                            value !=
+                                                                val9.selectedPaperSize) {
+                                                          Utils.showMessage(
+                                                              'Select compatible news paper!');
                                                           return 'Incompatible news size';
                                                         }
                                                         return null;
@@ -1372,7 +1384,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                   CustomDropDown(
                                                       validator: (value) {
                                                         if (val13.selectedCopyVariant ==
-                                                            'carbon-less' &&
+                                                                'carbon-less' &&
                                                             value != 'none') {
                                                           return 'Select none';
                                                         }
@@ -1466,6 +1478,18 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                       ),
                                                     ),
                                                   ),
+                                                  validator: (text) {
+                                                    if (text != null ||
+                                                        text != '') {
+                                                      if (int.tryParse(text!) !=
+                                                              null &&
+                                                          int.tryParse(text)! <
+                                                              0) {
+                                                        return 'Provide more than 0';
+                                                      }
+                                                    }
+                                                    return null;
+                                                  },
                                                 ),
                                               ),
                                             ),
@@ -1490,9 +1514,14 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     FilteringTextInputFormatter
                                                         .digitsOnly,
                                                   ],
-                                                  validator: (value){
-                                                    if(value == '' || value!.isEmpty){
-                                                      return 'Provide advance payment!';
+                                                  validator: (value) {
+                                                    if (value != '' ||
+                                                        value!.isNotEmpty) {
+                                                      if (int.tryParse(
+                                                              value!)! <
+                                                          0) {
+                                                        return 'Invalid input!';
+                                                      }
                                                     }
                                                     return null;
                                                   },
@@ -1550,11 +1579,10 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                               height: 10,
                             ),
                             RoundButton(
+                              loading: val.loading,
                               title: 'Place Order',
                               onPress: () {
-                                val.paperLogic();
                                 val.calculateRate();
-
                               },
                             ),
                           ],

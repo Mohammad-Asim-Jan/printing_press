@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/model/cashbook_entry.dart';
-import 'package:printing_press/model/payment.dart';
 
 class CashbookViewModel with ChangeNotifier {
   // late bool dataFetched;
@@ -12,7 +11,7 @@ class CashbookViewModel with ChangeNotifier {
     return FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('CashbookData')
-        .collection('CashbookEntry')
+        .collection('CashbookEntry').orderBy('cashbookEntryId', descending: true)
         .snapshots();
   }
 

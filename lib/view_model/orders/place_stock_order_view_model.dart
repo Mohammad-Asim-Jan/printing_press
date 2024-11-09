@@ -12,13 +12,16 @@ class PlaceStockOrderViewModel with ChangeNotifier {
   // todo Order date and time plus order completion time
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   get formKey => _formKey;
   final FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   late String uid;
   bool _loading = false;
+
   get loading => _loading;
   late bool _inStockOrderDataFetched;
+
   get inStockOrderDataFetched => _inStockOrderDataFetched;
 
   // all stock
@@ -51,6 +54,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     /// todo: validation after calculating the price etc
     selectedStockModel = stockList[selectedStockIndex];
     stockQuantity = int.tryParse(stockQuantityC.text.trim()) ?? 0;
+    debugPrint('Stock quantity : $stockQuantity');
     totalAmount = selectedStockModel.stockUnitSellPrice * stockQuantity;
     if (_formKey.currentState != null) {
       updateListener(true);
@@ -69,8 +73,8 @@ class PlaceStockOrderViewModel with ChangeNotifier {
           await addCustomerPaymentInCashbook();
 
           ///todo: reduce the remaining stock quantity
-          updateStock();
-          getAllStock();
+          await updateStock();
+          await getAllStock();
           updateListener(false);
         } catch (e) {
           Utils.showMessage('Error: $e');
@@ -108,6 +112,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       await documentRef.set({'LastCustomerOrderId': newCustomerOrderId});
     }
   }
+
   addCustomerStockOrder() async {
     await firestore
         .collection(uid)
@@ -158,6 +163,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     newStockOrderedHistoryId = data?['LastStockOrderId'] + 1;
     await documentRef.set({'LastStockOrderId': newStockOrderedHistoryId});
   }
+
   addStockOrderHistoryByCustomer() async {
     await firestore
         .collection(uid)
@@ -190,7 +196,6 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     );
   }
 
-
   setNewCashbookEntryId() async {
     newCashbookEntryId = 1;
     final documentRef = firestore
@@ -214,6 +219,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
     }
   }
+
   addCustomerPaymentInCashbook() async {
     /// adding the payment history to cashbook
 
@@ -259,14 +265,14 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       'availableStock': previousAvailableStockQuantity -
           (int.tryParse(stockQuantityC.text.trim()))!,
     }).then(
-          (value) {
+      (value) {
         Utils.showMessage('Stock Updated!');
         debugPrint('Stock updated successfully');
 
         updateListener(false);
       },
     ).onError(
-          (error, stackTrace) {
+      (error, stackTrace) {
         Utils.showMessage('Error: $error');
         debugPrint('Stock update failed error....$error');
         updateListener(false);

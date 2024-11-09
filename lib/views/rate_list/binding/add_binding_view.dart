@@ -53,12 +53,12 @@ class _AddBindingViewState extends State<AddBindingView> {
                           builder: (context, val2, child) {
                             return CustomTextField(
                                 textInputType: TextInputType.number,
-                                controller: val2.rateC,
+                                controller: val2.bindingRateC,
                                 inputFormatter:
                                     FilteringTextInputFormatter.digitsOnly,
                                 iconData: Icons.monetization_on_rounded,
-                                hint: 'Binding price',
-                                validatorText: 'Provide binding price');
+                                hint: 'Binding Rate',
+                                validatorText: 'Provide binding rate');
                           },
                         ),
                       ],

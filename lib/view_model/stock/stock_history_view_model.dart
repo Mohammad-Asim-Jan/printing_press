@@ -11,7 +11,7 @@ class StockOrderHistoryViewModel with ChangeNotifier {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('StockData')
         .collection('StockOrderHistory')
-        .where('stockId', isEqualTo: stockId)
+        .where('stockId', isEqualTo: stockId).orderBy('stockOrderId', descending: true)
         .snapshots();
   }
 

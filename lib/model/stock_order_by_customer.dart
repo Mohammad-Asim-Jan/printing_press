@@ -13,7 +13,7 @@ class StockOrderByCustomer {
   final int stockUnitSellPrice;
   final int stockQuantity;
   final Timestamp orderDateTime;
-  Timestamp? orderDueDateTime; // no due date for in-stock order
+  // Timestamp? orderDueDateTime; /// todo: no due date for in-stock order
   final String orderStatus;
 
   // final List<Stock> itemOrdered; ///todo: either to add this or not!
@@ -28,7 +28,7 @@ class StockOrderByCustomer {
     required this.customerOrderId,
     required this.customerAddress,
     required this.orderDateTime,
-    this.orderDueDateTime,
+    // this.orderDueDateTime,
     required this.orderStatus,
     required this.paidAmount,
     required this.totalAmount,
@@ -54,7 +54,7 @@ class StockOrderByCustomer {
       customerOrderId: json['customerOrderId'],
       customerAddress: json['customerAddress'],
       orderDateTime: json['orderDateTime'],
-      orderDueDateTime: json['orderDueDateTime'],
+      // orderDueDateTime: json['orderDueDateTime'],
       orderStatus: json['orderStatus'],
       paidAmount: json['paidAmount'],
       totalAmount: json['totalAmount'],
