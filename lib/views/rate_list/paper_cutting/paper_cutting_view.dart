@@ -75,11 +75,11 @@ class _PaperCuttingViewState extends State<PaperCuttingView> {
                             children: [
                               IconButton(
                                 icon: const Icon(Icons.edit),
-                                onPressed: () {},
+                                onPressed: () => value.editPaperCutting(context, index),
                               ),
                               IconButton(
                                 icon: const Icon(Icons.delete),
-                                onPressed: () {},
+                                onPressed: () => value.confirmDelete(context, index),
                               ),
                             ],
                           ),

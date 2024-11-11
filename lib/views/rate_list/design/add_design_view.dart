@@ -56,8 +56,8 @@ class _AddDesignViewState extends State<AddDesignView> {
                                 inputFormatter:
                                     FilteringTextInputFormatter.digitsOnly,
                                 iconData: Icons.monetization_on_rounded,
-                                hint: 'Design price',
-                                validatorText: 'Provide design price');
+                                hint: 'Design Rate',
+                                validatorText: 'Provide design rate');
                           },
                         ),
                       ],

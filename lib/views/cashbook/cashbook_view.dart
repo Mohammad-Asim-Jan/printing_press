@@ -56,7 +56,7 @@ class _CashbookViewState extends State<CashbookView> {
               }
 
               if (snapshot.hasData) {
-                value.allCashbookEntries = snapshot.data!.docs.skip(1).map(
+                value.allCashbookEntries = snapshot.data!.docs.map(
                   (e) {
                     return CashbookEntry.fromJson(e.data());
                   },

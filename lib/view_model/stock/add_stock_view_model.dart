@@ -64,14 +64,14 @@ class AddStockViewModel with ChangeNotifier {
         .instance
         .collection(uid)
         .doc('SuppliersData')
-        .collection('Suppliers')
+        .collection('Suppliers').orderBy('supplierId', descending: true)
         .get();
 
     List<QueryDocumentSnapshot> list = querySnapshot.docs;
 
-    if (list.length >= 2) {
+    if (list.isNotEmpty) {
       // debugPrint('The list we have got, has length equals to ${list.length}');
-      for (int i = 1; i < list.length; i++) {
+      for (int i = 0; i < list.length; i++) {
         suppliersNamesList.add(list[i].get('supplierName'));
         suppliersIdList.add(list[i].get('supplierId'));
       }
@@ -354,14 +354,14 @@ class AddStockViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['stockId'] == null) {
-      debugPrint('Stock id found to be null --------- ${data?['stockId']}');
-      await documentRef.set({'stockId': newStockId});
+    if (data?['lastStockId'] == null) {
+      debugPrint('Stock id found to be null --------- ${data?['lastStockId']}');
+      await documentRef.set({'lastStockId': newStockId});
     } else {
       debugPrint(
-          '\n\n\nStock id is found to be available. \nStock id: ${data?['stockId']}');
-      newStockId = data?['stockId'] + 1;
-      await documentRef.set({'stockId': newStockId});
+          '\n\n\nStock id is found to be available. \nStock id: ${data?['lastStockId']}');
+      newStockId = data?['lastStockId'] + 1;
+      await documentRef.set({'lastStockId': newStockId});
     }
   }
 

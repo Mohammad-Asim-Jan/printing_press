@@ -44,7 +44,7 @@ class _AddNumberingViewState extends State<AddNumberingView> {
                             return CustomTextField(
                                 controller: val1.numberingNameC,
                                 iconData: Icons.numbers_outlined,
-                                hint: 'Numbering name',
+                                hint: 'Numbering Name',
                                 validatorText: 'Provide Numbering name');
                           },
                         ),
@@ -56,8 +56,8 @@ class _AddNumberingViewState extends State<AddNumberingView> {
                                 inputFormatter:
                                     FilteringTextInputFormatter.digitsOnly,
                                 iconData: Icons.monetization_on_rounded,
-                                hint: 'Numbering price',
-                                validatorText: 'Provide numbering price');
+                                hint: 'Numbering Rate',
+                                validatorText: 'Provide numbering rate');
                           },
                         ),
                       ],

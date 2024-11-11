@@ -247,14 +247,14 @@ class AddSupplierViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['supplierId'] == null) {
+    if (data?['lastSupplierId'] == null) {
       // debugPrint(
-      //     'Supplier id found to be null --------- ${data?['supplierId']}');
-      documentRef.set({'supplierId': newSupplierId});
+      //     'Supplier id found to be null --------- ${data?['lastSupplierId']}');
+      documentRef.set({'lastSupplierId': newSupplierId});
     } else {
       // debugPrint('Supplier id: ${data?['supplierId']}');
-      newSupplierId = data?['supplierId'] + 1;
-      documentRef.set({'supplierId': newSupplierId});
+      newSupplierId = data?['lastSupplierId'] + 1;
+      documentRef.set({'lastSupplierId': newSupplierId});
     }
   }
 
@@ -270,14 +270,14 @@ class AddSupplierViewModel with ChangeNotifier {
     final documentSnapshot = await documentRef.get();
 
     var data = documentSnapshot.data();
-    if (data?['bankAccountNumberId'] == null) {
+    if (data?['lastBankAccountNumberId'] == null) {
       // debugPrint(
-      //     'BankAccountNoId id found to be null --------- ${data?['bankAccountNumberId']}');
-      documentRef.set({'bankAccountNumberId': newBankAccountNumberId});
+      //     'BankAccountNoId id found to be null --------- ${data?['lastBankAccountNumberId']}');
+      documentRef.set({'lastBankAccountNumberId': newBankAccountNumberId});
     } else {
       // debugPrint('Bank Acc No id: ${data?['bankAccountNumberId']}');
-      newBankAccountNumberId = data?['bankAccountNumberId'] + 1;
-      documentRef.set({'bankAccountNumberId': newBankAccountNumberId});
+      newBankAccountNumberId = data?['lastBankAccountNumberId'] + 1;
+      documentRef.set({'lastBankAccountNumberId': newBankAccountNumberId});
     }
   }
 }

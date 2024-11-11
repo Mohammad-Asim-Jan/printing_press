@@ -1,11 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:printing_press/model/rate_list/paper.dart';
+
+import '../../../colors/color_palette.dart';
+import '../../../utils/toast_message.dart';
 
 class PaperViewModel with ChangeNotifier {
   // late bool dataFetched;
   late List<Paper> paperList;
+  String uid = FirebaseAuth.instance.currentUser!.uid;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getPaperData() {
     return FirebaseFirestore.instance
@@ -13,6 +19,235 @@ class PaperViewModel with ChangeNotifier {
         .doc('RateList')
         .collection('Paper')
         .snapshots();
+  }
+
+  void editPaper(BuildContext context, int index) {
+    final nameController = TextEditingController(text: paperList[index].name);
+    final widthController =
+        TextEditingController(text: paperList[index].size.width.toString());
+    final heightController =
+        TextEditingController(text: paperList[index].size.height.toString());
+    final qualityController =
+        TextEditingController(text: paperList[index].quality.toString());
+    final rateController =
+        TextEditingController(text: paperList[index].rate.toString());
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: kSecColor,
+          insetPadding: const EdgeInsets.all(12),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Edit Paper",
+                      style: Theme.of(context)
+                          .appBarTheme
+                          .titleTextStyle
+                          ?.copyWith(color: kOne),
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: nameController,
+                      decoration:
+                          const InputDecoration(labelText: 'Paper Name'),
+                      validator: (value) {
+                        if (value == '' || value == null) {
+                          return 'Provide paper name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: widthController,
+                      decoration:
+                          const InputDecoration(labelText: 'Paper Width'),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      validator: (value) {
+                        if (value == null || value == '') {
+                          return 'Provide paper width';
+                        } else if (int.tryParse(value) == null) {
+                          return 'Provide valid value';
+                        } else if (int.tryParse(value) == 0) {
+                          return 'Must be greater than 0';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: heightController,
+                      decoration:
+                          const InputDecoration(labelText: 'Paper Height'),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      validator: (value) {
+                        if (value == null || value == '') {
+                          return 'Provide paper height';
+                        } else if (int.tryParse(value) == null) {
+                          return 'Provide valid value';
+                        } else if (int.tryParse(value) == 0) {
+                          return 'Must be greater than 0';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: qualityController,
+                      decoration:
+                          const InputDecoration(labelText: 'Paper Quality'),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      validator: (value) {
+                        if (value == null || value == '') {
+                          return 'Provide paper quality';
+                        } else if (int.tryParse(value) == null) {
+                          return 'Provide valid value';
+                        } else if (int.tryParse(value) == 0) {
+                          return 'Must be greater than 0';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    TextFormField(
+                      controller: rateController,
+                      decoration:
+                          const InputDecoration(labelText: 'Paper Rate'),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      validator: (value) {
+                        if (value == null || value == '') {
+                          return 'Provide paper rate';
+                        } else if (int.tryParse(value) == null) {
+                          return 'Provide valid value';
+                        } else if (int.tryParse(value) == 0) {
+                          return 'Must be greater than 0';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              if (_formKey.currentState != null &&
+                                  _formKey.currentState!.validate()) {
+                                await FirebaseFirestore.instance
+                                    .collection(uid)
+                                    .doc('RateList')
+                                    .collection('Paper')
+                                    .doc('PAPER-${paperList[index].paperId}')
+                                    .update({
+                                  'name': nameController.text.trim(),
+                                  'size': {
+                                    'width':
+                                        int.parse(widthController.text.trim()),
+                                    'height':
+                                        int.parse(heightController.text.trim()),
+                                  },
+                                  'quality':
+                                      int.parse(qualityController.text.trim()),
+                                  'rate': int.parse(rateController.text.trim()),
+                                }).then(
+                                  (value) {
+                                    Utils.showMessage('Paper Updated!');
+                                  },
+                                ).onError(
+                                  (error, stackTrace) {
+                                    Utils.showMessage('Error Occurred!');
+                                  },
+                                );
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: const Text("Update"),
+                          ),
+                        ])
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void confirmDelete(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: kSecColor,
+          titleTextStyle: Theme.of(context)
+              .appBarTheme
+              .titleTextStyle
+              ?.copyWith(color: kOne),
+          title: const Text("Confirm Delete"),
+          content: const Text("Are you sure you want to delete this item?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("No"),
+            ),
+            TextButton(
+              onPressed: () async {
+                await deletePaper(paperList[index].paperId);
+                Navigator.pop(context);
+              },
+              child: const Text("Yes"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> deletePaper(int paperId) async {
+    await FirebaseFirestore.instance
+        .collection(uid)
+        .doc('RateList')
+        .collection('Paper')
+        .doc('PAPER-$paperId')
+        .delete()
+        .then(
+      (value) {
+        Utils.showMessage('Paper deleted!');
+      },
+    ).onError(
+      (error, stackTrace) {
+        Utils.showMessage('Error occurred!');
+      },
+    );
   }
 
 //

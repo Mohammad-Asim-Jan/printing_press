@@ -57,7 +57,7 @@ class _AllStockViewState extends State<AllStockView> {
               }
 
               if (snapshot.hasData) {
-                value.allStockList = snapshot.data!.docs.skip(1).map(
+                value.allStockList = snapshot.data!.docs.map(
                   (e) {
                     return Stock.fromJson(e.data());
                   },

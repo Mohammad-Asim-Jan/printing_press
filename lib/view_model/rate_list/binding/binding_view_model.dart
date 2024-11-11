@@ -30,6 +30,7 @@ class BindingViewModel with ChangeNotifier {
       context: context,
       builder: (context) {
         return Dialog(
+          backgroundColor: kSecColor,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
@@ -96,11 +97,11 @@ class BindingViewModel with ChangeNotifier {
                                   .collection('Binding')
                                   .doc('BIND-${bindingList[index].bindingId}')
                                   .update({
-                                'name': nameController.text,
-                                'rate': int.parse(rateController.text),
+                                'name': nameController.text.trim(),
+                                'rate': int.parse(rateController.text.trim()),
                               }).then(
                                 (value) {
-                                  Utils.showMessage('Updated!');
+                                  Utils.showMessage('Binding Updated!');
                                 },
                               ).onError(
                                 (error, stackTrace) {
@@ -127,6 +128,7 @@ class BindingViewModel with ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: kSecColor,
           titleTextStyle: Theme.of(context)
               .appBarTheme
               .titleTextStyle

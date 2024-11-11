@@ -56,8 +56,8 @@ class _AddPaperCuttingViewState extends State<AddPaperCuttingView> {
                                 inputFormatter:
                                     FilteringTextInputFormatter.digitsOnly,
                                 iconData: Icons.monetization_on_rounded,
-                                hint: 'Paper Cutting price',
-                                validatorText: 'Provide paper cutting price');
+                                hint: 'Paper Cutting Rate',
+                                validatorText: 'Provide paper cutting rate');
                           },
                         ),
                       ],

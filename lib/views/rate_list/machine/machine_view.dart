@@ -77,11 +77,11 @@ class _MachineViewState extends State<MachineView> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.edit),
-                              onPressed: () {},
+                              onPressed: () => value.editMachine(context, index),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete),
-                              onPressed: () {},
+                              onPressed: () => value.confirmDelete(context, index),
                             ),
                           ],
                         ),

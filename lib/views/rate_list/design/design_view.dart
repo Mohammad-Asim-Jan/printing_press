@@ -75,11 +75,11 @@ class _DesignViewState extends State<DesignView> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.edit),
-                              onPressed: () {},
+                              onPressed: () => value.editDesign(context, index),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete),
-                              onPressed: () {},
+                              onPressed: () => value.confirmDelete(context, index),
                             ),
                           ],
                         ),

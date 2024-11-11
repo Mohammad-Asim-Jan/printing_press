@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/components/custom_text_field.dart';
-import 'package:printing_press/utils/email_validation.dart';
 import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../components/round_button.dart';
@@ -17,7 +15,6 @@ class AddSupplierView extends StatefulWidget {
 class _AddSupplierViewState extends State<AddSupplierView> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -63,39 +60,13 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                       ),
                       Consumer<AddSupplierViewModel>(
                         builder: (context, val3, child) {
-                          return TextFormField(
+                          return CustomTextField(
                             controller: val3.supplierEmailC,
-                            keyboardType: TextInputType.emailAddress,
-                            cursorColor: kPrimeColor,
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(
-                                Icons.email,
-                                size: 24,
-                              ),
-                              hintText: 'Supplier email',
-                              filled: true,
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: kPrimeColor,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: kSecColor,
-                                ),
-                              ),
-                            ),
-                            validator: (text) {
-                              if (text == '' || text == null) {
-                                return 'Provide supplier email';
-                              } else if (!EmailValidation.isEmailValid(text)) {
-                                return 'Invalid email';
-                              }
-                              return null;
-                            },
+                            textInputType: TextInputType.emailAddress,
+                            iconData: Icons.email,
+                            hint: 'Supplier email',
+                            validatorText: 'Provide supplier email',
+                            emailValidation: true,
                           );
                         },
                       ),
@@ -138,7 +109,6 @@ class _AddSupplierViewState extends State<AddSupplierView> {
               title: 'Add',
               loading: value.loading,
               onPress: () {
-                ///todo: validations
                 value.addSupplierInFirebase();
               },
             ),

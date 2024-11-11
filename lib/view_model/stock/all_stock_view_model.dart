@@ -11,7 +11,7 @@ class AllStockViewModel with ChangeNotifier {
     return FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('StockData')
-        .collection('AvailableStock')
+        .collection('AvailableStock').orderBy('stockId', descending: true)
         .snapshots();
   }
 // void fetchAllStockData() async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:printing_press/utils/email_validation.dart';
 import '../colors/color_palette.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -10,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final String validatorText;
   final int? maxLength;
   final TextInputFormatter? inputFormatter;
+  final bool? emailValidation;
 
   const CustomTextField({
     super.key,
@@ -18,6 +20,7 @@ class CustomTextField extends StatefulWidget {
     this.maxLength,
     required this.hint,
     required this.validatorText,
+    this.emailValidation,
     this.textInputType = TextInputType.text,
     this.inputFormatter,
     });
@@ -66,6 +69,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         validator: (text) {
           if (text == '' || text == null) {
             return widget.validatorText;
+          } else if(widget.emailValidation == true ? !EmailValidation.isEmailValid(text): false){
+            return 'Invalid Email';
           }
           return null;
         },
