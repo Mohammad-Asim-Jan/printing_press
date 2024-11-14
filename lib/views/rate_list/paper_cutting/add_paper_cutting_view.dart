@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/rate_list/paper_cutting/add_paper_cutting_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +46,8 @@ class _AddPaperCuttingViewState extends State<AddPaperCuttingView> {
                                 controller: val1.paperCuttingNameC,
                                 iconData: Icons.cut,
                                 hint: 'Paper Cutting name',
-                                validatorText: 'Provide paper Cutting name');
+                              validators: const [isNotEmpty],
+                            );
                           },
                         ),
                         Consumer<AddPaperCuttingViewModel>(
@@ -57,7 +59,8 @@ class _AddPaperCuttingViewState extends State<AddPaperCuttingView> {
                                     FilteringTextInputFormatter.digitsOnly,
                                 iconData: Icons.monetization_on_rounded,
                                 hint: 'Paper Cutting Rate',
-                                validatorText: 'Provide paper cutting rate');
+                              validators: const [isNotEmpty, isNotZero],
+                            );
                           },
                         ),
                       ],

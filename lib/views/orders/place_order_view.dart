@@ -9,6 +9,7 @@ import 'package:printing_press/views/stock/add_stock_view.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
 import '../../components/round_button.dart';
+import '../../utils/validation_functions.dart';
 import '../../view_model/orders/place_stock_order_view_model.dart';
 
 class PlaceOrderView extends StatefulWidget {
@@ -71,9 +72,9 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
         ),
         body: TabBarView(children: [
           Consumer<PlaceStockOrderViewModel>(
-            builder: (context, value, child) {
-              return value.inStockOrderDataFetched
-                  ? value.allStockList.isEmpty
+            builder: (context, val, child) {
+              return val.inStockOrderDataFetched
+                  ? val.allStockList.isEmpty
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -108,12 +109,11 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           Consumer<PlaceStockOrderViewModel>(
                                             builder: (context, val1, child) {
                                               return CustomTextField(
-                                                  controller:
-                                                      val1.customerNameC,
-                                                  iconData: Icons.person,
-                                                  hint: 'Customer name',
-                                                  validatorText:
-                                                      'Provide customer name');
+                                                controller: val1.customerNameC,
+                                                iconData: Icons.person,
+                                                hint: 'Customer name',
+                                                validators: const [isNotEmpty],
+                                              );
                                             },
                                           ),
 
@@ -122,12 +122,11 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           Consumer<PlaceStockOrderViewModel>(
                                             builder: (context, val2, child) {
                                               return CustomTextField(
-                                                  controller:
-                                                      val2.businessTitleC,
-                                                  iconData: Icons.business,
-                                                  hint: 'Business name',
-                                                  validatorText:
-                                                      'Provide business name');
+                                                controller: val2.businessTitleC,
+                                                iconData: Icons.business,
+                                                hint: 'Business name',
+                                                validators: const [isNotEmpty],
+                                              );
                                             },
                                           ),
 
@@ -136,18 +135,18 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           Consumer<PlaceStockOrderViewModel>(
                                             builder: (context, val3, child) {
                                               return CustomTextField(
-                                                  maxLength: 11,
-                                                  textInputType:
-                                                      TextInputType.number,
-                                                  controller:
-                                                      val3.customerContactC,
-                                                  inputFormatter:
-                                                      FilteringTextInputFormatter
-                                                          .digitsOnly,
-                                                  iconData: Icons.phone,
-                                                  hint: 'Contact',
-                                                  validatorText:
-                                                      'Provide customer phone no.');
+                                                maxLength: 11,
+                                                textInputType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    val3.customerContactC,
+                                                inputFormatter:
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                iconData: Icons.phone,
+                                                hint: 'Contact',
+                                                validators: const [isNotEmpty],
+                                              );
                                             },
                                           ),
 
@@ -156,12 +155,11 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           Consumer<PlaceStockOrderViewModel>(
                                               builder: (context, val4, child) {
                                             return CustomTextField(
-                                                controller:
-                                                    val4.customerAddressC,
-                                                iconData: Icons.home_filled,
-                                                hint: 'Address',
-                                                validatorText:
-                                                    'Provide customer address');
+                                              controller: val4.customerAddressC,
+                                              iconData: Icons.home_filled,
+                                              hint: 'Address',
+                                              validators: const [isNotEmpty],
+                                            );
                                           }),
 
                                           // orderDateTime
@@ -232,8 +230,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                   ),
                                                   Expanded(
                                                       flex: 1,
-                                                      child: Text(value
-                                                          .stockList[value
+                                                      child: Text(val
+                                                          .stockList[val
                                                               .selectedStockIndex]
                                                           .stockId
                                                           .toString())),
@@ -242,8 +240,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                       child: Text('Name: ')),
                                                   Expanded(
                                                       flex: 1,
-                                                      child: Text(value
-                                                          .stockList[value
+                                                      child: Text(val
+                                                          .stockList[val
                                                               .selectedStockIndex]
                                                           .stockName)),
                                                 ],
@@ -258,8 +256,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                   ),
                                                   Expanded(
                                                       flex: 1,
-                                                      child: Text(value
-                                                          .stockList[value
+                                                      child: Text(val
+                                                          .stockList[val
                                                               .selectedStockIndex]
                                                           .stockColor)),
                                                   const Expanded(
@@ -268,8 +266,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                           'Manufactured By: ')),
                                                   Expanded(
                                                       flex: 1,
-                                                      child: Text(value
-                                                          .stockList[value
+                                                      child: Text(val
+                                                          .stockList[val
                                                               .selectedStockIndex]
                                                           .manufacturedBy)),
                                                 ],
@@ -285,8 +283,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                   ),
                                                   Expanded(
                                                       flex: 1,
-                                                      child: Text(value
-                                                          .stockList[value
+                                                      child: Text(val
+                                                          .stockList[val
                                                               .selectedStockIndex]
                                                           .stockCategory)),
                                                   const Expanded(
@@ -295,8 +293,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                           Text('Available: ')),
                                                   Expanded(
                                                       flex: 1,
-                                                      child: Text(value
-                                                          .stockList[value
+                                                      child: Text(val
+                                                          .stockList[val
                                                               .selectedStockIndex]
                                                           .availableStock
                                                           .toString())),
@@ -313,8 +311,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                   ),
                                                   Expanded(
                                                       flex: 1,
-                                                      child: Text(value
-                                                          .stockList[value
+                                                      child: Text(val
+                                                          .stockList[val
                                                               .selectedStockIndex]
                                                           .stockDescription)),
                                                 ],
@@ -329,8 +327,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                   ),
                                                   Expanded(
                                                       flex: 1,
-                                                      child: Text(value
-                                                          .stockList[value
+                                                      child: Text(val
+                                                          .stockList[val
                                                               .selectedStockIndex]
                                                           .stockUnitSellPrice
                                                           .toString())),
@@ -341,60 +339,27 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                           const SizedBox(
                                             height: 20,
                                           ),
-                                          TextFormField(
-                                            controller:
-                                            value.stockQuantityC,
-                                            keyboardType:
-                                            TextInputType.number,
-                                            cursorColor: kPrimeColor,
-                                            inputFormatters: <TextInputFormatter>[
-                                              FilteringTextInputFormatter
-                                                  .digitsOnly,
-                                            ],
-                                            decoration: InputDecoration(
-                                              labelText: 'Quantity',
-                                              prefixIcon: const Icon(
-                                                Icons.filter_none_rounded,
-                                                size: 24,
-                                              ),
-                                              hintText: 'Quantity',
-                                              filled: true,
-                                              focusedBorder:
-                                              OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    20),
-                                                borderSide: BorderSide(
-                                                  width: 2,
-                                                  color: kPrimeColor,
-                                                ),
-                                              ),
-                                              enabledBorder:
-                                              OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    12),
-                                                borderSide: BorderSide(
-                                                  color: kSecColor,
-                                                ),
-                                              ),
-                                            ),
-                                            validator: (text) {
-                                              if (text == '' ||
-                                                  text == null) {
-                                                return 'Provide stock quantity';
-                                              } else if (int.tryParse(
-                                                  value.stockQuantityC
-                                                      .text)! >
-                                                  value
-                                                      .stockList[value
-                                                      .selectedStockIndex]
-                                                      .stockQuantity) {
-                                                return 'Out of stock';
-                                              }
-                                              return null;
-                                            },
-                                          ),
+
+                                          CustomTextField(
+                                              controller: val.stockQuantityC,
+                                              iconData:
+                                                  Icons.monetization_on_rounded,
+                                              inputFormatter:
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly,
+                                              textInputType:
+                                                  TextInputType.number,
+                                              hint: 'Quantity',
+                                              validators: [
+                                                isNotEmpty,
+                                                isNotZero,
+                                                (value) => lessThan(
+                                                    value,
+                                                    val
+                                                        .stockList[val
+                                                            .selectedStockIndex]
+                                                        .stockQuantity)
+                                              ]),
                                           // Row(
                                           //   children: [
                                           //     const Expanded(
@@ -414,60 +379,28 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
 
                                           // advancePayment
                                           /// text field number only
-                                          SizedBox(height: 20,),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
                                           Consumer<PlaceStockOrderViewModel>(
                                               builder: (context, val5, child) {
-                                            return TextFormField(
-                                              controller: val5.advancePaymentC,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              cursorColor: kPrimeColor,
-                                              inputFormatters: <TextInputFormatter>[
-                                                FilteringTextInputFormatter
-                                                    .digitsOnly,
-                                              ],
-                                              decoration: InputDecoration(
-                                                labelText: 'Advance payment',
-                                                prefixIcon: const Icon(
-                                                  Icons.monetization_on_rounded,
-                                                  size: 24,
-                                                ),
-                                                hintText: 'Advance payment',
-                                                filled: true,
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  borderSide: BorderSide(
-                                                    width: 2,
-                                                    color: kPrimeColor,
-                                                  ),
-                                                ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  borderSide: BorderSide(
-                                                    color: kSecColor,
-                                                  ),
-                                                ),
-                                              ),
-                                              validator: (text) {
-                                                if (text == '' ||
-                                                    text == null) {
-                                                  return 'Provide advance payment';
-                                                } else if (val5.stockQuantity ==
-                                                    0) {
-                                                  return 'Enter stock quantity (at least 1)';
-                                                } else if (int.tryParse(val5
-                                                        .advancePaymentC.text
-                                                        .trim())! >
-                                                    val5.totalAmount) {
-                                                  return 'Please enter below \$${val5.totalAmount}';
-                                                }
-                                                return null;
-                                              },
-                                            );
+                                            return CustomTextField(
+                                                controller:
+                                                    val5.advancePaymentC,
+                                                iconData: Icons
+                                                    .monetization_on_rounded,
+                                                inputFormatter:
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                textInputType:
+                                                    TextInputType.number,
+                                                hint: 'Advance payment',
+                                                validators: [
+                                                  isNotEmpty,
+                                                  isNotZero,
+                                                  (value) => lessThan(
+                                                      value, val5.totalAmount)
+                                                ]);
                                           }),
                                         ],
                                       ),
@@ -478,9 +411,9 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                             ),
                             RoundButton(
                               title: 'Place Order',
-                              loading: value.loading,
+                              loading: val.loading,
                               onPress: () {
-                                value.addCustomerOrderDataInFirebase(context);
+                                val.addCustomerOrderDataInFirebase(context);
                               },
                             ),
                           ],
@@ -512,8 +445,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 controller: val1.customerNameC,
                                                 iconData: Icons.person,
                                                 hint: 'Customer name',
-                                                validatorText:
-                                                    'Provide customer name');
+                                                validators: const [isNotEmpty]);
                                           },
                                         ),
 
@@ -525,8 +457,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                 controller: val2.businessTitleC,
                                                 iconData: Icons.business,
                                                 hint: 'Business name',
-                                                validatorText:
-                                                    'Provide business name');
+                                                validators: const [isNotEmpty]);
                                           },
                                         ),
 
@@ -545,8 +476,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         .digitsOnly,
                                                 iconData: Icons.phone,
                                                 hint: 'Contact',
-                                                validatorText:
-                                                    'Provide customer phone no.');
+                                                validators: const [isNotEmpty]);
                                           },
                                         ),
 
@@ -558,8 +488,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               controller: val4.customerAddressC,
                                               iconData: Icons.home_filled,
                                               hint: 'Address',
-                                              validatorText:
-                                                  'Provide customer address');
+                                              validators: const [isNotEmpty]);
                                         }),
                                         Row(
                                           mainAxisAlignment:
@@ -728,58 +657,26 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               height: 60,
                                               width: 100,
                                               child: Consumer<
-                                                  PlaceCustomizeOrderViewModel>(
-                                                builder:
-                                                    (context, val4, child) =>
-                                                        TextFormField(
-                                                  controller:
-                                                      val4.booksQuantityC,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  inputFormatters: <TextInputFormatter>[
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly
-                                                  ],
-                                                  cursorColor: kPrimeColor,
-                                                  decoration: InputDecoration(
-                                                    hintText: 'Books',
-                                                    filled: true,
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide: BorderSide(
-                                                        width: 2,
-                                                        color: kPrimeColor,
-                                                      ),
-                                                    ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide: BorderSide(
-                                                        color: kSecColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  validator: (text) {
-                                                    if (text == '' ||
-                                                        text == null) {
-                                                      return 'Please provide books quantity';
-                                                    } else if (int.tryParse(
-                                                            text)! <
-                                                        1) {
-                                                      return 'Book quantity should be at least 1';
-                                                    }
-                                                    return null;
-                                                  },
-                                                ),
-                                              ),
+                                                      PlaceCustomizeOrderViewModel>(
+                                                  builder: (context, val4,
+                                                          child) =>
+                                                      CustomTextField(
+                                                          controller: val4
+                                                              .booksQuantityC,
+                                                          iconData: null,
+                                                          inputFormatter:
+                                                              FilteringTextInputFormatter
+                                                                  .digitsOnly,
+                                                          textInputType: TextInputType.number,
+                                                          hint: 'Books',
+                                                          validators: const [
+                                                            isNotEmpty,
+                                                            isNotZero
+                                                          ])),
                                             ),
                                           ],
                                         ),
+
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
@@ -790,53 +687,23 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               width: 150,
                                               child: Consumer<
                                                   PlaceCustomizeOrderViewModel>(
-                                                builder:
-                                                    (context, val0, child) =>
-                                                        TextFormField(
-                                                  controller:
-                                                      val0.pagesPerBookC,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  inputFormatters: <TextInputFormatter>[
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly
-                                                  ],
-                                                  cursorColor: kPrimeColor,
-                                                  decoration: InputDecoration(
-                                                    hintText: 'Pages per book',
-                                                    filled: true,
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide: BorderSide(
-                                                        width: 2,
-                                                        color: kPrimeColor,
-                                                      ),
-                                                    ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide: BorderSide(
-                                                        color: kSecColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  validator: (text) {
-                                                    if (text == '' ||
-                                                        text == null) {
-                                                      return 'Please provide pages per book';
-                                                    } else if (int.tryParse(
-                                                            text)! <
-                                                        10) {
-                                                      return 'Pages should be at least 10';
-                                                    }
-                                                    return null;
-                                                  },
-                                                ),
+                                                builder: (context, val0,
+                                                        child) =>
+                                                    CustomTextField(
+                                                        controller:
+                                                            val0.pagesPerBookC,
+                                                        iconData: null,
+                                                        inputFormatter:
+                                                            FilteringTextInputFormatter
+                                                                .digitsOnly,
+                                                        textInputType:
+                                                            TextInputType
+                                                                .number,
+                                                        hint: 'Pages per book',
+                                                        validators: [
+                                                      isNotEmpty,
+                                                      (value) => moreThan(value, 10),
+                                                    ]),
                                               ),
                                             ),
                                           ],
@@ -1442,56 +1309,22 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               height: 60,
                                               width: 100,
                                               child: Consumer<
-                                                  PlaceCustomizeOrderViewModel>(
-                                                builder:
-                                                    (context, val15, child) =>
-                                                        TextFormField(
-                                                  controller:
-                                                      val15.otherExpensesC,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly,
-                                                  ],
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  cursorColor: kPrimeColor,
-                                                  decoration: InputDecoration(
-                                                    hintText: 'Expenses',
-                                                    filled: true,
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide: BorderSide(
-                                                        width: 2,
-                                                        color: kPrimeColor,
-                                                      ),
-                                                    ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide: BorderSide(
-                                                        color: kSecColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  validator: (text) {
-                                                    if (text != null ||
-                                                        text != '') {
-                                                      if (int.tryParse(text!) !=
-                                                              null &&
-                                                          int.tryParse(text)! <
-                                                              0) {
-                                                        return 'Provide more than 0';
-                                                      }
-                                                    }
-                                                    return null;
-                                                  },
-                                                ),
-                                              ),
+                                                      PlaceCustomizeOrderViewModel>(
+                                                  builder:
+                                                      (context, val15, child) =>
+                                                          CustomTextField(
+                                                            controller: val15
+                                                                .otherExpensesC,
+                                                            inputFormatter:
+                                                                FilteringTextInputFormatter
+                                                                    .digitsOnly,
+                                                            iconData: null,
+                                                            textInputType:
+                                                                TextInputType
+                                                                    .number,
+                                                            hint: 'Expenses',
+                                                            validators: null,
+                                                          )),
                                             ),
                                           ],
                                         ),
@@ -1504,55 +1337,24 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                               height: 60,
                                               width: 100,
                                               child: Consumer<
-                                                  PlaceCustomizeOrderViewModel>(
-                                                builder:
-                                                    (context, val15, child) =>
-                                                        TextFormField(
-                                                  controller:
-                                                      val15.advancePaymentC,
-                                                  inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly,
-                                                  ],
-                                                  validator: (value) {
-                                                    if (value != '' ||
-                                                        value!.isNotEmpty) {
-                                                      if (int.tryParse(
-                                                              value!)! <
-                                                          0) {
-                                                        return 'Invalid input!';
-                                                      }
-                                                    }
-                                                    return null;
-                                                  },
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  cursorColor: kPrimeColor,
-                                                  decoration: InputDecoration(
-                                                    hintText: 'Payment',
-                                                    filled: true,
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide: BorderSide(
-                                                        width: 2,
-                                                        color: kPrimeColor,
-                                                      ),
-                                                    ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      borderSide: BorderSide(
-                                                        color: kSecColor,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
+                                                      PlaceCustomizeOrderViewModel>(
+                                                  builder:
+                                                      (context, val15, child) =>
+                                                          CustomTextField(
+                                                            controller: val15
+                                                                .advancePaymentC,
+                                                            inputFormatter:
+                                                                FilteringTextInputFormatter
+                                                                    .digitsOnly,
+                                                            iconData: null,
+                                                            textInputType:
+                                                                TextInputType
+                                                                    .number,
+                                                            hint: 'Payment',
+                                                            validators: const [
+                                                              isNotEmpty,
+                                                            ],
+                                                          )),
                                             ),
                                           ],
                                         ),

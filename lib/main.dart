@@ -91,7 +91,9 @@ class MyApp extends StatelessWidget {
           // primarySwatch: Colors.green,
           appBarTheme: AppBarTheme(
             toolbarHeight: 45,
-            titleTextStyle: const TextStyle(
+            titleTextStyle:  TextStyle(
+              // color: Colors.white60,
+              color: kSecColor,
               fontSize: 24,
               wordSpacing: 2,
               letterSpacing: 3,
@@ -99,7 +101,8 @@ class MyApp extends StatelessWidget {
             ),
             centerTitle: true,
             backgroundColor: kOne,
-            foregroundColor: Colors.white,
+            foregroundColor: Colors.white60,
+
           ),
           scaffoldBackgroundColor: kSecColor,
           // useMaterial3: true,

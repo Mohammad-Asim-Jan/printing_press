@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/components/round_button.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/payment/payment_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -46,10 +47,13 @@ class _PaymentViewState extends State<PaymentView> {
             Consumer<PaymentViewModel>(
               builder: (context, val, child) {
                 return CustomTextField(
-                    controller: val.descriptionC,
-                    iconData: Icons.description,
-                    hint: 'Payment description',
-                    validatorText: 'Provide stock description');
+                  controller: val.descriptionC,
+                  iconData: Icons.description,
+                  hint: 'Payment description',
+                  validators: const [
+                    isNotEmpty,
+                  ],
+                );
               },
             ),
 
@@ -90,9 +94,10 @@ class _PaymentViewState extends State<PaymentView> {
                     } else if (val1.supplierPreviousRemainingAmount <
                         int.tryParse(val1.amountC.text.trim())!) {
                       return 'The remaining amount is \$ ${val1.supplierPreviousRemainingAmount}';
-                    } else {
-                      return null;
+                    } else if(int.tryParse(val1.amountC.text.trim())! == 0){
+                      return 'Provide some amount!';
                     }
+                      return null;
                   },
                 );
               },
@@ -105,7 +110,9 @@ class _PaymentViewState extends State<PaymentView> {
                     controller: val2.paymentMethodC,
                     iconData: Icons.payment,
                     hint: 'Payment Method',
-                    validatorText: 'Provide payment method');
+                    validators: const [
+                      isNotEmpty,
+                    ],);
               },
             ),
             const Spacer(),

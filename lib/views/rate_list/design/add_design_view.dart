@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/rate_list/design/add_design_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -42,10 +43,11 @@ class _AddDesignViewState extends State<AddDesignView> {
                         Consumer<AddDesignViewModel>(
                           builder: (context, val1, child) {
                             return CustomTextField(
-                                controller: val1.designNameC,
-                                iconData: Icons.design_services_rounded,
-                                hint: 'Design name',
-                                validatorText: 'Provide design name');
+                              controller: val1.designNameC,
+                              iconData: Icons.design_services_rounded,
+                              hint: 'Design name',
+                              validators: const [isNotEmpty],
+                            );
                           },
                         ),
                         Consumer<AddDesignViewModel>(
@@ -57,7 +59,10 @@ class _AddDesignViewState extends State<AddDesignView> {
                                     FilteringTextInputFormatter.digitsOnly,
                                 iconData: Icons.monetization_on_rounded,
                                 hint: 'Design Rate',
-                                validatorText: 'Provide design rate');
+                                validators: const [
+                                  isNotEmpty,
+                                  isNotZero,
+                                ],);
                           },
                         ),
                       ],

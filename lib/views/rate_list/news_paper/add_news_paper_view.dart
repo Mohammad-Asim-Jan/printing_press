@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/rate_list/news_paper/add_news_paper_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -43,10 +44,11 @@ class _AddNewsPaperViewState extends State<AddNewsPaperView> {
                       Consumer<AddNewsPaperViewModel>(
                         builder: (context, val1, child) {
                           return CustomTextField(
-                              controller: val1.newsPaperNameC,
-                              iconData: Icons.newspaper,
-                              hint: 'News-paper name',
-                              validatorText: 'Provide news-paper name');
+                            controller: val1.newsPaperNameC,
+                            iconData: Icons.newspaper,
+                            hint: 'News-paper name',
+                            validators: const [isNotEmpty],
+                          );
                         },
                       ),
                       Consumer<AddNewsPaperViewModel>(
@@ -58,7 +60,8 @@ class _AddNewsPaperViewState extends State<AddNewsPaperView> {
                                   FilteringTextInputFormatter.digitsOnly,
                               iconData: Icons.tune_rounded,
                               hint: 'News-paper width',
-                              validatorText: 'Provide news-paper width');
+                            validators: const [isNotEmpty, isNotZero],
+                          );
                         },
                       ),
                       Consumer<AddNewsPaperViewModel>(
@@ -70,7 +73,8 @@ class _AddNewsPaperViewState extends State<AddNewsPaperView> {
                                   FilteringTextInputFormatter.digitsOnly,
                               iconData: Icons.tune_rounded,
                               hint: 'News-paper height',
-                              validatorText: 'Provide news-paper height');
+                            validators: const [isNotEmpty, isNotZero],
+                          );
                         },
                       ),
                       Consumer<AddNewsPaperViewModel>(
@@ -82,7 +86,8 @@ class _AddNewsPaperViewState extends State<AddNewsPaperView> {
                                   FilteringTextInputFormatter.digitsOnly,
                               iconData: Icons.label,
                               hint: 'News-paper quality',
-                              validatorText: 'Provide news-paper quality');
+                            validators: const [isNotEmpty, isNotZero],
+                          );
                         },
                       ),
                       Consumer<AddNewsPaperViewModel>(
@@ -94,7 +99,8 @@ class _AddNewsPaperViewState extends State<AddNewsPaperView> {
                                   FilteringTextInputFormatter.digitsOnly,
                               iconData: Icons.monetization_on_rounded,
                               hint: 'Rate',
-                              validatorText: 'Provide news-paper rate');
+                            validators: const [isNotEmpty, isNotZero],
+                          );
                         },
                       ),
                     ],

@@ -36,6 +36,7 @@ class _HomeViewState extends State<HomeView> {
               height: 10,
             ),
             RoundButton(
+                unFill: true,
                 title: 'Customer Orders',
                 onPress: () {
                   Navigator.of(context).push(MaterialPageRoute(
@@ -47,6 +48,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             RoundButton(
                 title: 'Cashbook',
+                unFill: true,
                 onPress: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const CashbookView(),
@@ -67,6 +69,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             RoundButton(
                 title: 'Suppliers',
+                unFill: true,
                 onPress: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const AllSuppliersView(),
@@ -77,6 +80,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             RoundButton(
                 title: 'Stock',
+                unFill: true,
                 onPress: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const AllStockView(),
@@ -96,6 +100,7 @@ class _HomeViewState extends State<HomeView> {
             // ),
             RoundButton(
                 title: 'Rate list',
+                unFill: true,
                 onPress: () {
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const RateListView(),

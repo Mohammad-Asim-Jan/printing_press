@@ -17,6 +17,32 @@ class RateListView extends StatefulWidget {
 }
 
 class _RateListViewState extends State<RateListView> {
+  navigateTo(BuildContext context, Widget screen) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => screen));
+  }
+
+  List<String> buttonNames = [
+    'Binding',
+    'Design',
+    'Machine',
+    'News Paper',
+    'Numbering',
+    'Paper',
+    'Paper Cutting',
+    'Profit',
+  ];
+
+  List<Widget> screenNames = [
+    const BindingView(),
+    const DesignView(),
+    const MachineView(),
+    const NewsPaperView(),
+    const NumberingView(),
+    const PaperView(),
+    const PaperCuttingView(),
+    const ProfitView(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,82 +52,21 @@ class _RateListViewState extends State<RateListView> {
       body: SizedBox(
         height: double.infinity,
         width: double.infinity,
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            RoundButton(
-                title: 'Binding',
-                onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const BindingView()));
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            RoundButton(
-                title: 'Design',
-                onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const DesignView()));
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            RoundButton(
-                title: 'Machine',
-                onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const MachineView()));
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            RoundButton(
-                title: 'News Paper',
-                onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const NewsPaperView()));
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            RoundButton(
-                title: 'Numbering',
-                onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const NumberingView()));
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            RoundButton(
-                title: 'Paper',
-                onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const PaperView()));
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            RoundButton(
-                title: 'Paper Cutting',
-                onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const PaperCuttingView()));
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-            RoundButton(
-                title: 'Profit',
-                onPress: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const ProfitView()));
-                }),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
+        child: GridView.builder(
+          itemCount: buttonNames.length,
+          padding: const EdgeInsets.all(10),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: 1.9,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 15,
+            crossAxisCount: 2,
+          ),
+          itemBuilder: (context, index) {
+            return RoundButton(
+                unFill: true,
+                title: buttonNames[index],
+                onPress: () => navigateTo(context, screenNames[index]));
+          },
         ),
       ),
     );

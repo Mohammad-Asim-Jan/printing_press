@@ -22,17 +22,21 @@ class RoundButton extends StatefulWidget {
 class _RoundButtonState extends State<RoundButton> {
   @override
   Widget build(BuildContext context) {
-    return widget.loading
-        ? const CircularProgressIndicator(color: Colors.red)
-        : InkWell(
-            onTap: widget.onPress,
-            child: Container(
-              height: 50,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: widget.unFill ? Colors.transparent : kOne,
-                  borderRadius: BorderRadius.circular(8)),
-              child: Text(
+    return InkWell(
+      onTap: widget.loading ? null : widget.onPress,
+      child: Container(
+        height: 50,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            color: widget.unFill ? Colors.transparent : kOne,
+            borderRadius: BorderRadius.circular(8),
+            border: widget.unFill ? Border.all(width: 2, color: kOne) : null),
+        child: widget.loading
+            ? CircularProgressIndicator(
+                color: widget.unFill ? kOne : kTwo,
+                backgroundColor: widget.unFill ? kTwo : kOne,
+              )
+            : Text(
                 widget.title,
                 style: TextStyle(
                   color: widget.unFill ? kOne : kSecColor,
@@ -40,7 +44,7 @@ class _RoundButtonState extends State<RoundButton> {
                   fontSize: 20,
                 ),
               ),
-            ),
-          );
+      ),
+    );
   }
 }

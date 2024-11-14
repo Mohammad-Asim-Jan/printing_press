@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:printing_press/components/custom_drop_down.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/cashbook/add_cashbook_entry_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -43,13 +44,17 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                         Consumer<AddCashbookEntryViewModel>(
                           builder: (context, val1, child) {
                             return CustomTextField(
-                                controller: val1.amountC,
-                                textInputType: TextInputType.number,
-                                iconData: Icons.monetization_on_rounded,
-                                inputFormatter:
-                                    FilteringTextInputFormatter.digitsOnly,
-                                hint: 'Entry amount',
-                                validatorText: 'Provide entry amount');
+                              controller: val1.amountC,
+                              textInputType: TextInputType.number,
+                              iconData: Icons.monetization_on_rounded,
+                              inputFormatter:
+                                  FilteringTextInputFormatter.digitsOnly,
+                              hint: 'Amount',
+                              validators: const [
+                                isNotEmpty,
+                                isNotZero,
+                              ],
+                            );
                           },
                         ),
                         const SizedBox(
@@ -58,10 +63,13 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                         Consumer<AddCashbookEntryViewModel>(
                           builder: (context, val2, child) {
                             return CustomTextField(
-                                controller: val2.descriptionC,
-                                iconData: Icons.description,
-                                hint: 'Description',
-                                validatorText: 'Provide description');
+                              controller: val2.descriptionC,
+                              iconData: Icons.description,
+                              hint: 'Description',
+                              validators: const [
+                                isNotEmpty,
+                              ],
+                            );
                           },
                         ),
                         const SizedBox(
@@ -70,10 +78,11 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                         Consumer<AddCashbookEntryViewModel>(
                           builder: (context, val3, child) {
                             return CustomTextField(
-                                controller: val3.paymentMethodC,
-                                iconData: Icons.cached_sharp,
-                                hint: 'Payment method',
-                                validatorText: 'Provide payment method');
+                              controller: val3.paymentMethodC,
+                              iconData: Icons.cached_sharp,
+                              hint: 'Payment method',
+                              validators: const [isNotEmpty],
+                            );
                           },
                         ),
                         const SizedBox(
@@ -118,7 +127,6 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                 title: 'Add',
                 loading: value.loading,
                 onPress: () {
-
                   value.addCashbookEntryInFirebase();
                 },
               ),

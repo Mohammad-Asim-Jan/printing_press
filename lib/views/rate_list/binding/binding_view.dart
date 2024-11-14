@@ -107,7 +107,6 @@ class _BindingViewState extends State<BindingView> {
                   },
                 );
               }
-
               return const Text('No data!');
             },
           );

@@ -4,6 +4,7 @@ import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/components/custom_drop_down.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:printing_press/views/suppliers/add_supplier_view.dart';
 import 'package:provider/provider.dart';
@@ -71,50 +72,52 @@ class _AddStockViewState extends State<AddStockView> {
                                         Consumer<AddStockViewModel>(
                                           builder: (context, val1, child) {
                                             return CustomTextField(
-                                                controller: val1.stockNameC,
-                                                iconData: Icons.inventory,
-                                                hint: 'Stock name',
-                                                validatorText:
-                                                    'Provide stock name');
+                                              controller: val1.stockNameC,
+                                              iconData: Icons.inventory,
+                                              hint: 'Stock name',
+                                              validators: const [isNotEmpty],
+                                            );
                                           },
                                         ),
                                         Consumer<AddStockViewModel>(
                                           builder: (context, val2, child) {
                                             return CustomTextField(
-                                                controller: val2.stockCategoryC,
-                                                iconData:
-                                                    Icons.category_rounded,
-                                                hint: 'Stock category',
-                                                validatorText:
-                                                    'Provide stock category');
+                                              controller: val2.stockCategoryC,
+                                              iconData: Icons.category_rounded,
+                                              hint: 'Stock category',
+                                              validators: const [isNotEmpty],
+                                            );
                                           },
                                         ),
                                         Consumer<AddStockViewModel>(
                                           builder: (context, val3, child) {
                                             return CustomTextField(
-                                                controller:
-                                                    val3.stockDescriptionC,
-                                                iconData:
-                                                    Icons.description_rounded,
-                                                hint: 'Stock description',
-                                                validatorText:
-                                                    'Provide stock description');
+                                              controller:
+                                                  val3.stockDescriptionC,
+                                              iconData:
+                                                  Icons.description_rounded,
+                                              hint: 'Stock description',
+                                              validators: const [isNotEmpty],
+                                            );
                                           },
                                         ),
                                         Consumer<AddStockViewModel>(
                                           builder: (context, val4, child) {
                                             return CustomTextField(
-                                                textInputType:
-                                                    TextInputType.number,
-                                                controller:
-                                                    val4.stockUnitBuyPriceC,
-                                                inputFormatter:
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly,
-                                                iconData: Icons.attach_money,
-                                                hint: 'Stock price',
-                                                validatorText:
-                                                    'Provide stock buying price');
+                                              textInputType:
+                                                  TextInputType.number,
+                                              controller:
+                                                  val4.stockUnitBuyPriceC,
+                                              inputFormatter:
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly,
+                                              iconData: Icons.attach_money,
+                                              hint: 'Stock price',
+                                              validators: const [
+                                                isNotEmpty,
+                                                isNotZero
+                                              ],
+                                            );
                                           },
                                         ),
                                         Consumer<AddStockViewModel>(
@@ -130,7 +133,8 @@ class _AddStockViewState extends State<AddStockView> {
                                                     .digitsOnly,
                                               ],
                                               decoration: InputDecoration(
-                                                labelText:'Stock selling price' ,
+                                                labelText:
+                                                    'Stock selling price',
                                                 prefixIcon: const Icon(
                                                   Icons.monetization_on,
                                                   size: 24,
@@ -180,14 +184,19 @@ class _AddStockViewState extends State<AddStockView> {
                                           ///todo: add plus icon and minus icon for ease
                                           builder: (context, val6, child) {
                                             return CustomTextField(
-                                                controller: val6.stockQuantityC,
-                                                iconData: Icons.list,
-                                                inputFormatter:
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly,
-                                                hint: 'Stock quantity',
-                                                validatorText:
-                                                    'Provide stock quantity');
+                                              textInputType:
+                                                  TextInputType.number,
+                                              controller: val6.stockQuantityC,
+                                              iconData: Icons.list,
+                                              inputFormatter:
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly,
+                                              hint: 'Stock quantity',
+                                              validators: const [
+                                                isNotEmpty,
+                                                isNotZero
+                                              ],
+                                            );
                                           },
                                         ),
                                         Consumer<AddStockViewModel>(
@@ -197,8 +206,8 @@ class _AddStockViewState extends State<AddStockView> {
                                                 iconData:
                                                     Icons.color_lens_rounded,
                                                 hint: 'Stock color',
-                                                validatorText:
-                                                    'Provide stock color');
+                                              validators: const [isNotEmpty],
+                                            );
                                           },
                                         ),
                                         Consumer<AddStockViewModel>(
@@ -208,8 +217,8 @@ class _AddStockViewState extends State<AddStockView> {
                                                     val8.stockManufacturedByC,
                                                 iconData: Icons.factory,
                                                 hint: 'Stock brand name',
-                                                validatorText:
-                                                    'Provide stock brand name');
+                                              validators: const [isNotEmpty],
+                                            );
                                           },
                                         ),
 

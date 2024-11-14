@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:printing_press/utils/email_validation.dart';
 import '../colors/color_palette.dart';
+
+typedef ValidatorFunction = String? Function(String?);
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
-  final IconData iconData;
+  final IconData? iconData;
   final String hint;
   final TextInputType textInputType;
-  final String validatorText;
+  final List<ValidatorFunction>? validators;
   final int? maxLength;
   final TextInputFormatter? inputFormatter;
-  final bool? emailValidation;
 
   const CustomTextField({
     super.key,
@@ -19,11 +19,22 @@ class CustomTextField extends StatefulWidget {
     required this.iconData,
     this.maxLength,
     required this.hint,
-    required this.validatorText,
-    this.emailValidation,
     this.textInputType = TextInputType.text,
     this.inputFormatter,
-    });
+    this.validators,
+  });
+
+  String? _validate(String? value) {
+    if (validators != null) {
+      if (validators!.isNotEmpty) {
+        for (var validator in validators!) {
+          final result = validator(value);
+          if (result != null) return result; // Return the error if found
+        }
+      }
+    }
+    return null; // No errors
+  }
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -42,8 +53,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         inputFormatters: widget.inputFormatter == null
             ? null
             : <TextInputFormatter>[
-          widget.inputFormatter!,
-        ],
+                widget.inputFormatter!,
+              ],
         decoration: InputDecoration(
           labelText: widget.hint,
           prefixIcon: Icon(
@@ -66,14 +77,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             ),
           ),
         ),
-        validator: (text) {
-          if (text == '' || text == null) {
-            return widget.validatorText;
-          } else if(widget.emailValidation == true ? !EmailValidation.isEmailValid(text): false){
-            return 'Invalid Email';
-          }
-          return null;
-        },
+        validator: widget._validate,
       ),
     );
   }

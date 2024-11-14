@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/rate_list/machine/add_machine_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -43,58 +44,75 @@ class _AddMachineViewState extends State<AddMachineView> {
                       Consumer<AddMachineViewModel>(
                         builder: (context, val1, child) {
                           return CustomTextField(
-                              controller: val1.machineNameC,
-                              iconData: Icons.handyman_rounded,
-                              hint: 'Machine name',
-                              validatorText: 'Provide machine name');
+                            controller: val1.machineNameC,
+                            iconData: Icons.handyman_rounded,
+                            hint: 'Machine name',
+                            validators: const [isNotEmpty],
+                          );
                         },
                       ),
                       Consumer<AddMachineViewModel>(
                         builder: (context, val2, child) {
                           return CustomTextField(
-                              textInputType: TextInputType.number,
-                              controller: val2.sizeWidthC,
-                              inputFormatter:
-                                  FilteringTextInputFormatter.digitsOnly,
-                              iconData: Icons.tune_rounded,
-                              hint: 'Machine width',
-                              validatorText: 'Provide machine width');
+                            textInputType: TextInputType.number,
+                            controller: val2.sizeWidthC,
+                            inputFormatter:
+                                FilteringTextInputFormatter.digitsOnly,
+                            iconData: Icons.tune_rounded,
+                            hint: 'Machine width',
+                            validators: const [
+                              isNotEmpty,
+                              isNotZero,
+                            ],
+                          );
                         },
                       ),
                       Consumer<AddMachineViewModel>(
                         builder: (context, val3, child) {
                           return CustomTextField(
-                              textInputType: TextInputType.number,
-                              controller: val3.sizeHeightC,
-                              inputFormatter:
-                                  FilteringTextInputFormatter.digitsOnly,
-                              iconData: Icons.tune_rounded,
-                              hint: 'Machine height',
-                              validatorText: 'Provide machine height');
+                            textInputType: TextInputType.number,
+                            controller: val3.sizeHeightC,
+                            inputFormatter:
+                                FilteringTextInputFormatter.digitsOnly,
+                            iconData: Icons.tune_rounded,
+                            hint: 'Machine height',
+                            validators: const [
+                              isNotEmpty,
+                              isNotZero,
+                            ],
+                          );
                         },
                       ),
                       Consumer<AddMachineViewModel>(
                         builder: (context, val4, child) {
                           return CustomTextField(
-                              textInputType: TextInputType.number,
-                              controller: val4.plateRateC,
-                              inputFormatter:
-                                  FilteringTextInputFormatter.digitsOnly,
-                              iconData: Icons.settings,
-                              hint: 'Machine plate rate',
-                              validatorText: 'Provide machine plate rate');
+                            textInputType: TextInputType.number,
+                            controller: val4.plateRateC,
+                            inputFormatter:
+                                FilteringTextInputFormatter.digitsOnly,
+                            iconData: Icons.settings,
+                            hint: 'Machine plate rate',
+                            validators: const [
+                              isNotEmpty,
+                              isNotZero,
+                            ],
+                          );
                         },
                       ),
                       Consumer<AddMachineViewModel>(
                         builder: (context, val5, child) {
                           return CustomTextField(
-                              textInputType: TextInputType.number,
-                              controller: val5.printingRateC,
-                              inputFormatter:
-                                  FilteringTextInputFormatter.digitsOnly,
-                              iconData: Icons.print_rounded,
-                              hint: 'Machine printing rate',
-                              validatorText: 'Provide machine printing rate');
+                            textInputType: TextInputType.number,
+                            controller: val5.printingRateC,
+                            inputFormatter:
+                                FilteringTextInputFormatter.digitsOnly,
+                            iconData: Icons.print_rounded,
+                            hint: 'Machine printing rate',
+                            validators: const [
+                              isNotEmpty,
+                              isNotZero,
+                            ],
+                          );
                         },
                       ),
                     ],

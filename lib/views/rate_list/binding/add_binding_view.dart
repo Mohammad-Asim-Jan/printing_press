@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:printing_press/components/custom_text_field.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/rate_list/binding/add_binding_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -43,22 +44,24 @@ class _AddBindingViewState extends State<AddBindingView> {
                         Consumer<AddBindingViewModel>(
                           builder: (context, val1, child) {
                             return CustomTextField(
-                                controller: val1.bindingNameC,
-                                iconData: Icons.my_library_books,
-                                hint: 'Binding name',
-                                validatorText: 'Provide binding name');
+                              controller: val1.bindingNameC,
+                              iconData: Icons.my_library_books,
+                              hint: 'Binding name',
+                              validators: [isNotEmpty],
+                            );
                           },
                         ),
                         Consumer<AddBindingViewModel>(
                           builder: (context, val2, child) {
                             return CustomTextField(
-                                textInputType: TextInputType.number,
-                                controller: val2.bindingRateC,
-                                inputFormatter:
-                                    FilteringTextInputFormatter.digitsOnly,
-                                iconData: Icons.monetization_on_rounded,
-                                hint: 'Binding Rate',
-                                validatorText: 'Provide binding rate');
+                              textInputType: TextInputType.number,
+                              controller: val2.bindingRateC,
+                              inputFormatter:
+                                  FilteringTextInputFormatter.digitsOnly,
+                              iconData: Icons.monetization_on_rounded,
+                              hint: 'Binding Rate',
+                              validators: [isNotEmpty, isNotZero],
+                            );
                           },
                         ),
                       ],

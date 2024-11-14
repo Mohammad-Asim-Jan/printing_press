@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:provider/provider.dart';
 
 import '../../../components/custom_text_field.dart';
@@ -45,7 +46,8 @@ class _AddPaperViewState extends State<AddPaperView> {
                               controller: val1.paperNameC,
                               iconData: Icons.newspaper,
                               hint: 'Paper name',
-                              validatorText: 'Provide paper name');
+                            validators: const [isNotEmpty],
+                          );
                         },
                       ),
                       Consumer<AddPaperViewModel>(
@@ -57,7 +59,8 @@ class _AddPaperViewState extends State<AddPaperView> {
                                   FilteringTextInputFormatter.digitsOnly,
                               iconData: Icons.tune_rounded,
                               hint: 'Paper width',
-                              validatorText: 'Provide paper width');
+                            validators: const [isNotEmpty, isNotZero],
+                          );
                         },
                       ),
                       Consumer<AddPaperViewModel>(
@@ -69,7 +72,8 @@ class _AddPaperViewState extends State<AddPaperView> {
                                   FilteringTextInputFormatter.digitsOnly,
                               iconData: Icons.tune_rounded,
                               hint: 'Paper height',
-                              validatorText: 'Provide paper height');
+                            validators: const [isNotEmpty, isNotZero],
+                          );
                         },
                       ),
                       Consumer<AddPaperViewModel>(
@@ -81,7 +85,8 @@ class _AddPaperViewState extends State<AddPaperView> {
                                   FilteringTextInputFormatter.digitsOnly,
                               iconData: Icons.label,
                               hint: 'Paper quality',
-                              validatorText: 'Provide paper quality');
+                            validators: const [isNotEmpty, isNotZero],
+                          );
                         },
                       ),
                       Consumer<AddPaperViewModel>(
@@ -93,7 +98,8 @@ class _AddPaperViewState extends State<AddPaperView> {
                                   FilteringTextInputFormatter.digitsOnly,
                               iconData: Icons.monetization_on_rounded,
                               hint: 'Rate',
-                              validatorText: 'Provide paper rate');
+                            validators: const [isNotEmpty, isNotZero],
+                          );
                         },
                       ),
                     ],

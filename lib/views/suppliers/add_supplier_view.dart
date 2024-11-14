@@ -4,6 +4,7 @@ import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../components/round_button.dart';
+import '../../utils/validation_functions.dart';
 
 class AddSupplierView extends StatefulWidget {
   const AddSupplierView({super.key});
@@ -42,7 +43,8 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                               controller: val1.supplierNameC,
                               iconData: Icons.person,
                               hint: 'Supplier name',
-                              validatorText: 'Provide supplier name');
+                            validators: const [isNotEmpty],
+                          );
                         },
                       ),
                       Consumer<AddSupplierViewModel>(
@@ -55,7 +57,8 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                               controller: val2.supplierPhoneNoC,
                               iconData: Icons.call,
                               hint: 'Supplier phone',
-                              validatorText: 'Provide supplier phone');
+                            validators: const [isNotEmpty],
+                          );
                         },
                       ),
                       Consumer<AddSupplierViewModel>(
@@ -65,8 +68,7 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                             textInputType: TextInputType.emailAddress,
                             iconData: Icons.email,
                             hint: 'Supplier email',
-                            validatorText: 'Provide supplier email',
-                            emailValidation: true,
+                            validators: const [isNotEmpty],
                           );
                         },
                       ),
@@ -76,7 +78,8 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                               controller: val4.supplierAddressC,
                               iconData: Icons.home_filled,
                               hint: 'Supplier address',
-                              validatorText: 'Provide supplier address');
+                            validators: const [isNotEmpty],
+                          );
                         },
                       ),
                       Consumer<AddSupplierViewModel>(
@@ -85,7 +88,8 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                               controller: val5.accountTypeC,
                               iconData: Icons.account_balance_rounded,
                               hint: 'Supplier bank type',
-                              validatorText: 'Provide supplier bank type');
+                            validators: const [isNotEmpty],
+                          );
                         },
                       ),
                       Consumer<AddSupplierViewModel>(
@@ -94,8 +98,8 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                               controller: val6.bankAccountNumberC,
                               iconData: Icons.numbers,
                               hint: 'Supplier Account no.',
-                              validatorText:
-                                  'Provide supplier bank account no.');
+                            validators: const [isNotEmpty],
+                          );
                         },
                       ),
                     ],

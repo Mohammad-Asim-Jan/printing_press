@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:printing_press/utils/email_validation.dart';
+import 'package:printing_press/components/custom_text_field.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/auth/log_in_view_model.dart';
 import 'package:printing_press/views/auth/sign_up.dart';
 import 'package:provider/provider.dart';
@@ -56,40 +57,16 @@ class _LogInState extends State<LogIn> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    TextFormField(
-                      controller: logInViewModel.emailC,
-                      keyboardType: TextInputType.emailAddress,
-                      cursorColor: kPrimeColor,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(
-                          Icons.email,
-                          size: 24,
-                        ),
-                        hintText: 'Email',
-                        filled: true,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
-                            width: 2,
-                            color: kPrimeColor,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: kSecColor,
-                          ),
-                        ),
-                      ),
-                      validator: (text) {
-                        if (text == '' || text == null) {
-                          return 'Provide supplier email';
-                        } else if (!EmailValidation.isEmailValid(text)) {
-                          return 'Please provide a valid email address';
-                        }
-                        return null;
-                      },
-                    ),
+                    CustomTextField(
+                        controller: logInViewModel.emailC,
+                        textInputType: TextInputType.emailAddress,
+                        iconData: Icons.email,
+                        hint: 'Email',
+                        validators: [
+                          isEmailValid,
+                          isNotEmpty
+                        ]),
+
                     Consumer<LogInViewModel>(
                       builder: (context, value, child) {
                         return TextFormField(
@@ -130,6 +107,8 @@ class _LogInState extends State<LogIn> {
                           validator: (text) {
                             if (text == '' || text == null) {
                               return 'Please provide password';
+                            } else if(text.length<6){
+                              return 'Password minimum length is 6';
                             }
                             return null;
                           },
