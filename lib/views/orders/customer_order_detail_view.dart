@@ -165,7 +165,7 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                   ]
                 : [
               Container(
-                  padding: EdgeInsets.all(6),
+                  padding: const EdgeInsets.all(6),
                   color: Colors.white60,
                   margin: EdgeInsets.all(5),
                   child: Column(

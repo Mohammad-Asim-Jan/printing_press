@@ -28,9 +28,9 @@ class _RoundButtonState extends State<RoundButton> {
         height: 50,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: widget.unFill ? Colors.transparent : kOne,
+            color: widget.unFill ? Colors.transparent : kNew7,
             borderRadius: BorderRadius.circular(8),
-            border: widget.unFill ? Border.all(width: 2, color: kOne) : null),
+            border: widget.unFill ? Border.all(width: 2, color: kNew7) : null),
         child: widget.loading
             ? CircularProgressIndicator(
                 color: widget.unFill ? kOne : kTwo,
@@ -39,7 +39,7 @@ class _RoundButtonState extends State<RoundButton> {
             : Text(
                 widget.title,
                 style: TextStyle(
-                  color: widget.unFill ? kOne : kSecColor,
+                  color: widget.unFill ? kNew7 : kSecColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),

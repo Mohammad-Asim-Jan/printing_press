@@ -91,20 +91,20 @@ class MyApp extends StatelessWidget {
           // primarySwatch: Colors.green,
           appBarTheme: AppBarTheme(
             toolbarHeight: 45,
-            titleTextStyle:  TextStyle(
-              // color: Colors.white60,
-              color: kSecColor,
+            titleTextStyle: TextStyle(
+              color: kNew4,
               fontSize: 24,
               wordSpacing: 2,
               letterSpacing: 3,
+              fontFamily: 'Urbanist',
               fontWeight: FontWeight.bold,
             ),
             centerTitle: true,
-            backgroundColor: kOne,
-            foregroundColor: Colors.white60,
-
+            // backgroundColor: kPrimeColor,
+            backgroundColor: Colors.transparent,
+            foregroundColor: kNew4,
           ),
-          scaffoldBackgroundColor: kSecColor,
+          scaffoldBackgroundColor: kTwo,
           // useMaterial3: true,
         ),
         debugShowCheckedModeBanner: false,
