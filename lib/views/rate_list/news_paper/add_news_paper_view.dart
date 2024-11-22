@@ -36,7 +36,7 @@ class _AddNewsPaperViewState extends State<AddNewsPaperView> {
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Form(
                   key: addNewsPaperViewModel.formKey,
                   child: Column(
@@ -110,13 +110,16 @@ class _AddNewsPaperViewState extends State<AddNewsPaperView> {
             ),
           ),
           Consumer<AddNewsPaperViewModel>(
-            builder: (context, value, child) => RoundButton(
-              title: 'Add',
-              loading: value.loading,
-              onPress: () {
-                ///todo: validations
-                value.addNewsPaperInFirebase();
-              },
+            builder: (context, value, child) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RoundButton(
+                title: 'Add',
+                loading: value.loading,
+                onPress: () {
+                  ///todo: validations
+                  value.addNewsPaperInFirebase();
+                },
+              ),
             ),
           ),
         ],

@@ -35,7 +35,7 @@ class _AddNumberingViewState extends State<AddNumberingView> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Form(
                     key: addNumberingViewModel.formKey,
                     child: Column(
@@ -70,13 +70,16 @@ class _AddNumberingViewState extends State<AddNumberingView> {
               ),
             ),
             Consumer<AddNumberingViewModel>(
-              builder: (context, value, child) => RoundButton(
-                title: 'Add',
-                loading: value.loading,
-                onPress: () {
-                  ///todo: validations
-                  value.addNumberingInFirebase();
-                },
+              builder: (context, value, child) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RoundButton(
+                  title: 'Add',
+                  loading: value.loading,
+                  onPress: () {
+                    ///todo: validations
+                    value.addNumberingInFirebase();
+                  },
+                ),
               ),
             ),
           ],

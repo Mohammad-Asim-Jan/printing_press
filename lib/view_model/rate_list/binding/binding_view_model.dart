@@ -30,12 +30,13 @@ class BindingViewModel with ChangeNotifier {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: kSecColor,
+          backgroundColor: kTwo,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
             child: Container(
-              width: double.infinity,padding: const EdgeInsets.all(20),
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -128,7 +129,7 @@ class BindingViewModel with ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: kSecColor,
+          backgroundColor: kTwo,
           titleTextStyle: Theme.of(context)
               .appBarTheme
               .titleTextStyle

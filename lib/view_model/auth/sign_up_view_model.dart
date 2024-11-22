@@ -50,7 +50,7 @@ class SignUpViewModel with ChangeNotifier {
           // FirebaseFirestoreServices firestoreServices =
           //     FirebaseFirestoreServices(auth: _auth);
           // firestoreServices.initialData();
-          SignOut().signOut(context);
+          SignOut().logOut(context);
           setLoading(false);
         }).onError((error, stackTrace) {
           Utils.showMessage(error.toString());

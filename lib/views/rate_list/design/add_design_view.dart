@@ -35,7 +35,7 @@ class _AddDesignViewState extends State<AddDesignView> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Form(
                     key: addDesignViewModel.formKey,
                     child: Column(
@@ -72,13 +72,16 @@ class _AddDesignViewState extends State<AddDesignView> {
               ),
             ),
             Consumer<AddDesignViewModel>(
-              builder: (context, value, child) => RoundButton(
-                title: 'Add',
-                loading: value.loading,
-                onPress: () {
-                  ///todo: validations
-                  value.addDesignInFirebase();
-                },
+              builder: (context, value, child) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RoundButton(
+                  title: 'Add',
+                  loading: value.loading,
+                  onPress: () {
+                    ///todo: validations
+                    value.addDesignInFirebase();
+                  },
+                ),
               ),
             ),
           ],

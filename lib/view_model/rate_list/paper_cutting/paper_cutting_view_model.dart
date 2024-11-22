@@ -31,7 +31,7 @@ class PaperCuttingViewModel with ChangeNotifier {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: kSecColor,
+          backgroundColor: kTwo,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
@@ -131,7 +131,7 @@ class PaperCuttingViewModel with ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: kSecColor,
+          backgroundColor: kTwo,
           titleTextStyle: Theme.of(context)
               .appBarTheme
               .titleTextStyle

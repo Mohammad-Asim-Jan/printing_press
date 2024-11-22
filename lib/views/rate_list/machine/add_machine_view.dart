@@ -36,7 +36,7 @@ class _AddMachineViewState extends State<AddMachineView> {
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Form(
                   key: addMachineViewModel.formKey,
                   child: Column(
@@ -122,13 +122,16 @@ class _AddMachineViewState extends State<AddMachineView> {
             ),
           ),
           Consumer<AddMachineViewModel>(
-            builder: (context, value, child) => RoundButton(
-              title: 'Add',
-              loading: value.loading,
-              onPress: () {
-                ///todo: validations
-                value.addMachineInFirebase();
-              },
+            builder: (context, value, child) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RoundButton(
+                title: 'Add',
+                loading: value.loading,
+                onPress: () {
+                  ///todo: validations
+                  value.addMachineInFirebase();
+                },
+              ),
             ),
           ),
         ],

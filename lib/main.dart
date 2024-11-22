@@ -101,7 +101,7 @@ class MyApp extends StatelessWidget {
             ),
             centerTitle: true,
             // backgroundColor: kPrimeColor,
-            backgroundColor: Colors.transparent,
+            backgroundColor: kTwo,
             foregroundColor: kNew4,
           ),
           scaffoldBackgroundColor: kTwo,

@@ -36,7 +36,7 @@ class _AddBindingViewState extends State<AddBindingView> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Form(
                     key: addBindingViewModel.formKey,
                     child: Column(
@@ -47,7 +47,7 @@ class _AddBindingViewState extends State<AddBindingView> {
                               controller: val1.bindingNameC,
                               iconData: Icons.my_library_books,
                               hint: 'Binding name',
-                              validators: [isNotEmpty],
+                              validators: const [isNotEmpty],
                             );
                           },
                         ),
@@ -71,13 +71,16 @@ class _AddBindingViewState extends State<AddBindingView> {
               ),
             ),
             Consumer<AddBindingViewModel>(
-              builder: (context, value, child) => RoundButton(
-                title: 'Add',
-                loading: value.loading,
-                onPress: () {
-                  ///todo: validations
-                  value.addBindingInFirebase();
-                },
+              builder: (context, value, child) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RoundButton(
+                  title: 'Add',
+                  loading: value.loading,
+                  onPress: () {
+                    ///todo: validations
+                    value.addBindingInFirebase();
+                  },
+                ),
               ),
             ),
           ],

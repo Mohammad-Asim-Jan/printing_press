@@ -96,7 +96,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                             Expanded(
                               child: SingleChildScrollView(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Form(
                                     key: placeStockOrderViewModel.formKey,
                                     child: Padding(
@@ -409,12 +409,15 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                 ),
                               ),
                             ),
-                            RoundButton(
-                              title: 'Place Order',
-                              loading: val.loading,
-                              onPress: () {
-                                val.addCustomerOrderDataInFirebase(context);
-                              },
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: RoundButton(
+                                title: 'Place Order',
+                                loading: val.loading,
+                                onPress: () {
+                                  val.addCustomerOrderDataInFirebase(context);
+                                },
+                              ),
                             ),
                           ],
                         )
@@ -430,7 +433,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                             Expanded(
                               child: SingleChildScrollView(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Form(
                                     key: placeCustomizeOrderViewModel.formKey,
                                     child: Padding(
@@ -1364,48 +1367,55 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                 ),
                               ),
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: TextButton(
-                                        onPressed: () {},
-                                        child: const Text(
-                                          'Calculate',
-                                          style: TextStyle(fontSize: 18),
-                                        ))),
-                                const Expanded(
-                                    child: Center(child: Text('000'))),
-                              ],
-                            ),
+                            /// todo:
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //         child: TextButton(
+                            //             onPressed: () {},
+                            //             child: const Text(
+                            //               'Calculate',
+                            //               style: TextStyle(fontSize: 18),
+                            //             ))),
+                            //     const Expanded(
+                            //         child: Center(child: Text('000'))),
+                            //   ],
+                            // ),
                             const SizedBox(
                               height: 10,
                             ),
-                            RoundButton(
-                              loading: val.loading,
-                              title: 'Place Order',
-                              onPress: () {
-                                val.calculateRate();
-                              },
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: RoundButton(
+                                loading: val.loading,
+                                title: 'Place Order',
+                                onPress: () {
+                                  val.calculateRate();
+                                },
+                              ),
                             ),
                           ],
                         )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                                'You must have at least one rate of each service'),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const RateListView(),
-                                  ),
-                                );
-                              },
-                              child: const Text('Add service rate'),
-                            ),
-                          ],
-                        )
+                      : Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                  'You must have at least one rate of each service'),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => const RateListView(),
+                                    ),
+                                  );
+                                },
+                                child: const Text('Add service rate'),
+                              ),
+                            ],
+                          ),
+                      )
                   : const Center(child: CircularProgressIndicator());
             },
           ),

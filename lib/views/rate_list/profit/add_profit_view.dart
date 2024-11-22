@@ -36,7 +36,7 @@ class _AddProfitViewState extends State<AddProfitView> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Form(
                     key: addProfitViewModel.formKey,
                     child: Column(
@@ -74,13 +74,16 @@ class _AddProfitViewState extends State<AddProfitView> {
               ),
             ),
             Consumer<AddProfitViewModel>(
-              builder: (context, value, child) => RoundButton(
-                title: 'Add',
-                loading: value.loading,
-                onPress: () {
-                  ///todo: validations
-                  value.addProfitInFirebase();
-                },
+              builder: (context, value, child) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RoundButton(
+                  title: 'Add',
+                  loading: value.loading,
+                  onPress: () {
+                    ///todo: validations
+                    value.addProfitInFirebase();
+                  },
+                ),
               ),
             ),
           ],

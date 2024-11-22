@@ -32,7 +32,7 @@ class _AddSupplierViewState extends State<AddSupplierView> {
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Form(
                   key: addSupplierViewModel.formKey,
                   child: Column(
@@ -109,12 +109,15 @@ class _AddSupplierViewState extends State<AddSupplierView> {
             ),
           ),
           Consumer<AddSupplierViewModel>(
-            builder: (context, value, child) => RoundButton(
-              title: 'Add',
-              loading: value.loading,
-              onPress: () {
-                value.addSupplierInFirebase();
-              },
+            builder: (context, value, child) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RoundButton(
+                title: 'Add',
+                loading: value.loading,
+                onPress: () {
+                  value.addSupplierInFirebase();
+                },
+              ),
             ),
           ),
         ],

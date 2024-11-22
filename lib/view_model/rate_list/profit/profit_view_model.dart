@@ -21,16 +21,15 @@ class ProfitViewModel with ChangeNotifier {
   }
 
   void editProfit(BuildContext context, int index) {
-    final nameController =
-    TextEditingController(text: profitList[index].name);
+    final nameController = TextEditingController(text: profitList[index].name);
     final percentageController =
-    TextEditingController(text: profitList[index].percentage.toString());
+        TextEditingController(text: profitList[index].percentage.toString());
 
     showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: kSecColor,
+          backgroundColor: kTwo,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
@@ -51,8 +50,7 @@ class ProfitViewModel with ChangeNotifier {
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: nameController,
-                    decoration:
-                    const InputDecoration(labelText: 'Profit Name'),
+                    decoration: const InputDecoration(labelText: 'Profit Name'),
                     validator: (value) {
                       if (value == '' || value == null) {
                         return 'Provide profit name';
@@ -65,7 +63,7 @@ class ProfitViewModel with ChangeNotifier {
                     maxLength: 2,
                     controller: percentageController,
                     decoration:
-                    const InputDecoration(labelText: 'Profit Percentage'),
+                        const InputDecoration(labelText: 'Profit Percentage'),
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly,
@@ -95,17 +93,17 @@ class ProfitViewModel with ChangeNotifier {
                                   .collection(uid)
                                   .doc('RateList')
                                   .collection('Profit')
-                                  .doc(
-                                  'PROFIT-${profitList[index].profitId}')
+                                  .doc('PROFIT-${profitList[index].profitId}')
                                   .update({
                                 'name': nameController.text.trim(),
-                                'percentage': int.parse(percentageController.text.trim()),
+                                'percentage':
+                                    int.parse(percentageController.text.trim()),
                               }).then(
-                                    (value) {
+                                (value) {
                                   Utils.showMessage('Profit Updated!');
                                 },
                               ).onError(
-                                    (error, stackTrace) {
+                                (error, stackTrace) {
                                   Utils.showMessage('Error Occurred!');
                                 },
                               );
@@ -129,7 +127,7 @@ class ProfitViewModel with ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: kSecColor,
+          backgroundColor: kTwo,
           titleTextStyle: Theme.of(context)
               .appBarTheme
               .titleTextStyle
@@ -145,8 +143,7 @@ class ProfitViewModel with ChangeNotifier {
             ),
             TextButton(
               onPressed: () async {
-                await deleteProfit(
-                    profitList[index].profitId);
+                await deleteProfit(profitList[index].profitId);
                 Navigator.pop(context);
               },
               child: const Text("Yes"),
@@ -165,16 +162,15 @@ class ProfitViewModel with ChangeNotifier {
         .doc('PROFIT-$profitId')
         .delete()
         .then(
-          (value) {
+      (value) {
         Utils.showMessage('Profit deleted!');
       },
     ).onError(
-          (error, stackTrace) {
+      (error, stackTrace) {
         Utils.showMessage('Error occurred!');
       },
     );
   }
-
 
 //
 // void fetchProfitData() async {

@@ -35,7 +35,7 @@ class _AddPaperViewState extends State<AddPaperView> {
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Form(
                   key: addPaperViewModel.formKey,
                   child: Column(
@@ -109,13 +109,16 @@ class _AddPaperViewState extends State<AddPaperView> {
             ),
           ),
           Consumer<AddPaperViewModel>(
-            builder: (context, value, child) => RoundButton(
-              title: 'Add',
-              loading: value.loading,
-              onPress: () {
-                ///todo: validations
-                value.addPaperInFirebase();
-              },
+            builder: (context, value, child) => Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: RoundButton(
+                title: 'Add',
+                loading: value.loading,
+                onPress: () {
+                  ///todo: validations
+                  value.addPaperInFirebase();
+                },
+              ),
             ),
           ),
         ],

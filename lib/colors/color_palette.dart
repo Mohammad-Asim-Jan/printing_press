@@ -20,6 +20,7 @@ Color kNew6 = const Color(0xffbc6c25);
 Color kNew7 = const Color(0xffe36d0c); // good one btn
 Color kNew8 = const Color(0xffdc6b6b);
 Color kNew9 = const Color(0xffaaaaaa); // disabled
+Color kNew9a = const Color(0xff8f8f8f); // disabled
 Color kNew10 = const Color(0xffe09f3e); // good one btn
 Color kNew11 = const Color(0xffB2C8BA); // beautiful color as well
 Color kNew12 = const Color(0xff0c4863); // good one btn

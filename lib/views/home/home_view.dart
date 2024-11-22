@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:printing_press/colors/color_palette.dart';
-import 'package:printing_press/components/round_button.dart';
 import 'package:printing_press/view_model/home/home_view_model.dart';
-import 'package:printing_press/views/cashbook/cashbook_view.dart';
-import 'package:printing_press/views/orders/all_orders_view.dart';
-import 'package:printing_press/views/orders/place_order_view.dart';
-import 'package:printing_press/views/rate_list/rate_list_view.dart';
-import 'package:printing_press/views/stock/all_stock_view.dart';
-import 'package:printing_press/views/suppliers/all_suppliers_view.dart';
 import 'package:provider/provider.dart';
+import '../../view_model/auth/sign_out.dart';
+import '../rate_list/rate_list_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -29,73 +24,158 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: context.watch<HomeViewModel>().index == 4
+          ? Drawer(
+              backgroundColor: Colors.yellow.shade50,
+              width: 300,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    SafeArea(
+                      child: ListTile(
+                        titleTextStyle:
+                            Theme.of(context).appBarTheme.titleTextStyle,
+                        title: const Center(child: Text('Rate List')),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 2.5,
+                      color: kNew4,
+                      indent: 10,
+                      endIndent: 10,
+                    ),
+                    const Expanded(child: RateListView()),
+                    // SwitchListTile(value: true, onChanged: (val) {}),
+                    // ExpansionTile(
+                    //   leading: Icon(Icons.settings),
+                    //   title: Text('Settings'),
+                    //   children: [
+                    //     ListTile(
+                    //       leading: Icon(Icons.color_lens),
+                    //       title: Text('Change Theme'),
+                    //       onTap: () {
+                    //         // Change theme
+                    //       },
+                    //     ),
+                    //     ListTile(
+                    //       leading: Icon(Icons.language),
+                    //       title: Text('Language Settings'),
+                    //       onTap: () {
+                    //         // Change language
+                    //       },
+                    //     ),
+                    //   ],
+                    // ),
+                    // const Spacer(flex: 1,),
+                    const Divider(
+                      height: 30,
+                      indent: 80,
+                      endIndent: 80,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        SignOut().confirmLogOut(context);
+                      },
+                      child: Card(
+                        shadowColor: Colors.blueGrey,
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        color: Colors.red.shade400,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                  child: Center(
+                                      child: Text(
+                                'Log Out\t\t\t\t\t',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Urbanist',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
+                              ))),
+                              Icon(Icons.logout_rounded, color: Colors.white70)
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Consumer<HomeViewModel>(
-          builder: (BuildContext context, HomeViewModel value, Widget? child) {
-        if (value.index == 4) {
-          return const SizedBox.shrink();
-        } else {
-          return FloatingActionButton(
-            backgroundColor: kSecColor,
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => value.floatingButtonNavigation()));
-            },
-            child: Text(
-              'Add +',
-              style: TextStyle(color: kThirdColor),
-            ),
-          );
-        }
-      }),
+          builder: (BuildContext context, HomeViewModel value, Widget? child) =>
+              FloatingActionButton.extended(
+                splashColor: kNew10,
+                foregroundColor: kTwo,
+                backgroundColor: kNew7,
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => value.floatingButtonNavigation()));
+                },
+                label: Text(value.getFloatingBtnLabel()),
+                // child: const Text(
+                //   'Add New +',
+                //   // style: TextStyle(color: kThirdColor),
+                // ),
+              )),
       bottomNavigationBar: Consumer<HomeViewModel>(
         builder: (context, value, child) => BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                activeIcon: Icon(Icons.people_alt_outlined),
-                icon: Icon(Icons.people_alt),
+                backgroundColor: kThirdColor,
+                activeIcon: const Icon(Icons.people_alt),
+                icon: const Icon(Icons.people_alt_outlined),
                 label: 'Orders'),
             BottomNavigationBarItem(
-                activeIcon: Icon(Icons.account_balance_wallet_outlined),
-                icon: Icon(Icons.account_balance_wallet),
+                backgroundColor: kThirdColor,
+                activeIcon: const Icon(Icons.account_balance_wallet),
+                icon: const Icon(Icons.account_balance_wallet_outlined),
                 label: 'CashBook'),
             BottomNavigationBarItem(
-                activeIcon: Icon(Icons.add_business_outlined),
-                icon: Icon(
-                  Icons.add_business,
-                ),
+                backgroundColor: kThirdColor,
+                activeIcon: const Icon(Icons.add_business),
+                icon: const Icon(Icons.add_business_outlined),
                 label: 'Suppliers'),
             BottomNavigationBarItem(
-                activeIcon: Icon(Icons.inventory_2_outlined),
-                icon: Icon(Icons.inventory_2),
+                backgroundColor: kThirdColor,
+                activeIcon: const Icon(Icons.inventory_2),
+                icon: const Icon(Icons.inventory_2_outlined),
                 label: 'Stock'),
             BottomNavigationBarItem(
-                activeIcon: Icon(Icons.view_list_outlined),
-                icon: Icon(Icons.view_list),
+                backgroundColor: kThirdColor,
+                activeIcon: const Icon(Icons.view_list),
+                icon: const Icon(Icons.view_list_outlined),
                 label: 'Rate-list'),
           ],
           showUnselectedLabels: true,
-          unselectedItemColor: kNew9,
+          unselectedItemColor: kNew9a,
           type: BottomNavigationBarType.shifting,
           currentIndex: homeViewModel.index,
           onTap: (index) => homeViewModel.updateIndex(index),
-          selectedItemColor: kNew12,
-          selectedFontSize: 15,
+          selectedItemColor: Colors.white,
+          // backgroundColor: kThirdColor,
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
       appBar: AppBar(
           title: Consumer<HomeViewModel>(
               builder: (context, value, child) =>
-                  Text(homeViewModel.appBarText()))),
-      body: const Padding(
-        padding: EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            Center(
-              child: Text('No be continued...'),
-            )
-          ],
-        ),
-      ),
+                  Text(homeViewModel.getAppBarText()))),
+      body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Consumer<HomeViewModel>(
+              builder: (context, value, child) => value.getMainView())),
     );
   }
 }

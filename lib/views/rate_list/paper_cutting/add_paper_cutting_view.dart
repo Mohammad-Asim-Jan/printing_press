@@ -35,7 +35,7 @@ class _AddPaperCuttingViewState extends State<AddPaperCuttingView> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Form(
                     key: addPaperCuttingViewModel.formKey,
                     child: Column(
@@ -70,13 +70,16 @@ class _AddPaperCuttingViewState extends State<AddPaperCuttingView> {
               ),
             ),
             Consumer<AddPaperCuttingViewModel>(
-              builder: (context, value, child) => RoundButton(
-                title: 'Add',
-                loading: value.loading,
-                onPress: () {
-                  ///todo: validations
-                  value.addPaperCuttingInFirebase();
-                },
+              builder: (context, value, child) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RoundButton(
+                  title: 'Add',
+                  loading: value.loading,
+                  onPress: () {
+                    ///todo: validations
+                    value.addPaperCuttingInFirebase();
+                  },
+                ),
               ),
             ),
           ],

@@ -36,7 +36,7 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Form(
                     key: addCashbookEntryViewModel.formKey,
                     child: Column(
@@ -123,12 +123,15 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
               ),
             ),
             Consumer<AddCashbookEntryViewModel>(
-              builder: (context, value, child) => RoundButton(
-                title: 'Add',
-                loading: value.loading,
-                onPress: () {
-                  value.addCashbookEntryInFirebase();
-                },
+              builder: (context, value, child) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RoundButton(
+                  title: 'Add',
+                  loading: value.loading,
+                  onPress: () {
+                    value.addCashbookEntryInFirebase();
+                  },
+                ),
               ),
             ),
           ],
