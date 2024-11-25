@@ -116,16 +116,16 @@ class AddNumberingViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['numberingId'] == null) {
+    if (data?['lastNumberingId'] == null) {
       newNumberingId = 1;
       debugPrint(
-          'Numbering id found to be null --------- ${data?['numberingId']}');
-      await documentRef.set({'numberingId': newNumberingId});
+          'Numbering id found to be null --------- ${data?['lastNumberingId']}');
+      await documentRef.set({'lastNumberingId': newNumberingId});
     } else {
       debugPrint(
-          '\n\n\nNumbering id found to be available. \nNumbering id: ${data?['numberingId']}');
-      newNumberingId = data?['numberingId'] + 1;
-      await documentRef.set({'numberingId': newNumberingId});
+          '\n\n\nNumbering id found to be available. \nNumbering id: ${data?['lastNumberingId']}');
+      newNumberingId = data?['lastNumberingId'] + 1;
+      await documentRef.set({'lastNumberingId': newNumberingId});
     }
   }
 

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Stock {
   final int stockId;
@@ -9,13 +8,12 @@ class Stock {
   final int stockUnitBuyPrice;
   final int stockUnitSellPrice;
   final int stockQuantity;
-
   // final Size stockSize;
   final String stockColor;
   final String manufacturedBy;
   int? totalAmount;
   final int supplierId;
-  final Timestamp stockDateAdded;
+  final DateTime stockDateAdded;
 
   Stock({
     required this.stockId,
@@ -49,17 +47,7 @@ class Stock {
       totalAmount: jsonData['totalAmount'],
       manufacturedBy: jsonData['manufacturedBy'],
       supplierId: jsonData['supplierId'],
-      stockDateAdded: jsonData['stockDateAdded'],
+      stockDateAdded: jsonData['stockDateAdded'].toDate(),
     );
   }
-
-  ///todo: Create a function that convert the DateTime to TimeStamp and returns it
-  /// todo: intl.dart package for date time formatting
-// import 'package:intl/intl.dart';
-//
-// void main() {
-//   DateTime now = DateTime.now();
-//   String formattedDate = DateFormat('yyyy-MM-dd – HH:mm').format(now);
-//   print(formattedDate); // Example output: "2024-08-23 – 14:30"
-// }
 }

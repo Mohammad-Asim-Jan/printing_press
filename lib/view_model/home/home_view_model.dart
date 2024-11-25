@@ -72,10 +72,10 @@ class HomeViewModel with ChangeNotifier {
   }
 
   List<String> floatingButtonLabel = [
-    'New Order',
+    'Place Order',
     'Add/Pay Amount',
     'Register a Supplier',
-    'Add Stock',
+    'Order Stock',
     'Add +'
   ];
 

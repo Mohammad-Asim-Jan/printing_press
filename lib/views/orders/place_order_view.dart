@@ -8,6 +8,7 @@ import 'package:printing_press/views/rate_list/rate_list_view.dart';
 import 'package:printing_press/views/stock/add_stock_view.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
+import '../../components/custom_circular_indicator.dart';
 import '../../components/round_button.dart';
 import '../../utils/validation_functions.dart';
 import '../../view_model/orders/place_stock_order_view_model.dart';
@@ -421,7 +422,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                             ),
                           ],
                         )
-                  : const Center(child: CircularProgressIndicator());
+                  : const CustomCircularIndicator();
             },
           ),
           Consumer<PlaceCustomizeOrderViewModel>(
@@ -1416,7 +1417,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                             ],
                           ),
                       )
-                  : const Center(child: CircularProgressIndicator());
+                  : const CustomCircularIndicator();
             },
           ),
         ]),

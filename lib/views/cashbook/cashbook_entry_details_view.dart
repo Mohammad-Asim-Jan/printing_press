@@ -24,8 +24,8 @@ class _CashbookEntryDetailsViewState extends State<CashbookEntryDetailsView> {
     super.initState();
 
     ///todo: formatted date has to be used
-    formattedDateTime = DateFormat('dd MMMM yyyy, hh:mm a')
-        .format(widget.cashbookEntry.paymentDateTime.toDate());
+    formattedDateTime =
+        DateFormat('dd MMMM yyyy').format(widget.cashbookEntry.paymentDateTime);
   }
 
   @override

@@ -18,6 +18,8 @@ class BindingViewModel with ChangeNotifier {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('RateList')
         .collection('Binding')
+        .where('bindingId', isNotEqualTo: null)
+        .orderBy('bindingId', descending: true)
         .snapshots();
   }
 

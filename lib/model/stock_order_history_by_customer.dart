@@ -9,7 +9,7 @@ class StockOrderHistoryByCustomer {
   final int stockQuantity;
   final int totalAmount;
   final int customerOrderId;
-  final Timestamp stockDateOrdered;
+  final DateTime stockDateOrdered;
 
   StockOrderHistoryByCustomer({
     required this.stockOrderId,
@@ -33,7 +33,7 @@ class StockOrderHistoryByCustomer {
       stockQuantity: json['stockQuantity'],
       totalAmount: json['totalAmount'],
       customerOrderId: json['customerOrderId'],
-      stockDateOrdered: json['stockDateOrdered'],
+      stockDateOrdered: json['stockDateOrdered'].toDate(),
     );
   }
 }

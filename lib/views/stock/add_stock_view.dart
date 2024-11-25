@@ -9,6 +9,8 @@ import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:printing_press/views/suppliers/add_supplier_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/custom_circular_indicator.dart';
+
 class AddStockView extends StatefulWidget {
   const AddStockView({super.key});
 
@@ -36,15 +38,11 @@ class _AddStockViewState extends State<AddStockView> {
         body: Consumer<AddStockViewModel>(
           builder: (context, value, child) {
             return value.dataFetched == false
-                ? const Center(
-                  child: CircularProgressIndicator(
-                      color: Colors.redAccent,
-                    ),
-                )
+                ? const CustomCircularIndicator()
                 : addStockViewModel.suppliersNamesList.isEmpty
                     ? Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
@@ -62,7 +60,7 @@ class _AddStockViewState extends State<AddStockView> {
                             ),
                           ],
                         ),
-                    )
+                      )
                     : Column(
                         children: [
                           Expanded(
@@ -72,6 +70,7 @@ class _AddStockViewState extends State<AddStockView> {
                                 child: Form(
                                   key: addStockViewModel.formKey,
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Consumer<AddStockViewModel>(
                                         builder: (context, val1, child) {
@@ -96,10 +95,8 @@ class _AddStockViewState extends State<AddStockView> {
                                       Consumer<AddStockViewModel>(
                                         builder: (context, val3, child) {
                                           return CustomTextField(
-                                            controller:
-                                                val3.stockDescriptionC,
-                                            iconData:
-                                                Icons.description_rounded,
+                                            controller: val3.stockDescriptionC,
+                                            iconData: Icons.description_rounded,
                                             hint: 'Stock description',
                                             validators: const [isNotEmpty],
                                           );
@@ -108,10 +105,8 @@ class _AddStockViewState extends State<AddStockView> {
                                       Consumer<AddStockViewModel>(
                                         builder: (context, val4, child) {
                                           return CustomTextField(
-                                            textInputType:
-                                                TextInputType.number,
-                                            controller:
-                                                val4.stockUnitBuyPriceC,
+                                            textInputType: TextInputType.number,
+                                            controller: val4.stockUnitBuyPriceC,
                                             inputFormatter:
                                                 FilteringTextInputFormatter
                                                     .digitsOnly,
@@ -126,61 +121,69 @@ class _AddStockViewState extends State<AddStockView> {
                                       ),
                                       Consumer<AddStockViewModel>(
                                         builder: (context, val5, child) {
-                                          return TextFormField(
-                                            controller:
-                                                val5.stockUnitSellPriceC,
-                                            keyboardType:
-                                                TextInputType.number,
-                                            cursorColor: kPrimeColor,
-                                            inputFormatters: <TextInputFormatter>[
-                                              FilteringTextInputFormatter
-                                                  .digitsOnly,
-                                            ],
-                                            decoration: InputDecoration(
-                                              labelText:
-                                                  'Stock selling price',
-                                              prefixIcon: const Icon(
-                                                Icons.monetization_on,
-                                                size: 24,
-                                              ),
-                                              hintText: 'Stock selling price',
-                                              filled: true,
-                                              focusedBorder:
-                                                  OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                borderSide: BorderSide(
-                                                  width: 2,
-                                                  color: kPrimeColor,
+                                          return Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10.0),
+                                            child: TextFormField(
+                                              controller:
+                                                  val5.stockUnitSellPriceC,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              cursorColor: kPrimeColor,
+                                              inputFormatters: <TextInputFormatter>[
+                                                FilteringTextInputFormatter
+                                                    .digitsOnly,
+                                              ],
+                                              decoration: InputDecoration(
+                                                labelText:
+                                                    'Stock selling price',
+                                                prefixIcon: const Icon(
+                                                  Icons.monetization_on,
+                                                  size: 24,
+                                                ),
+                                                hintText: 'Stock selling price',
+                                                labelStyle: TextStyle(
+                                                    color: kPrimeColor),
+                                                hintStyle:
+                                                    TextStyle(color: kNew9a),
+                                                filled: true,
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  borderSide: BorderSide(
+                                                    width: 2,
+                                                    color: kPrimeColor,
+                                                  ),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  borderSide: BorderSide(
+                                                    color: kNew9a,
+                                                  ),
                                                 ),
                                               ),
-                                              enabledBorder:
-                                                  OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                borderSide: BorderSide(
-                                                  color: kSecColor,
-                                                ),
-                                              ),
+                                              validator: (text) {
+                                                if (text == '' ||
+                                                    text == null) {
+                                                  return 'Provide stock selling price';
+                                                } else if (val5
+                                                        .stockUnitBuyPriceC.text
+                                                        .trim() ==
+                                                    '') {
+                                                  return 'Provide stock buy price first';
+                                                } else if (int.tryParse(
+                                                        text.trim())! <=
+                                                    int.tryParse(val5
+                                                        .stockUnitBuyPriceC.text
+                                                        .trim())!) {
+                                                  return 'Stock selling price must be greater than buying price';
+                                                }
+                                                return null;
+                                              },
                                             ),
-                                            validator: (text) {
-                                              if (text == '' ||
-                                                  text == null) {
-                                                return 'Provide stock selling price';
-                                              } else if (val5
-                                                      .stockUnitBuyPriceC.text
-                                                      .trim() ==
-                                                  '') {
-                                                return 'Provide stock buy price first';
-                                              } else if (int.tryParse(
-                                                      text.trim())! <=
-                                                  int.tryParse(val5
-                                                      .stockUnitBuyPriceC.text
-                                                      .trim())!) {
-                                                return 'Stock selling price must be greater than buying price';
-                                              }
-                                              return null;
-                                            },
                                           );
                                         },
                                       ),
@@ -188,8 +191,7 @@ class _AddStockViewState extends State<AddStockView> {
                                         ///todo: add plus icon and minus icon for ease
                                         builder: (context, val6, child) {
                                           return CustomTextField(
-                                            textInputType:
-                                                TextInputType.number,
+                                            textInputType: TextInputType.number,
                                             controller: val6.stockQuantityC,
                                             iconData: Icons.list,
                                             inputFormatter:
@@ -206,10 +208,9 @@ class _AddStockViewState extends State<AddStockView> {
                                       Consumer<AddStockViewModel>(
                                         builder: (context, val7, child) {
                                           return CustomTextField(
-                                              controller: val7.stockColorC,
-                                              iconData:
-                                                  Icons.color_lens_rounded,
-                                              hint: 'Stock color',
+                                            controller: val7.stockColorC,
+                                            iconData: Icons.color_lens_rounded,
+                                            hint: 'Stock color',
                                             validators: const [isNotEmpty],
                                           );
                                         },
@@ -217,33 +218,39 @@ class _AddStockViewState extends State<AddStockView> {
                                       Consumer<AddStockViewModel>(
                                         builder: (context, val8, child) {
                                           return CustomTextField(
-                                              controller:
-                                                  val8.stockManufacturedByC,
-                                              iconData: Icons.factory,
-                                              hint: 'Stock brand name',
+                                            controller:
+                                                val8.stockManufacturedByC,
+                                            iconData: Icons.factory,
+                                            hint: 'Stock brand name',
                                             validators: const [isNotEmpty],
                                           );
                                         },
                                       ),
-
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text('Select Stock Supplier',
+                                          style: TextStyle(
+                                              color: kThirdColor,
+                                              fontSize: 16,
+                                              fontFamily: 'Urbanist',
+                                              fontWeight: FontWeight.bold)),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
                                       Row(
                                         children: [
-                                          const Text('Stock supplier'),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
                                           Consumer<AddStockViewModel>(
                                             builder: (context, val9, child) {
                                               return Expanded(
                                                 flex: 2,
                                                 child: CustomDropDown(
                                                   validator: null,
-                                                  list:
-                                                      val9.suppliersNamesList,
-                                                  value: val9
-                                                      .selectedSupplierName,
-                                                  hint: val9
-                                                      .selectedSupplierName,
+                                                  list: val9.suppliersNamesList,
+                                                  value:
+                                                      val9.selectedSupplierName,
+                                                  hint:
+                                                      val9.selectedSupplierName,
                                                   onChanged: (newVal) {
                                                     val9.changeSupplierDropdown(
                                                         newVal);

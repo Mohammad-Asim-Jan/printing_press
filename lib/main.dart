@@ -21,7 +21,7 @@ import 'package:printing_press/view_model/rate_list/profit/add_profit_view_model
 import 'package:printing_press/view_model/rate_list/profit/profit_view_model.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:printing_press/view_model/stock/all_stock_view_model.dart';
-import 'package:printing_press/view_model/stock/stock_history_view_model.dart';
+import 'package:printing_press/view_model/stock/stock_details_view_model.dart';
 import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';
 import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
 import 'package:printing_press/view_model/suppliers/supplier_orders_history_view_model.dart';
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AddSupplierViewModel()),
         ChangeNotifierProvider(create: (_) => AllStockViewModel()),
         ChangeNotifierProvider(create: (_) => AddStockViewModel()),
-        ChangeNotifierProvider(create: (_) => StockOrderHistoryViewModel()),
+        ChangeNotifierProvider(create: (_) => StockDetailsViewModel()),
         ChangeNotifierProvider(create: (_) => SupplierOrdersHistoryViewModel()),
         ChangeNotifierProvider(create: (_) => PaymentViewModel()),
         ChangeNotifierProvider(create: (_) => CashbookViewModel()),
@@ -94,8 +94,8 @@ class MyApp extends StatelessWidget {
             titleTextStyle: TextStyle(
               color: kNew4,
               fontSize: 24,
-              wordSpacing: 2,
-              letterSpacing: 3,
+              // wordSpacing: 2,
+              letterSpacing: 1,
               fontFamily: 'Urbanist',
               fontWeight: FontWeight.bold,
             ),

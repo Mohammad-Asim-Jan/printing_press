@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import '../colors/color_palette.dart';
 
 class CustomDropDown extends StatefulWidget {
-  CustomDropDown({
-    super.key,
-    required this.list,
-    required this.hint,
-    required this.onChanged,
-    required this.value,
-    required this.validator
-  });
+  CustomDropDown(
+      {super.key,
+      required this.list,
+      required this.hint,
+      required this.onChanged,
+      required this.value,
+      required this.validator});
 
   List<String> list = [];
   String hint;
@@ -29,9 +28,14 @@ class _CustomDropDownState extends State<CustomDropDown> {
       height: 60,
       width: 140,
       child: DropdownButtonFormField<String>(
-        validator: widget.validator,
-          dropdownColor: kSecColor,
-          style: const TextStyle(fontSize: 14, color: Colors.black),
+          validator: widget.validator,
+          dropdownColor: kTwo,
+          style: TextStyle(
+            fontSize: 16,
+            color: kNew12,
+            fontWeight: FontWeight.bold,
+            overflow: TextOverflow.ellipsis,
+          ),
           decoration: InputDecoration(
             // prefixIcon: const Icon(
             //   Icons.design_services_outlined,
@@ -48,11 +52,11 @@ class _CustomDropDownState extends State<CustomDropDown> {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
-                color: kSecColor,
+                color: kNew9a,
               ),
             ),
           ),
-          // isExpanded: true,
+          isExpanded: true,
           // selectedItemBuilder: (context) {
           //   if (_selectedLocation == 'A') {
           //     return [const Text('You have selected a')];
@@ -61,6 +65,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
           // },
           // style: ,
           value: widget.value,
+          iconEnabledColor: kNew12,
           items: widget.list.map((String val) {
             return DropdownMenuItem<String>(
               alignment: Alignment.center,

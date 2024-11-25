@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/auth/log_in_view_model.dart';
-import 'package:printing_press/views/auth/sign_up.dart';
+import 'package:printing_press/views/auth/sign_up_view.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
 import '../../components/round_button.dart';
 
-class LogIn extends StatefulWidget {
-  const LogIn({super.key});
+class LogInView extends StatefulWidget {
+  const LogInView({super.key});
 
   @override
-  State<LogIn> createState() => _LogInState();
+  State<LogInView> createState() => _LogInViewState();
 }
 
-class _LogInState extends State<LogIn> {
+class _LogInViewState extends State<LogInView> {
   late LogInViewModel logInViewModel;
 
   @override
@@ -32,19 +32,21 @@ class _LogInState extends State<LogIn> {
     logInViewModel = Provider.of<LogInViewModel>(context, listen: false);
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
             Text(
-              'Login',
+              'LOGIN',
               style: TextStyle(
-                color: kOne,
+                color: kNew4,
+                // color: kOne,
                 fontSize: 33,
+                fontFamily: 'FredokaOne',
                 wordSpacing: 2,
-                letterSpacing: 3,
-                fontWeight: FontWeight.bold,
+                letterSpacing: 6,
+                // fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(
@@ -62,11 +64,7 @@ class _LogInState extends State<LogIn> {
                         textInputType: TextInputType.emailAddress,
                         iconData: Icons.email,
                         hint: 'Email',
-                        validators: [
-                          isEmailValid,
-                          isNotEmpty
-                        ]),
-
+                        validators: [isEmailValid, isNotEmpty]),
                     Consumer<LogInViewModel>(
                       builder: (context, value, child) {
                         return TextFormField(
@@ -107,7 +105,7 @@ class _LogInState extends State<LogIn> {
                           validator: (text) {
                             if (text == '' || text == null) {
                               return 'Please provide password';
-                            } else if(text.length<6){
+                            } else if (text.length < 6) {
                               return 'Password minimum length is 6';
                             }
                             return null;
@@ -136,22 +134,39 @@ class _LogInState extends State<LogIn> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Don\'t have an account?   ',
+                  'Don\'t have an account?',
                   style: TextStyle(
+                    fontFamily: 'Urbanist',
+                    fontWeight: FontWeight.w600,
                     fontSize: 16,
                     color: kOne,
                   ),
                 ),
-                RoundButton(
-                  title: 'Sign Up',
-                  onPress: () {
+                InkWell(
+                  onTap: () {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const SignUp()));
+                        builder: (context) => const SignUpView()));
                   },
-                  unFill: true,
+                  child: Container(
+                    height: 40,
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        color: kNew9a,
+                        fontFamily: 'FredokaOne',
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
+            SizedBox(height: 10,),
           ],
         ),
       ),

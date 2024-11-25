@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../colors/color_palette.dart';
 import '../../utils/toast_message.dart';
-import '../../views/auth/log_in.dart';
+import '../../views/auth/log_in_view.dart';
 
 class SignOut {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -14,7 +14,7 @@ class SignOut {
       Utils.showMessage('Successfully Log out!');
 
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LogIn()));
+          MaterialPageRoute(builder: (context) => const LogInView()));
     } on FirebaseAuthException catch (e) {
       Utils.showMessage(e.toString());
     }

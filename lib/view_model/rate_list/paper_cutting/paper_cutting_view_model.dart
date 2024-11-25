@@ -8,7 +8,6 @@ import '../../../model/rate_list/paper_cutting.dart';
 import '../../../utils/toast_message.dart';
 
 class PaperCuttingViewModel with ChangeNotifier {
-  // late bool dataFetched;
   late List<PaperCutting> paperCuttingList;
   String uid = FirebaseAuth.instance.currentUser!.uid;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -18,6 +17,8 @@ class PaperCuttingViewModel with ChangeNotifier {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('RateList')
         .collection('PaperCutting')
+        .where('paperCuttingId', isNotEqualTo: null)
+        .orderBy('paperCuttingId', descending: true)
         .snapshots();
   }
 

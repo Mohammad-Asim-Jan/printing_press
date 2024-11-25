@@ -2,17 +2,40 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/model/stock.dart';
+import 'package:printing_press/utils/toast_message.dart';
 
 class AllStockViewModel with ChangeNotifier {
   // late bool dataFetched;
-  late List<Stock> allStockList;
+  late List<Stock> stockList;
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getStocksData() {
     return FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('StockData')
-        .collection('AvailableStock').orderBy('stockId', descending: true)
+        .collection('AvailableStock')
+        .where('stockId', isNotEqualTo: null)
+        .orderBy('stockId', descending: true)
         .snapshots();
+  }
+
+  Future<bool> isSupplierAvailable(int index) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection(FirebaseAuth.instance.currentUser!.uid)
+          .doc('SuppliersData')
+          .collection('Suppliers')
+          .where('supplierId', isEqualTo: stockList[index].supplierId)
+          .get();
+      if (querySnapshot.docs.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e, s) {
+      Utils.showMessage('Error: $e');
+      debugPrint("Error $e");
+      return false;
+    }
   }
 // void fetchAllStockData() async {
 //   dataFetched = false;

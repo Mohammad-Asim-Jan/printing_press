@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class StockOrderHistoryToSupplier {
   final int stockOrderId;
   final int stockId; // ref to the stock
-  final String stockName;
-  final String stockCategory;
+  final String stockName; /// todo: remove this because it is no more of use
+  final String stockCategory; /// todo: remove this because it is no more of use
   final int stockUnitBuyPrice;
   final int stockQuantity;
   final int totalAmount;
   final int supplierId;
-  final Timestamp stockDateAdded;
+  final DateTime stockDateAdded;
 
   StockOrderHistoryToSupplier({
     required this.stockOrderId,
@@ -33,7 +33,7 @@ class StockOrderHistoryToSupplier {
       stockQuantity: json['stockQuantity'],
       totalAmount: json['totalAmount'],
       supplierId: json['supplierId'],
-      stockDateAdded: json['stockDateAdded'],
+      stockDateAdded: json['stockDateAdded'].toDate(),
     );
   }
 }

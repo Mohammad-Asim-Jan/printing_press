@@ -1,4 +1,3 @@
-
 class Binding {
   int bindingId;
   String name;

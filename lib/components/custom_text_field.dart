@@ -44,7 +44,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: TextFormField(
         maxLength: widget.maxLength,
         controller: widget.controller,
@@ -62,18 +62,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
             size: 24,
           ),
           hintText: widget.hint,
+          labelStyle: TextStyle(color: kPrimeColor),
+          hintStyle: TextStyle(color: kNew9a),
           filled: true,
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide(
               width: 2,
+              // color: kNew9a,
               color: kPrimeColor,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(
-              color: kSecColor,
+              color: kNew9a,
             ),
           ),
         ),

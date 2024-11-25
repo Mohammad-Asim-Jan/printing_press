@@ -105,15 +105,15 @@ class AddMachineViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['machineId'] == null) {
+    if (data?['lastMachineId'] == null) {
       newMachineId = 1;
-      debugPrint('Machine id found to be null --------- ${data?['machineId']}');
-      await documentRef.set({'machineId': newMachineId});
+      debugPrint('Machine id found to be null --------- ${data?['lastMachineId']}');
+      await documentRef.set({'lastMachineId': newMachineId});
     } else {
       debugPrint(
-          '\n\n\nMachine id is found to be available. \nMachine id: ${data?['machineId']}');
-      newMachineId = data?['machineId'] + 1;
-      await documentRef.set({'machineId': newMachineId});
+          '\n\n\nMachine id is found to be available. \nMachine id: ${data?['lastMachineId']}');
+      newMachineId = data?['lastMachineId'] + 1;
+      await documentRef.set({'lastMachineId': newMachineId});
     }
   }
 

@@ -116,15 +116,15 @@ class AddProfitViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['profitId'] == null) {
+    if (data?['lastProfitId'] == null) {
       newProfitId = 1;
-      debugPrint('Profit id found to be null --------- ${data?['profitId']}');
-      await documentRef.set({'profitId': newProfitId});
+      debugPrint('Profit id found to be null --------- ${data?['lastProfitId']}');
+      await documentRef.set({'lastProfitId': newProfitId});
     } else {
       debugPrint(
-          '\n\n\nProfit id is found to be available. \nProfit id: ${data?['profitId']}');
-      newProfitId = data?['profitId'] + 1;
-      await documentRef.set({'profitId': newProfitId});
+          '\n\n\nProfit id is found to be available. \nProfit id: ${data?['lastProfitId']}');
+      newProfitId = data?['lastProfitId'] + 1;
+      await documentRef.set({'lastProfitId': newProfitId});
     }
   }
 

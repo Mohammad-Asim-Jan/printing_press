@@ -18,6 +18,8 @@ class NumberingViewModel with ChangeNotifier {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('RateList')
         .collection('Numbering')
+        .where('numberingId', isNotEqualTo: null)
+        .orderBy('numberingId', descending: true)
         .snapshots();
   }
 

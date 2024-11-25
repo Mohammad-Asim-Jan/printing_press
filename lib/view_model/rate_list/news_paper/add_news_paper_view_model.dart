@@ -101,16 +101,16 @@ class AddNewsPaperViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['newsPaperId'] == null) {
+    if (data?['lastNewsPaperId'] == null) {
       newNewsPaperId = 1;
       debugPrint(
-          'NewsPaper id found to be null --------- ${data?['newsPaperId']}');
-      await documentRef.set({'newsPaperId': newNewsPaperId});
+          'NewsPaper id found to be null --------- ${data?['lastNewsPaperId']}');
+      await documentRef.set({'lastNewsPaperId': newNewsPaperId});
     } else {
       debugPrint(
-          '\n\n\nNewsPaper id is found to be available. \nNewsPaper id: ${data?['newsPaperId']}');
-      newNewsPaperId = data?['newsPaperId'] + 1;
-      await documentRef.set({'newsPaperId': newNewsPaperId});
+          '\n\n\nNewsPaper id is found to be available. \nNewsPaper id: ${data?['lastNewsPaperId']}');
+      newNewsPaperId = data?['lastNewsPaperId'] + 1;
+      await documentRef.set({'lastNewsPaperId': newNewsPaperId});
     }
   }
 

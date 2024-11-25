@@ -5,6 +5,7 @@ import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dar
 import 'package:printing_press/views/suppliers/supplier_orders_history_view.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
+import '../../components/custom_circular_indicator.dart';
 import 'add_supplier_view.dart';
 
 class AllSuppliersView extends StatefulWidget {
@@ -35,7 +36,7 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
             builder: (BuildContext context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
+                return const CustomCircularIndicator();
               }
               if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));

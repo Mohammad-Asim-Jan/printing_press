@@ -10,12 +10,11 @@ class CashbookEntry {
   final String? description;
   final String paymentType;
   final String? paymentMethod;
-  final Timestamp paymentDateTime;
+  final DateTime paymentDateTime;
 
   CashbookEntry({
     // this.supplierPaymentId,
     required this.cashbookEntryId,
-    required this.paymentDateTime,
     required this.amount,
     this.supplierId,
     this.newStockOrderId,
@@ -23,6 +22,7 @@ class CashbookEntry {
     this.description,
     required this.paymentType,
     required this.paymentMethod,
+    required this.paymentDateTime,
   });
 
   factory CashbookEntry.fromJson(Map<String, dynamic> jsonData) {
@@ -36,7 +36,7 @@ class CashbookEntry {
       customerOrderId: jsonData['customerOrderId'],
       description: jsonData['description'],
       paymentType: jsonData['paymentType'],
-      paymentMethod: jsonData['paymentMethod'],
+      paymentMethod: jsonData['paymentMethod'].toDate(),
     );
   }
 }

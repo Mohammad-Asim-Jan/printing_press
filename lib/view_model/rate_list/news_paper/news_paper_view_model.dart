@@ -18,6 +18,8 @@ class NewsPaperViewModel with ChangeNotifier {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('RateList')
         .collection('NewsPaper')
+        .where('paperId', isNotEqualTo: null)
+        .orderBy('paperId', descending: true)
         .snapshots();
   }
 

@@ -7,6 +7,8 @@ import 'package:printing_press/view_model/orders/all_orders_view_model.dart';
 import 'package:printing_press/views/orders/customer_order_detail_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/custom_circular_indicator.dart';
+
 class AllOrdersView extends StatefulWidget {
   const AllOrdersView({super.key});
 
@@ -36,7 +38,7 @@ class _AllOrdersViewState extends State<AllOrdersView> {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const CustomCircularIndicator();
                 }
 
                 if (snapshot.hasError) {

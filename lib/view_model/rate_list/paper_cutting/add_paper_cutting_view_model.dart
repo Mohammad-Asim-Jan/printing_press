@@ -17,7 +17,6 @@ class AddPaperCuttingViewModel with ChangeNotifier {
   TextEditingController paperCuttingNameC = TextEditingController();
   TextEditingController rateC = TextEditingController();
 
-
   late String paperCuttingName;
   late int rate;
 
@@ -119,16 +118,16 @@ class AddPaperCuttingViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['paperCuttingId'] == null) {
+    if (data?['lastPaperCuttingId'] == null) {
       newPaperCuttingId = 1;
       debugPrint(
-          'PaperCutting id found to be null --------- ${data?['paperCuttingId']}');
-      await documentRef.set({'paperCuttingId': newPaperCuttingId});
+          'PaperCutting id found to be null --------- ${data?['lastPaperCuttingId']}');
+      await documentRef.set({'lastPaperCuttingId': newPaperCuttingId});
     } else {
       debugPrint(
-          '\n\n\nPaperCutting id found to be available. \nPaperCutting id: ${data?['paperCuttingId']}');
-      newPaperCuttingId = data?['paperCuttingId'] + 1;
-      await documentRef.set({'paperCuttingId': newPaperCuttingId});
+          '\n\n\nPaperCutting id found to be available. \nPaperCutting id: ${data?['lastPaperCuttingId']}');
+      newPaperCuttingId = data?['lastPaperCuttingId'] + 1;
+      await documentRef.set({'lastPaperCuttingId': newPaperCuttingId});
     }
   }
 

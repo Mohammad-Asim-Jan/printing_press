@@ -35,10 +35,9 @@ class _SplashViewState extends State<SplashView> {
         children: [
           const Spacer(flex: 5),
           Text(
-            /// todo: designing the app name here
             'Printing Press',
             style: TextStyle(
-              color: kPrimeColor,
+              color: kNew4,
               fontFamily: 'FredokaOne',
               fontSize: 40,
             ),
@@ -52,17 +51,17 @@ class _SplashViewState extends State<SplashView> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis),
           const Spacer(
-            flex: 5,
+            flex: 6,
           ),
           Divider(
             color: kPrimeColor,
-            endIndent: 30,
-            indent: 30,
+            endIndent: 60,
+            indent: 60,
             thickness: 0.7,
             height: 0,
           ),
           SizedBox(
-            height: 90,
+            height: 80,
             width: double.infinity,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -78,7 +77,7 @@ class _SplashViewState extends State<SplashView> {
                   ),
                 ),
                 const SizedBox(
-                  height: 6,
+                  height: 12,
                 ),
                 Text(
                   ///todo: change the font
@@ -87,7 +86,7 @@ class _SplashViewState extends State<SplashView> {
                     letterSpacing: 4,
                     wordSpacing: 2,
                     color: kPrimeColor,
-                    fontSize: 24,
+                    fontSize: 20,
                     fontFamily: 'GreatVibes',
                   ),
                 ),

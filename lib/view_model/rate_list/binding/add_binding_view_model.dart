@@ -115,15 +115,15 @@ class AddBindingViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['bindingId'] == null) {
+    if (data?['lastBindingId'] == null) {
       newBindingId = 1;
-      debugPrint('Binding id found to be null --------- ${data?['bindingId']}');
-      await documentRef.set({'bindingId': newBindingId});
+      debugPrint('Binding id found to be null --------- ${data?['lastBindingId']}');
+      await documentRef.set({'lastBindingId': newBindingId});
     } else {
       debugPrint(
-          '\n\n\nBinding id is found to be available. \nBinding id: ${data?['bindingId']}');
-      newBindingId = data?['bindingId'] + 1;
-      await documentRef.set({'bindingId': newBindingId});
+          '\n\n\nBinding id is found to be available. \nBinding id: ${data?['lastBindingId']}');
+      newBindingId = data?['lastBindingId'] + 1;
+      await documentRef.set({'lastBindingId': newBindingId});
     }
   }
 

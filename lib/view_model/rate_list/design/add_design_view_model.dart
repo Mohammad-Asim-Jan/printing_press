@@ -115,15 +115,15 @@ class AddDesignViewModel with ChangeNotifier {
 
     var data = documentSnapshot.data();
 
-    if (data?['designId'] == null) {
+    if (data?['lastDesignId'] == null) {
       newDesignId = 1;
-      debugPrint('Design id found to be null --------- ${data?['designId']}');
-      await documentRef.set({'designId': newDesignId});
+      debugPrint('Design id found to be null --------- ${data?['lastDesignId']}');
+      await documentRef.set({'lastDesignId': newDesignId});
     } else {
       debugPrint(
-          '\n\n\nDesign id is found to be available. \nDesign id: ${data?['designId']}');
-      newDesignId = data?['designId'] + 1;
-      await documentRef.set({'designId': newDesignId});
+          '\n\n\nDesign id is found to be available. \nDesign id: ${data?['lastDesignId']}');
+      newDesignId = data?['lastDesignId'] + 1;
+      await documentRef.set({'lastDesignId': newDesignId});
     }
   }
 

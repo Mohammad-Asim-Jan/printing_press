@@ -18,6 +18,8 @@ class DesignViewModel with ChangeNotifier {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('RateList')
         .collection('Design')
+        .where('designId', isNotEqualTo: null)
+        .orderBy('designId', descending: true)
         .snapshots();
   }
 

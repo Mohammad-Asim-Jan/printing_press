@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:printing_press/components/custom_circular_indicator.dart';
 import 'package:printing_press/components/round_button.dart';
 import 'package:printing_press/model/cashbook_entry.dart';
 import 'package:printing_press/view_model/suppliers/supplier_orders_history_view_model.dart';
@@ -80,7 +81,7 @@ class _SupplierOrdersHistoryViewState extends State<SupplierOrdersHistoryView> {
                         AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
                             snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
+                        return const CustomCircularIndicator();
                       }
                 
                       if (snapshot.hasError) {

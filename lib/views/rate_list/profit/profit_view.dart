@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/model/rate_list/profit.dart';
+import 'package:printing_press/text_styles/custom_text_styles.dart';
 import 'package:printing_press/view_model/rate_list/profit/profit_view_model.dart';
 import 'package:printing_press/views/rate_list/profit/add_profit_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../colors/color_palette.dart';
+import '../../../components/custom_circular_indicator.dart';
 
 class ProfitView extends StatefulWidget {
   const ProfitView({super.key});
@@ -32,14 +34,14 @@ class _ProfitViewState extends State<ProfitView> {
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const CustomCircularIndicator();
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
           if (snapshot.hasData) {
-            value.profitList = snapshot.data!.docs.skip(1).map((e) {
+            value.profitList = snapshot.data!.docs.map((e) {
               return Profit.fromJson(e.data());
             }).toList();
             if (value.profitList.isEmpty) {
@@ -49,7 +51,7 @@ class _ProfitViewState extends State<ProfitView> {
               itemCount: value.profitList.length,
               itemBuilder: (BuildContext context, int index) {
                 /// todo: change the list tile to custom design
-                return ListTile(
+                ListTile(
                   trailing: SizedBox(
                     width: 100,
                     child: Row(
@@ -79,6 +81,92 @@ class _ProfitViewState extends State<ProfitView> {
                     'Percentage: ${value.profitList[index].percentage}',
                   ),
                   leading: Text(value.profitList[index].profitId.toString()),
+                );
+                return Card(
+                  elevation: 1.5,
+                  shadowColor: Colors.blue.withOpacity(0.3),
+                  color: kSecColor,
+                  margin:
+                      EdgeInsets.only(bottom: 10, top: 5, right: 10, left: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                        // Expanded(
+                        //   flex: 4,
+                        //   child: Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.center,
+                        //     children: [
+                        //       Text(
+                        //         'ID',
+                        //         style: TextStyle(
+                        //           fontFamily: 'Iowan',
+                        //           color: kNew9a,
+                        //         ),
+                        //       ),
+                        //       SizedBox(height: 4),
+                        //       Text(
+                        //         '${value.profitList[index].profitId}',
+                        //         maxLines: 1,
+                        //         style: TextStyle(
+                        //           overflow: TextOverflow.ellipsis,
+                        //           color: kThirdColor,
+                        //           fontSize: 16,
+                        //           fontWeight: FontWeight.w500,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        SizedBox(width: 5),
+                        Expanded(
+                          flex: 7,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Name', style: kDescriptionTextStyle),
+                              SizedBox(height: 4),
+                              kTitleText(value.profitList[index].name)
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Expanded(
+                          flex: 6,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Percentage', style: kDescriptionTextStyle),
+                              SizedBox(height: 4),
+                              kDescriptionText(
+                                  '${value.profitList[index].percentage} %')
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Expanded(
+                          flex: 3,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () => value.editProfit(context, index),
+                                child: Icon(Icons.edit, color: kNew4),
+                              ),
+                              GestureDetector(
+                                  child: Icon(Icons.delete, color: kNew4),
+                                  onTap: () =>
+                                      value.confirmDelete(context, index)),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                      ],
+                    ),
+                  ),
                 );
               },
             );

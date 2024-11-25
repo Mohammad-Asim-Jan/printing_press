@@ -17,6 +17,8 @@ class ProfitViewModel with ChangeNotifier {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('RateList')
         .collection('Profit')
+        .where('profitId', isNotEqualTo: null)
+        .orderBy('profitId', descending: true)
         .snapshots();
   }
 

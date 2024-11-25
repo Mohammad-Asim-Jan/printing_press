@@ -117,14 +117,13 @@ class AddStockViewModel with ChangeNotifier {
     if (_formKey.currentState != null) {
       updateListeners(true);
       if (_formKey.currentState!.validate()) {
-        /// todo: checking if the quantity is zero, then don't update
         newStockQuantity = int.tryParse(stockQuantityC.text.trim())!;
 
         if (newStockQuantity == 0) {
           Utils.showMessage('Quantity must be greater than 0');
           updateListeners(false);
         } else {
-          /// todo: check if stock is already available
+          /// check if stock is already available
           await getDataFromTextFields();
           QuerySnapshot stockQuerySnapshot = await firestore
               .collection(uid)
@@ -136,7 +135,7 @@ class AddStockViewModel with ChangeNotifier {
           if (stockQuerySnapshot.docs.isNotEmpty) {
             debugPrint('\n\n\nIt means stock exists\n\n\n\n\n');
 
-            /// todo: check if the stock has the same values
+            /// check if the stock has the same values
             stockQuerySnapshot = await firestore
                 .collection(uid)
                 .doc('StockData')
@@ -157,7 +156,7 @@ class AddStockViewModel with ChangeNotifier {
 
               // debugPrint('\n\nNew Total Amount: $newTotalAmount\n\n');
 
-              /// todo: update the Stock
+              /// update the Stock
               DocumentSnapshot stockDocumentSnapshot =
                   stockQuerySnapshot.docs.first;
               newStockId = stockDocumentSnapshot.get('stockId');
@@ -181,7 +180,7 @@ class AddStockViewModel with ChangeNotifier {
                 'stockQuantity': newStockQuantity + previousStockQuantity,
                 'totalAmount': totalAmount,
               }).then((value) async {
-                ///todo: add an order history
+                /// add an order history
                 // debugPrint(
                 //     '\n\n\n\n\n\n\n\n Stock data updated !!\n\n\n\n\n\n');
                 Utils.showMessage('Stock data updated !!');
@@ -205,7 +204,7 @@ class AddStockViewModel with ChangeNotifier {
                   'stockDateAdded': timeStamp,
                 });
 
-                /// todo: update the supplier total amount and remaining amount
+                /// update the supplier total amount and remaining amount
                 supplierId = suppliersIdList[selectedSupplierIndex];
 
                 DocumentReference supplierRef = firestore
@@ -240,7 +239,7 @@ class AddStockViewModel with ChangeNotifier {
               updateListeners(false);
             }
           } else {
-            /// todo: stock doesn't exist
+            /// stock doesn't exist
             await setNewStockId();
             await setNewStockOrderId();
 
@@ -248,7 +247,7 @@ class AddStockViewModel with ChangeNotifier {
 
             supplierId = suppliersIdList[selectedSupplierIndex];
 
-            /// todo: Adding a new stock
+            /// Adding a new stock
             await firestore
                 .collection(uid)
                 .doc('StockData')
@@ -269,7 +268,7 @@ class AddStockViewModel with ChangeNotifier {
               'supplierId': supplierId,
               'stockDateAdded': timeStamp
             }).then((value) async {
-              /// todo: Adding the history of the stock
+              /// Adding the history of the stock
               await firestore
                   .collection(uid)
                   .doc('StockData')
@@ -287,7 +286,7 @@ class AddStockViewModel with ChangeNotifier {
                 'stockDateAdded': timeStamp,
               }).then(
                 (value) async {
-                  /// todo: update the supplier total amount
+                  /// update the supplier total amount
                   debugPrint(
                       '\n\n\n\n\nSupplier id while updating the total amount: $supplierId \n\n\n\n\n');
                   DocumentReference supplierRef = firestore
@@ -365,7 +364,6 @@ class AddStockViewModel with ChangeNotifier {
     }
   }
 
-  ///todo:
   setNewStockOrderId() async {
     newStockOrderId = 1;
     final documentRef = FirebaseFirestore.instance

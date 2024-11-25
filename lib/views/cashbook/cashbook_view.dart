@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:printing_press/components/custom_circular_indicator.dart';
 import 'package:printing_press/model/cashbook_entry.dart';
 import 'package:printing_press/view_model/cashbook/cashbook_view_model.dart';
 import 'package:printing_press/views/cashbook/cashbook_entry_details_view.dart';
@@ -31,7 +32,7 @@ class _CashbookViewState extends State<CashbookView> {
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const CustomCircularIndicator();
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -65,7 +66,8 @@ class _CashbookViewState extends State<CashbookView> {
                         },
                       ));
                     },
-                    trailing: Text(value.allCashbookEntries[index].cashbookEntryId
+                    trailing: Text(value
+                        .allCashbookEntries[index].cashbookEntryId
                         .toString()),
                     // SizedBox(
                     //   width: 100,
@@ -88,8 +90,8 @@ class _CashbookViewState extends State<CashbookView> {
                         color: kThirdColor,
                         fontSize: 18,
                         fontWeight: FontWeight.w500),
-                    title:
-                        Text(value.allCashbookEntries[index].paymentType ?? '0'),
+                    title: Text(
+                        value.allCashbookEntries[index].paymentType ?? '0'),
                     tileColor: kTwo,
                     subtitleTextStyle: const TextStyle(
                         color: Colors.black, fontStyle: FontStyle.italic),

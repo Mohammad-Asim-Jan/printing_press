@@ -46,28 +46,7 @@ class _HomeViewState extends State<HomeView> {
                       endIndent: 10,
                     ),
                     const Expanded(child: RateListView()),
-                    // SwitchListTile(value: true, onChanged: (val) {}),
-                    // ExpansionTile(
-                    //   leading: Icon(Icons.settings),
-                    //   title: Text('Settings'),
-                    //   children: [
-                    //     ListTile(
-                    //       leading: Icon(Icons.color_lens),
-                    //       title: Text('Change Theme'),
-                    //       onTap: () {
-                    //         // Change theme
-                    //       },
-                    //     ),
-                    //     ListTile(
-                    //       leading: Icon(Icons.language),
-                    //       title: Text('Language Settings'),
-                    //       onTap: () {
-                    //         // Change language
-                    //       },
-                    //     ),
-                    //   ],
-                    // ),
-                    // const Spacer(flex: 1,),
+
                     const Divider(
                       height: 30,
                       indent: 80,
@@ -281,3 +260,26 @@ class _HomeViewState extends State<HomeView> {
 //         builder: (context) => const KhataView(),
 //       ));
 //     }),
+
+// SwitchListTile(value: true, onChanged: (val) {}),
+// ExpansionTile(
+//   leading: Icon(Icons.settings),
+//   title: Text('Settings'),
+//   children: [
+//     ListTile(
+//       leading: Icon(Icons.color_lens),
+//       title: Text('Change Theme'),
+//       onTap: () {
+//         // Change theme
+//       },
+//     ),
+//     ListTile(
+//       leading: Icon(Icons.language),
+//       title: Text('Language Settings'),
+//       onTap: () {
+//         // Change language
+//       },
+//     ),
+//   ],
+// ),
+// const Spacer(flex: 1,),

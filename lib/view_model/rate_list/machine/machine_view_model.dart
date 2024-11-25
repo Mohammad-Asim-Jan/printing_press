@@ -18,6 +18,8 @@ class MachineViewModel with ChangeNotifier {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('RateList')
         .collection('Machine')
+        .where('machineId', isNotEqualTo: null)
+        .orderBy('machineId', descending: true)
         .snapshots();
   }
 

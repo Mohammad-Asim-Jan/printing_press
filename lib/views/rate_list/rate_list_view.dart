@@ -62,39 +62,40 @@ class _RateListViewState extends State<RateListView> {
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 22.0,
+                horizontal: 30.0,
               ),
               child: Container(
-                height: 36,
-                margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.only(
-                    top: 4, bottom: 4, left: 25, right: 0),
+                height: 38,
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.only(top: 4, bottom: 4),
                 decoration: BoxDecoration(
-                  color: value.rateListIndex == index ? kNew10 : null,
+                  color: value.rateListIndex == index ? kNew9a : null,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      icons[index],
-                      color: value.rateListIndex == index
-                          ? Colors.white
-                          : Colors.black54,
+                    Expanded(
+                      flex: 6,
+                      child: Icon(
+                        icons[index],
+                        color: value.rateListIndex == index
+                            ? Colors.white
+                            : Colors.black54,
+                      ),
                     ),
                     Expanded(
-                      child: Center(
-                        child: Text(
-                          buttonNames[index],
-                          style: TextStyle(
-                              color: value.rateListIndex == index
-                                  ? Colors.white
-                                  : Colors.black54,
-                              fontSize: 18,
-                              fontFamily: 'Iowan',
-                              fontWeight: value.rateListIndex == index
-                                  ? FontWeight.bold
-                                  : null),
-                        ),
+                      flex: 11,
+                      child: Text(
+                        buttonNames[index],
+                        style: TextStyle(
+                            color: value.rateListIndex == index
+                                ? Colors.white
+                                : Colors.black54,
+                            fontSize: 18,
+                            fontFamily: 'Iowan',
+                            fontWeight: value.rateListIndex == index
+                                ? FontWeight.bold
+                                : null),
                       ),
                     ),
                   ],

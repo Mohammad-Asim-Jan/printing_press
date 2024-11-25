@@ -68,12 +68,9 @@ class AddPaperViewModel with ChangeNotifier {
               .set({
             'paperId': newPaperId,
             'name': paperName,
-            'size': {
-              'width':sizeWidth,
-              'height': sizeHeight
-            },
+            'size': {'width': sizeWidth, 'height': sizeHeight},
             'quality': quality,
-            'rate':rate
+            'rate': rate
           }).then((value) async {
             Utils.showMessage('New paper added');
             debugPrint('New paper added!!!!!!!!!!!!!!!!!');
@@ -96,23 +93,23 @@ class AddPaperViewModel with ChangeNotifier {
         .doc('RateList')
         .collection('Paper')
 
-    /// 0 is added so that the last paper id document appears to the top
-    /// because when we are getting the data, we ignore the first doc because it is always of id
+        /// 0 is added so that the last paper id document appears to the top
+        /// because when we are getting the data, we ignore the first doc because it is always of id
         .doc('0LastPaperId');
 
     final documentSnapshot = await documentRef.get();
 
     var data = documentSnapshot.data();
 
-    if (data?['paperId'] == null) {
+    if (data?['lastPaperId'] == null) {
       newPaperId = 1;
-      debugPrint('Paper id found to be null --------- ${data?['paperId']}');
-      await documentRef.set({'paperId': newPaperId});
+      debugPrint('Paper id found to be null --------- ${data?['lastPaperId']}');
+      await documentRef.set({'lastPaperId': newPaperId});
     } else {
       debugPrint(
-          '\n\n\nPaper id is found to be available. \nPaper id: ${data?['paperId']}');
-      newPaperId = data?['paperId'] + 1;
-      await documentRef.set({'paperId': newPaperId});
+          '\n\n\nPaper id is found to be available. \nPaper id: ${data?['lastPaperId']}');
+      newPaperId = data?['lastNewsPaperId'] + 1;
+      await documentRef.set({'lastNewsPaperId': newPaperId});
     }
   }
 
