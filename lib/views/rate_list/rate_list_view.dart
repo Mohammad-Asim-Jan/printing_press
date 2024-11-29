@@ -37,17 +37,6 @@ class _RateListViewState extends State<RateListView> {
     Icons.trending_up_rounded,
   ];
 
-  // List<Widget> screenNames = [
-  //   const BindingView(),
-  //   const DesignView(),
-  //   const MachineView(),
-  //   const NewsPaperView(),
-  //   const NumberingView(),
-  //   const PaperView(),
-  //   const PaperCuttingView(),
-  //   const ProfitView(),
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeViewModel>(
@@ -69,7 +58,7 @@ class _RateListViewState extends State<RateListView> {
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.only(top: 4, bottom: 4),
                 decoration: BoxDecoration(
-                  color: value.rateListIndex == index ? kNew9a : null,
+                  color: value.rateListIndex == index ? kThirdColor : null,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(

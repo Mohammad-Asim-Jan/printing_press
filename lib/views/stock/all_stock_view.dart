@@ -111,6 +111,7 @@ class _AllStockViewState extends State<AllStockView> {
                               ],
                             ),
                           ),
+                          SizedBox(width: 5),
                           Expanded(
                             flex: 3,
                             child: Column(

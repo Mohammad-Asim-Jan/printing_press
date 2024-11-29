@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/components/custom_drop_down.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
@@ -40,6 +41,7 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                   child: Form(
                     key: addCashbookEntryViewModel.formKey,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Consumer<AddCashbookEntryViewModel>(
                           builder: (context, val1, child) {
@@ -57,9 +59,6 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                             );
                           },
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
                         Consumer<AddCashbookEntryViewModel>(
                           builder: (context, val2, child) {
                             return CustomTextField(
@@ -72,9 +71,6 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                             );
                           },
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
                         Consumer<AddCashbookEntryViewModel>(
                           builder: (context, val3, child) {
                             return CustomTextField(
@@ -86,23 +82,19 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                           },
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 6,
                         ),
+                        Text('Payment Method',
+                            style: TextStyle(
+                                color: kThirdColor,
+                                fontSize: 16,
+                                fontFamily: 'Urbanist',
+                                fontWeight: FontWeight.bold)),
                         Row(
                           children: [
-                            const Expanded(
-                              flex: 1,
-                              child: Text(
-                                'Payment Method',
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
                             Consumer<AddCashbookEntryViewModel>(
                                 builder: (context, val4, child) {
                               return Expanded(
-                                flex: 2,
                                 child: CustomDropDown(
                                   validator: null,
                                   list: const ['CASH-OUT', 'CASH-IN'],

@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/model/supplier.dart';
+import 'package:printing_press/text_styles/custom_text_styles.dart';
 import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
-import 'package:printing_press/views/suppliers/supplier_orders_history_view.dart';
+import 'package:printing_press/views/suppliers/supplier_details_view.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
 import '../../components/custom_circular_indicator.dart';
@@ -28,91 +29,123 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<AllSuppliersViewModel>(
-        builder: (context, value, child) {
-          return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: value.getSuppliersData(),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CustomCircularIndicator();
-              }
-              if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              }
+    return Consumer<AllSuppliersViewModel>(
+      builder: (context, value, child) {
+        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: value.getSuppliersData(),
+          builder: (BuildContext context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CustomCircularIndicator();
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
 
-              if (snapshot.hasData) {
-                value.allSuppliersModel = snapshot.data!.docs.skip(1).map(
-                  (e) {
-                    return Supplier.fromJson(e.data());
-                  },
-                ).toList();
-                if (value.allSuppliersModel.isEmpty) {
-                  return const Center(
-                    child: Text('No suppliers found!'),
-                  );
-                }
-                return ListView.builder(
-                  itemCount: value.allSuppliersModel.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    /// todo: change the list tile to custom design
-                    return ListTile(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => SupplierOrdersHistoryView(
-                              supplierId:
-                                  value.allSuppliersModel[index].supplierId,
-                              totalAmount:
-                                  value.allSuppliersModel[index].totalAmount,
-                              remainingAmount: value
-                                  .allSuppliersModel[index].amountRemaining,
-                              paidAmount: value
-                                  .allSuppliersModel[index].totalPaidAmount,
-                            ),
-                          ),
-                        );
-                      },
-                      trailing: SizedBox(
-                        width: 100,
+            if (snapshot.hasData) {
+              value.allSuppliersModel = snapshot.data!.docs.skip(1).map(
+                (e) {
+                  return Supplier.fromJson(e.data());
+                },
+              ).toList();
+              if (value.allSuppliersModel.isEmpty) {
+                return const Center(
+                  child: Text('No suppliers found!'),
+                );
+              }
+              return ListView.builder(
+                itemCount: value.allSuppliersModel.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SupplierDetailsView(
+                              supplierId: value.allSuppliersModel[index].supplierId)));
+                    },
+                    child: Card(
+                      elevation: 1.5,
+                      color: Color(0xffcad6d2),
+                      shadowColor: Colors.blueGrey.withOpacity(0.23),
+                      margin: EdgeInsets.only(
+                          bottom: 10, top: 5, right: 10, left: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
                         child: Row(
                           children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {},
+                            SizedBox(width: 5),
+                            // Expanded(
+                            //   flex: 1,
+                            //   child: Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: [
+                            //       kTitleText(
+                            //           value
+                            //               .allSuppliersModel[index].supplierId
+                            //               .toString(),
+                            //           12,
+                            //           kNew9a,
+                            //           2)
+                            //     ],
+                            //   ),
+                            // ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              flex: 7,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  kTitleText(
+                                      value.allSuppliersModel[index]
+                                          .supplierName,
+                                      18),
+                                  SizedBox(height: 8),
+                                  kTitleText(
+                                      value.allSuppliersModel[index]
+                                          .supplierPhoneNo,
+                                      14,
+                                      kOne)
+                                ],
+                              ),
                             ),
+                            SizedBox(width: 5),
+                            Expanded(
+                              flex: 6,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Amount to Pay',
+                                      style: kDescriptionTextStyle),
+                                  SizedBox(height: 4),
+                                  kTitleText(
+                                      'Rs. ${value.allSuppliersModel[index].amountRemaining}',
+                                      null,
+                                      kNew8.withOpacity(0.75),
+                                      2)
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 5),
                             IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {},
+                              icon: Icon(Icons.delete, color: kNew4),
+                              onPressed: () {
+                                /// todo:
+                              },
                             ),
                           ],
                         ),
                       ),
-                      shape: Border.all(width: 2, color: kPrimeColor),
-                      // titleAlignment: ListTileTitleAlignment.threeLine,
-                      titleTextStyle: TextStyle(
-                          color: kThirdColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500),
-                      title: Text(value.allSuppliersModel[index].supplierName),
-                      tileColor: kTwo,
-                      subtitleTextStyle: const TextStyle(
-                          color: Colors.black, fontStyle: FontStyle.italic),
-                      subtitle: Text(
-                        'Phone No: ${value.allSuppliersModel[index].supplierPhoneNo}\nAddress: ${value.allSuppliersModel[index].supplierAddress}}',
-                      ),
-                      leading: Text(
-                          value.allSuppliersModel[index].supplierId.toString()),
-                    );
-                  },
-                );
-              }
-              return const Text('No data!');
-            },
-          );
-        },
-      ),
+                    ),
+                  );
+                },
+              );
+            }
+            return const Text('No data!');
+          },
+        );
+      },
     );
   }
 }

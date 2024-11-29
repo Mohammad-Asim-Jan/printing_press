@@ -1,13 +1,10 @@
 
-/// todo: there will be a field named key that is supposed to be the key of the new supplier or the last supplier added to the database
-
 class Supplier {
   final int supplierId; // auto-generated
   final String supplierName; //
-  final int supplierPhoneNo; //
+  final String supplierPhoneNo; //
   final String supplierEmail; //
   final String supplierAddress; //
-
   // final List<BankAccount>? bankAccount;
   final int totalAmount; //
   final int totalPaidAmount; //

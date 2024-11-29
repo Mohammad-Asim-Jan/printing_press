@@ -1,30 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:printing_press/model/bank_account.dart';
 import 'package:printing_press/utils/toast_message.dart';
 
-class PaymentViewModel with ChangeNotifier {
+class PaymentToSupplierViewModel with ChangeNotifier {
   late int newStockOrderId;
   late int newCashbookEntryId;
   final _formKey = GlobalKey<FormState>();
+
+  late List<String> listOfSupplierAccounts = ['Cash'];
+  late String selectedBankAcc = 'Cash';
 
   get formKey => _formKey;
   bool _loading = false;
 
   get loading => _loading;
   final uid = FirebaseAuth.instance.currentUser!.uid;
-
-  ///todo: validating the text field to input only the digits
+  final firestore = FirebaseFirestore.instance;
   TextEditingController amountC = TextEditingController();
   TextEditingController descriptionC = TextEditingController();
-  TextEditingController paymentMethodC = TextEditingController();
 
   late int supplierPreviousRemainingAmount;
 
   late int supplierPreviousAmountPaid;
 
   getSupplierPreviousRemainingAmount(int? supplierId) async {
-    DocumentReference supplierRef = FirebaseFirestore.instance
+    DocumentReference supplierRef = firestore
         .collection(uid)
         .doc('SuppliersData')
         .collection('Suppliers')
@@ -38,27 +40,19 @@ class PaymentViewModel with ChangeNotifier {
     amountC.text = supplierPreviousRemainingAmount.toString();
   }
 
-  //final int? supplierId; -> from where it comes
-  //final int? orderId; -> from where it comes
-  //final String paymentType; -> cash-in
-  //final Timestamp paymentDateTime; -> auto generated
-  ///   String? description; -> text field
-  ///   final int amount; -> text field
-  ///   final String paymentMethod; -> dropdown menu having the list of the bank accounts of the supplier + cash a default option
   addPaymentInFirestore(int? supplierId, int orderId) async {
+      updateListener(true);
     if (_formKey.currentState != null) {
       debugPrint('Form key is not null\n');
-      updateListener(true);
       if (_formKey.currentState!.validate()) {
         int amount = int.tryParse(amountC.text.trim())!;
         String description = descriptionC.text.trim();
-        String paymentMethod = paymentMethodC.text.trim();
         debugPrint('Form key is valid\n');
         Timestamp timeStamp = Timestamp.now();
         await setNewStockOrderHistoryId();
 
         await setNewCashbookEntryId();
-        await FirebaseFirestore.instance
+        await firestore
             .collection(uid)
             .doc('StockData')
             .collection('StockOrderHistory')
@@ -70,16 +64,13 @@ class PaymentViewModel with ChangeNotifier {
           'amount': amount,
           'description': description,
           'paymentType': 'CASH-OUT',
-
-          ///todo: do we need to have a bank ref?
-          ///for supplier, there has to be a payment method dropdown
-          'paymentMethod': paymentMethod,
+          'paymentMethod': selectedBankAcc,
           'paymentDateTime': timeStamp,
         }).then((value) async {
-          Utils.showMessage('Supplier payment added !');
 
+          Utils.showMessage('Supplier payment added !');
           /// adding the payment history to cashbook
-          await FirebaseFirestore.instance
+          await firestore
               .collection(uid)
               .doc('CashbookData')
               .collection('CashbookEntry')
@@ -91,10 +82,7 @@ class PaymentViewModel with ChangeNotifier {
             'amount': amount,
             'description': description,
             'paymentType': 'CASH-OUT',
-
-            ///todo: do we need to have a bank ref?
-            ///for supplier, there has to be a payment method dropdown
-            'paymentMethod': paymentMethod,
+            'paymentMethod': selectedBankAcc,
             'paymentDateTime': timeStamp,
           }).then(
             (value) async {
@@ -102,31 +90,32 @@ class PaymentViewModel with ChangeNotifier {
               debugPrint('\n\n\nCashbook Entry added!\n\n\n');
 
               /// update the supplier remaining amount and total amount paid
-              DocumentReference supplierRef = FirebaseFirestore.instance
+              DocumentReference supplierRef = firestore
                   .collection(uid)
                   .doc('SuppliersData')
                   .collection('Suppliers')
                   .doc('SUP-$supplierId');
-
-              DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
-
-              supplierPreviousRemainingAmount =
-                  supplierDocSnapshot.get('amountRemaining');
-              supplierPreviousAmountPaid =
-                  supplierDocSnapshot.get('totalPaidAmount');
+              //
+              // DocumentSnapshot supplierDocSnapshot = await supplierRef.get();
+              //
+              // supplierPreviousRemainingAmount =
+              //     supplierDocSnapshot.get('amountRemaining');
+              // supplierPreviousAmountPaid =
+              //     supplierDocSnapshot.get('totalPaidAmount');
 
               supplierRef.update({
-                'totalPaidAmount': supplierPreviousAmountPaid +
-                    amount,
-                'amountRemaining': supplierPreviousRemainingAmount -
-                    amount
+                'totalPaidAmount': supplierPreviousAmountPaid + amount,
+                'amountRemaining': supplierPreviousRemainingAmount - amount
               }).then(
                 (value) {
+                  supplierPreviousAmountPaid += amount;
+                  supplierPreviousRemainingAmount -= amount;
                   Utils.showMessage('Supplier rem and paid amount updated!');
                   updateListener(false);
                 },
               ).onError(
                 (error, stackTrace) {
+                  debugPrint(error.toString());
                   Utils.showMessage('Sup rem and paid amount error: $error');
                   updateListener(false);
                 },
@@ -134,6 +123,7 @@ class PaymentViewModel with ChangeNotifier {
             },
           ).onError(
             (error, stackTrace) {
+              debugPrint(error.toString());
               Utils.showMessage('Cashbook entry Error:$error');
               debugPrint('\n\n\nCashbook Entry error!\n\n\n');
               updateListener(false);
@@ -154,14 +144,14 @@ class PaymentViewModel with ChangeNotifier {
       }
     } else {
       debugPrint('Form key is null \n');
-      Utils.showMessage('Current state = null');
+      Utils.showMessage('Current state is null');
       updateListener(false);
     }
   }
 
   setNewStockOrderHistoryId() async {
     newStockOrderId = 1;
-    final documentRef = FirebaseFirestore.instance
+    final documentRef = firestore
         .collection(uid)
         .doc('StockData')
         .collection('StockOrderHistory')
@@ -185,7 +175,7 @@ class PaymentViewModel with ChangeNotifier {
 
   setNewCashbookEntryId() async {
     newCashbookEntryId = 1;
-    final documentRef = FirebaseFirestore.instance
+    final documentRef = firestore
         .collection(uid)
         .doc('CashbookData')
         .collection('CashbookEntry')
@@ -205,6 +195,32 @@ class PaymentViewModel with ChangeNotifier {
       newCashbookEntryId = data?['LastCashbookEntryId'] + 1;
       await documentRef.set({'LastCashbookEntryId': newCashbookEntryId});
     }
+  }
+
+  getSupplierBankAccountNames(int supplierId) async {
+    listOfSupplierAccounts = ['Cash'];
+    await firestore
+        .collection(uid)
+        .doc('SuppliersData')
+        .collection('BankAccounts')
+        .doc('SUP-BANK-$supplierId')
+        .get()
+        .then(
+      (value) {
+        List data = value.get('bankAccounts');
+        List<BankAccount> supplierAccounts = data.map((e) {
+          return BankAccount.fromJson(e);
+        }).toList();
+        for (BankAccount e in supplierAccounts) {
+          listOfSupplierAccounts.add(e.accountType);
+        }
+        notifyListeners();
+      },
+    ).onError(
+      (error, stackTrace) {
+        Utils.showMessage(error.toString());
+      },
+    );
   }
 
   updateListener(bool loading) {

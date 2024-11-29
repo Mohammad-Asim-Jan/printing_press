@@ -4,17 +4,19 @@ import 'package:intl/intl.dart';
 import 'package:printing_press/model/stock_order_history_by_customer.dart';
 import 'package:printing_press/model/stock_order_history_to_supplier.dart';
 import 'package:printing_press/text_styles/custom_text_styles.dart';
+import 'package:printing_press/utils/date_format.dart';
 import 'package:printing_press/view_model/stock/stock_details_view_model.dart';
 import 'package:provider/provider.dart';
-
 import '../../components/custom_circular_indicator.dart';
 
 class StockHistoryView extends StatefulWidget {
   const StockHistoryView({
     super.key,
     required this.stockId,
+    required this.supplierId,
   });
 
+  final int supplierId;
   final int stockId;
 
   @override
@@ -22,15 +24,20 @@ class StockHistoryView extends StatefulWidget {
 }
 
 class _StockHistoryViewState extends State<StockHistoryView> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<StockDetailsViewModel>(
-        builder: (context, value, child) {
+    return Consumer<StockDetailsViewModel>(builder: (context, value, child) {
       return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: value.getStockHistoryData(widget.stockId),
           builder: (BuildContext context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            value.getSupplierName(widget.supplierId);
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CustomCircularIndicator();
             }
@@ -72,143 +79,139 @@ class _StockHistoryViewState extends State<StockHistoryView> {
                   }
 
                   return Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      decoration: BoxDecoration(
-                        color: isCustomer
-                            ? Colors.green.withOpacity(0.2)
-                            : Colors.blue.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 8),
-                          Icon(
-                              isCustomer
-                                  ? Icons.person_2_outlined
-                                  : Icons.business_outlined,
-                              color: isCustomer
-                                  ? Colors.green.shade500
-                                  : Colors.blue.shade300),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Table(
-                                columnWidths: {
-                                  0: FractionColumnWidth(0.2),
-                                  1: FractionColumnWidth(0.2),
-                                  2: FractionColumnWidth(0.2),
-                                  3: FractionColumnWidth(0.2),
-                                  4: FractionColumnWidth(0.2),
-                                },
-                                children: [
-                                  TableRow(
-                                    children: [
-                                      Padding(
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: isCustomer
+                          ? Colors.green.withOpacity(0.2)
+                          : Colors.blue.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 8),
+                        Icon(
+                            isCustomer
+                                ? Icons.person_2_outlined
+                                : Icons.business_outlined,
+                            color: isCustomer
+                                ? Colors.green.shade500
+                                : Colors.blue.shade300),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Table(
+                              columnWidths: {
+                                0: FractionColumnWidth(0.2),
+                                1: FractionColumnWidth(0.2),
+                                2: FractionColumnWidth(0.2),
+                                3: FractionColumnWidth(0.2),
+                                4: FractionColumnWidth(0.2),
+                              },
+                              children: [
+                                TableRow(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: kTitleText(
+                                          isCustomer ? 'Order Id' : 'Supplier',
+                                          10,
+                                          Colors.black.withOpacity(0.6),
+                                          2),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: kTitleText(
+                                          isCustomer
+                                              ? 'Sell Price'
+                                              : 'Buy Price',
+                                          10,
+                                          Colors.black.withOpacity(0.6),
+                                          2),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: kTitleText('Quantity', 10,
+                                          Colors.black.withOpacity(0.6), 2),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: kTitleText('Amount', 10,
+                                          Colors.black.withOpacity(0.6), 2),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: kTitleText('Date', 10,
+                                          Colors.black.withOpacity(0.6), 2),
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    Padding(
                                         padding: EdgeInsets.all(4.0),
                                         child: kTitleText(
                                             isCustomer
-                                                ? 'Order Id'
-                                                : 'Supplier Id',
-                                            10,
-                                            Colors.black.withOpacity(0.6),
-                                            2),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: kTitleText(
-                                            isCustomer
-                                                ? 'Sell Price'
-                                                : 'Buy Price',
-                                            10,
-                                            Colors.black.withOpacity(0.6),
-                                            2),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: kTitleText('Quantity', 10,
-                                            Colors.black.withOpacity(0.6), 2),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: kTitleText('Amount', 10,
-                                            Colors.black.withOpacity(0.6), 2),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: kTitleText('Date', 10,
-                                            Colors.black.withOpacity(0.6), 2),
-                                      ),
-                                    ],
-                                  ),
-                                  TableRow(
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsets.all(4.0),
-                                          child: kTitleText(
-                                              isCustomer
-                                                  ? customer.customerOrderId
-                                                      .toString()
-                                                  : supplier.supplierId
-                                                      .toString(),
-                                              12,
-                                              null,
-                                              2)),
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: kTitleText(
-                                            isCustomer
-                                                ? customer.stockUnitSellPrice
+                                                ? customer.customerOrderId
                                                     .toString()
-                                                : supplier.stockUnitBuyPrice
-                                                    .toString(),
+                                                : value.supplierName,
                                             12,
                                             null,
-                                            2),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: kTitleText(
-                                            isCustomer
-                                                ? customer.stockQuantity
-                                                    .toString()
-                                                : supplier.stockQuantity
-                                                    .toString(),
-                                            12,
-                                            null,
-                                            2),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: kTitleText(
-                                            isCustomer
-                                                ? customer.totalAmount
-                                                    .toString()
-                                                : supplier.totalAmount
-                                                    .toString(),
-                                            12,
-                                            null,
-                                            2),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: kTitleText(
-                                            isCustomer
-                                                ? formatDate(
-                                                customer.stockDateOrdered)
-                                                : formatDate(
-                                                supplier.stockDateAdded),
-                                            12,
-                                            null,
-                                            2),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                            2)),
+                                    Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: kTitleText(
+                                          isCustomer
+                                              ? customer.stockUnitSellPrice
+                                                  .toString()
+                                              : supplier.stockUnitBuyPrice
+                                                  .toString(),
+                                          12,
+                                          null,
+                                          2),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: kTitleText(
+                                          isCustomer
+                                              ? customer.stockQuantity
+                                                  .toString()
+                                              : supplier.stockQuantity
+                                                  .toString(),
+                                          12,
+                                          null,
+                                          2),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: kTitleText(
+                                          isCustomer
+                                              ? customer.totalAmount.toString()
+                                              : supplier.totalAmount.toString(),
+                                          12,
+                                          null,
+                                          2),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: kTitleText(
+                                          isCustomer
+                                              ? formatDate(
+                                                  customer.stockDateOrdered)
+                                              : formatDate(
+                                                  supplier.stockDateAdded),
+                                          12,
+                                          null,
+                                          2),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),);
+                        ),
+                      ],
+                    ),
+                  );
                 },
               );
             }
@@ -217,9 +220,6 @@ class _StockHistoryViewState extends State<StockHistoryView> {
     });
   }
 
-  String formatDate(DateTime datetime) {
-    return DateFormat('dd MMM, yyyy').format(datetime);
-  }
 }
 // if (value.allStockOrderHistoryList[index]
 //     is StockOrderHistoryByCustomer) {

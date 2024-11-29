@@ -40,9 +40,9 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                       Consumer<AddSupplierViewModel>(
                         builder: (context, val1, child) {
                           return CustomTextField(
-                              controller: val1.supplierNameC,
-                              iconData: Icons.person,
-                              hint: 'Supplier name',
+                            controller: val1.supplierNameC,
+                            iconData: Icons.person,
+                            hint: 'Supplier name',
                             validators: const [isNotEmpty],
                           );
                         },
@@ -50,13 +50,13 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                       Consumer<AddSupplierViewModel>(
                         builder: (context, val2, child) {
                           return CustomTextField(
-                              maxLength: 11,
-                              textInputType: TextInputType.number,
-                              inputFormatter:
-                                  FilteringTextInputFormatter.digitsOnly,
-                              controller: val2.supplierPhoneNoC,
-                              iconData: Icons.call,
-                              hint: 'Supplier phone',
+                            maxLength: 11,
+                            textInputType: TextInputType.number,
+                            inputFormatter:
+                                FilteringTextInputFormatter.digitsOnly,
+                            controller: val2.supplierPhoneNoC,
+                            iconData: Icons.call,
+                            hint: 'Supplier phone',
                             validators: const [isNotEmpty],
                           );
                         },
@@ -68,16 +68,16 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                             textInputType: TextInputType.emailAddress,
                             iconData: Icons.email,
                             hint: 'Supplier email',
-                            validators: const [isNotEmpty],
+                            validators: const [isNotEmpty, isEmailValid],
                           );
                         },
                       ),
                       Consumer<AddSupplierViewModel>(
                         builder: (context, val4, child) {
                           return CustomTextField(
-                              controller: val4.supplierAddressC,
-                              iconData: Icons.home_filled,
-                              hint: 'Supplier address',
+                            controller: val4.supplierAddressC,
+                            iconData: Icons.home_filled,
+                            hint: 'Supplier address',
                             validators: const [isNotEmpty],
                           );
                         },
@@ -85,9 +85,9 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                       Consumer<AddSupplierViewModel>(
                         builder: (context, val5, child) {
                           return CustomTextField(
-                              controller: val5.accountTypeC,
-                              iconData: Icons.account_balance_rounded,
-                              hint: 'Supplier bank type',
+                            controller: val5.accountTypeC,
+                            iconData: Icons.account_balance_rounded,
+                            hint: 'Supplier bank type',
                             validators: const [isNotEmpty],
                           );
                         },
@@ -95,9 +95,9 @@ class _AddSupplierViewState extends State<AddSupplierView> {
                       Consumer<AddSupplierViewModel>(
                         builder: (context, val6, child) {
                           return CustomTextField(
-                              controller: val6.bankAccountNumberC,
-                              iconData: Icons.numbers,
-                              hint: 'Supplier Account no.',
+                            controller: val6.bankAccountNumberC,
+                            iconData: Icons.numbers,
+                            hint: 'Supplier Account no.',
                             validators: const [isNotEmpty],
                           );
                         },

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CashbookEntry {
   final int cashbookEntryId;
@@ -29,14 +28,14 @@ class CashbookEntry {
     return CashbookEntry(
       // supplierPaymentId: jsonData['supplierPaymentId'],
       cashbookEntryId: jsonData['cashbookEntryId'],
-      paymentDateTime: jsonData['paymentDateTime'],
       newStockOrderId: jsonData['newStockOrderId'],
       amount: jsonData['amount'],
       supplierId: jsonData['supplierId'],
       customerOrderId: jsonData['customerOrderId'],
       description: jsonData['description'],
       paymentType: jsonData['paymentType'],
-      paymentMethod: jsonData['paymentMethod'].toDate(),
+      paymentMethod: jsonData['paymentMethod'],
+      paymentDateTime: jsonData['paymentDateTime'].toDate(),
     );
   }
 }

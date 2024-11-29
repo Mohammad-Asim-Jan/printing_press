@@ -15,8 +15,6 @@ import 'package:printing_press/model/rate_list/paper_cutting.dart';
 import 'package:printing_press/model/rate_list/profit.dart';
 import 'package:printing_press/utils/toast_message.dart';
 
-import '../../model/rate_list.dart';
-
 class PlaceCustomizeOrderViewModel with ChangeNotifier {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 

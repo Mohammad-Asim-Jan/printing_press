@@ -25,7 +25,6 @@ class StockDetailsView extends StatefulWidget {
 }
 
 class _StockDetailsViewState extends State<StockDetailsView> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -35,10 +34,35 @@ class _StockDetailsViewState extends State<StockDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
+        floatingActionButton: Consumer<StockDetailsViewModel>(
+          builder: (context, value, child) => ElevatedButton(
+              onPressed: () {
+                if (widget.isSupplierExist) {
+                  value.addMoreStock(context);
+                } else {
+                  Utils.showMessage('Supplier is not available!');
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: widget.isSupplierExist ? kTwo : kNew9,
+                padding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                backgroundColor: widget.isSupplierExist ? kNew7 : kNew9a,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Add more',
+                  style: TextStyle(fontSize: 14),
+                ),
+              )),
+        ),
         backgroundColor: kNew1a,
         appBar: AppBar(
           foregroundColor: kNew9a,
-          backgroundColor: kNew1a,
+          backgroundColor: Colors.transparent,
           title: Text(
             'Stock Details',
             style: TextStyle(
@@ -47,29 +71,6 @@ class _StockDetailsViewState extends State<StockDetailsView> {
                 letterSpacing: 0,
                 fontWeight: FontWeight.w500),
           ),
-          actions: [
-            ElevatedButton(
-                onPressed: () {
-                  if (widget.isSupplierExist) {
-                    /// todo:
-                  } else {
-                    Utils.showMessage('Supplier is not available!');
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor:
-                      widget.isSupplierExist ? Colors.white70 : kNew9,
-                  padding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  backgroundColor: widget.isSupplierExist ? kOne : kNew9a,
-                ),
-                child: Text(
-                  'Add more',
-                  style: TextStyle(fontSize: 10),
-                )),
-            SizedBox(width: 10)
-          ],
         ),
         body: Consumer<StockDetailsViewModel>(builder: (context, value, child) {
           return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -89,8 +90,7 @@ class _StockDetailsViewState extends State<StockDetailsView> {
               if (snapshot.hasData) {
                 value.stock = Stock.fromJson(snapshot.data!.data()!);
                 return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -110,9 +110,7 @@ class _StockDetailsViewState extends State<StockDetailsView> {
                                   overflow: TextOverflow.ellipsis,
                                   color: kThirdColor),
                             ),
-                            SizedBox(
-                              width: 15,
-                            ),
+                            SizedBox(width: 15),
                             Text(
                               '( ${value.stock.stockColor} )',
                               maxLines: 1,
@@ -142,9 +140,7 @@ class _StockDetailsViewState extends State<StockDetailsView> {
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              width: 12,
-                            ),
+                            SizedBox(width: 12),
                             Expanded(
                               flex: 1,
                               child: Column(
@@ -197,7 +193,9 @@ class _StockDetailsViewState extends State<StockDetailsView> {
                                   ],
                                 ),
                               ),
-                              SizedBox(width: 20,),
+                              SizedBox(
+                                width: 20,
+                              ),
                               Expanded(
                                 child: Row(
                                   mainAxisAlignment:
@@ -256,8 +254,9 @@ class _StockDetailsViewState extends State<StockDetailsView> {
                                 Colors.black.withOpacity(0.6))),
                         SizedBox(height: 8),
                         Flexible(
-                            child:
-                                StockHistoryView(stockId: value.stock.stockId))
+                            child: StockHistoryView(
+                                stockId: value.stock.stockId,
+                                supplierId: value.stock.supplierId))
                       ]),
                 );
               }

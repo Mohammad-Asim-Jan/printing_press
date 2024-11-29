@@ -46,7 +46,6 @@ class _HomeViewState extends State<HomeView> {
                       endIndent: 10,
                     ),
                     const Expanded(child: RateListView()),
-
                     const Divider(
                       height: 30,
                       indent: 80,
@@ -101,10 +100,6 @@ class _HomeViewState extends State<HomeView> {
                       builder: (context) => value.floatingButtonNavigation()));
                 },
                 label: Text(value.getFloatingBtnLabel()),
-                // child: const Text(
-                //   'Add New +',
-                //   // style: TextStyle(color: kThirdColor),
-                // ),
               )),
       bottomNavigationBar: Consumer<HomeViewModel>(
         builder: (context, value, child) => BottomNavigationBar(

@@ -23,7 +23,7 @@ class AddSupplierViewModel with ChangeNotifier {
   TextEditingController bankAccountNumberC = TextEditingController();
 
   late String supplierName;
-  late int supplierPhoneNo;
+  late String supplierPhoneNo;
   late String supplierEmail;
   late String supplierAddress;
   late String accountType;
@@ -39,7 +39,7 @@ class AddSupplierViewModel with ChangeNotifier {
         /// check if supplier is already available
 
         supplierName = supplierNameC.text.trim();
-        supplierPhoneNo = int.tryParse(supplierPhoneNoC.text.trim())!;
+        supplierPhoneNo = supplierPhoneNoC.text.trim();
         supplierEmail = supplierEmailC.text.trim();
         supplierAddress = supplierAddressC.text.trim();
         accountType = accountTypeC.text.trim();

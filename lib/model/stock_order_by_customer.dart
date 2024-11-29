@@ -1,23 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StockOrderByCustomer {
-  ///todo: implement it in the add order view model (customer)
   final int customerOrderId;
   final String customerName;
   final String businessTitle;
   final int customerContact;
   final String customerAddress;
+  ///
   final int stockId; // ref to the stock
   final String stockName;
   final String stockCategory; // this might not be essential
   final int stockUnitSellPrice;
   final int stockQuantity;
+  final String orderStatus;
   final Timestamp orderDateTime;
   // Timestamp? orderDueDateTime; /// todo: no due date for in-stock order
-  final String orderStatus;
 
   // final List<Stock> itemOrdered; ///todo: either to add this or not!
   // final Timestamp stockDateAdded;
+  final int advancePayment;
   final int paidAmount;
   final int totalAmount;
 
@@ -30,6 +31,7 @@ class StockOrderByCustomer {
     required this.orderDateTime,
     // this.orderDueDateTime,
     required this.orderStatus,
+    required this.advancePayment,
     required this.paidAmount,
     required this.totalAmount,
     required this.stockId,
@@ -56,6 +58,7 @@ class StockOrderByCustomer {
       orderDateTime: json['orderDateTime'],
       // orderDueDateTime: json['orderDueDateTime'],
       orderStatus: json['orderStatus'],
+      advancePayment: json['advancePayment']??0,
       paidAmount: json['paidAmount'],
       totalAmount: json['totalAmount'],
     );

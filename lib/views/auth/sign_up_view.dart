@@ -100,6 +100,18 @@ class _SignUpViewState extends State<SignUpView> {
                               color: kSecColor,
                             ),
                           ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: kNew8,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(18),
+                              borderSide: BorderSide(
+                                color: kNew8,
+                              ),
+                            )
                         ),
                         validator: (text) {
                           if (text == '' || text == null) {
@@ -141,6 +153,18 @@ class _SignUpViewState extends State<SignUpView> {
                               color: kSecColor,
                             ),
                           ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide(
+                                color: kNew8,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(18),
+                              borderSide: BorderSide(
+                                color: kNew8,
+                              ),
+                            )
                         ),
                         validator: (text) {
                           if (text == '' || text == null) {

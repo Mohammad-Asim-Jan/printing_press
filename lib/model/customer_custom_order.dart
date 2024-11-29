@@ -6,6 +6,7 @@ class CustomerCustomOrder {
   final String businessTitle;
   final int customerContact;
   final String customerAddress;
+  ///
   final int? designRate;
   final String paperSize;
   final int paperExpenses;
@@ -25,12 +26,13 @@ class CustomerCustomOrder {
   final int? backPrintType;
   final int profitPercent;
   final int? otherExpenses;
+  final Timestamp? orderDueDateTime;
+  ///
   final String orderStatus;
   final Timestamp orderDateTime;
-  final Timestamp? orderDueDateTime;
+  ///
   final int advancePayment;
   final int paidAmount;
-
   // final int remainingAmount;
   final int totalAmount;
 

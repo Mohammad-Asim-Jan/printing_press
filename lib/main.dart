@@ -8,7 +8,7 @@ import 'package:printing_press/view_model/auth/log_in_view_model.dart';
 import 'package:printing_press/view_model/auth/sign_up_view_model.dart';
 import 'package:printing_press/view_model/orders/all_orders_view_model.dart';
 import 'package:printing_press/view_model/orders/place_customize_order_view_model.dart';
-import 'package:printing_press/view_model/payment/payment_view_model.dart';
+import 'package:printing_press/view_model/payment/payment_to_supplier_view_model.dart';
 import 'package:printing_press/view_model/rate_list/binding/binding_view_model.dart';
 import 'package:printing_press/view_model/rate_list/machine/add_machine_view_model.dart';
 import 'package:printing_press/view_model/rate_list/machine/machine_view_model.dart';
@@ -24,7 +24,7 @@ import 'package:printing_press/view_model/stock/all_stock_view_model.dart';
 import 'package:printing_press/view_model/stock/stock_details_view_model.dart';
 import 'package:printing_press/view_model/suppliers/add_supplier_view_model.dart';
 import 'package:printing_press/view_model/suppliers/all_suppliers_view_model.dart';
-import 'package:printing_press/view_model/suppliers/supplier_orders_history_view_model.dart';
+import 'package:printing_press/view_model/suppliers/supplier_details_view_model.dart';
 import 'package:provider/provider.dart';
 import 'view_model/cashbook/add_cashbook_entry_view_model.dart';
 import 'view_model/orders/place_stock_order_view_model.dart';
@@ -63,8 +63,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AllStockViewModel()),
         ChangeNotifierProvider(create: (_) => AddStockViewModel()),
         ChangeNotifierProvider(create: (_) => StockDetailsViewModel()),
-        ChangeNotifierProvider(create: (_) => SupplierOrdersHistoryViewModel()),
-        ChangeNotifierProvider(create: (_) => PaymentViewModel()),
+        ChangeNotifierProvider(create: (_) => SupplierDetailsViewModel()),
+        ChangeNotifierProvider(create: (_) => PaymentToSupplierViewModel()),
         ChangeNotifierProvider(create: (_) => CashbookViewModel()),
         ChangeNotifierProvider(create: (_) => AddBindingViewModel()),
         ChangeNotifierProvider(create: (_) => BindingViewModel()),

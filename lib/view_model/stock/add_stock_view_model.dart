@@ -181,9 +181,7 @@ class AddStockViewModel with ChangeNotifier {
                 'totalAmount': totalAmount,
               }).then((value) async {
                 /// add an order history
-                // debugPrint(
-                //     '\n\n\n\n\n\n\n\n Stock data updated !!\n\n\n\n\n\n');
-                Utils.showMessage('Stock data updated !!');
+                 Utils.showMessage('Stock data updated !!');
                 await setNewStockOrderId();
 
                 /// adding a stock order history

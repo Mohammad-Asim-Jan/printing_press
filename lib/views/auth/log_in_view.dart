@@ -74,34 +74,45 @@ class _LogInViewState extends State<LogInView> {
                           keyboardType: TextInputType.emailAddress,
                           textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                value.swap();
-                              },
-                              icon: Icon(value.obscureText
-                                  ? Icons.visibility_off_rounded
-                                  : Icons.visibility_rounded),
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.lock,
-                              size: 24,
-                            ),
-                            hintText: 'Password',
-                            filled: true,
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                width: 2,
-                                color: kPrimeColor,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  value.swap();
+                                },
+                                icon: Icon(value.obscureText
+                                    ? Icons.visibility_off_rounded
+                                    : Icons.visibility_rounded),
                               ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: kSecColor,
+                              prefixIcon: const Icon(
+                                Icons.lock,
+                                size: 24,
                               ),
-                            ),
-                          ),
+                              hintText: 'Password',
+                              filled: true,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                  width: 2,
+                                  color: kPrimeColor,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: kSecColor,
+                                ),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(
+                                  color: kNew8,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                borderSide: BorderSide(
+                                  color: kNew8,
+                                ),
+                              )),
                           validator: (text) {
                             if (text == '' || text == null) {
                               return 'Please provide password';
@@ -166,7 +177,9 @@ class _LogInViewState extends State<LogInView> {
                 ),
               ],
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
           ],
         ),
       ),

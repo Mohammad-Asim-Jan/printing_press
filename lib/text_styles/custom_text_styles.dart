@@ -14,6 +14,7 @@ Text kTitleText(String text, [double? size, Color? color, int? maxLines]) {
     style: TextStyle(
       fontFamily: 'Iowan',
       overflow: TextOverflow.ellipsis,
+      textBaseline: TextBaseline.alphabetic,
       color: color ?? kThirdColor,
       fontSize: size ?? 16,
       fontWeight: FontWeight.bold,

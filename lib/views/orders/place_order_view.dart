@@ -706,7 +706,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         hint: 'Pages per book',
                                                         validators: [
                                                       isNotEmpty,
-                                                      (value) => moreThan(value, 10),
+                                                      (value) =>
+                                                          moreThan(value, 10),
                                                     ]),
                                               ),
                                             ),
@@ -1368,6 +1369,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                 ),
                               ),
                             ),
+
                             /// todo:
                             // Row(
                             //   children: [
@@ -1398,8 +1400,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                           ],
                         )
                       : Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
@@ -1408,7 +1410,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) => const RateListView(),
+                                      builder: (context) =>
+                                          const RateListView(),
                                     ),
                                   );
                                 },
@@ -1416,7 +1419,7 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                               ),
                             ],
                           ),
-                      )
+                        )
                   : const CustomCircularIndicator();
             },
           ),
