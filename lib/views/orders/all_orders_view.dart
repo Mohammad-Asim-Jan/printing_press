@@ -18,12 +18,6 @@ class AllOrdersView extends StatefulWidget {
 
 class _AllOrdersViewState extends State<AllOrdersView> {
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -79,25 +73,19 @@ class _AllOrdersViewState extends State<AllOrdersView> {
 
                         return GestureDetector(
                           onTap: () {
-                            print('is custom order $isCustomOrder');
-                            isCustomOrder
-                                ? print(
-                                    'Custom order: ${customOrder.customerName}')
-                                : print(
-                                    'Stock order: ${stockOrder.customerName}');
                             Navigator.of(context)
                                 .push(MaterialPageRoute(builder: (context) {
                               return CustomerOrderDetailView(
-                                  customerCustomOrder:
-                                      isCustomOrder ? customOrder : null,
-                                  stockOrderByCustomer:
-                                      isCustomOrder ? null : stockOrder);
+                                  customerOrderId: isCustomOrder
+                                      ? customOrder.customerOrderId
+                                      : stockOrder.customerOrderId,
+                                  isCustomOrder: isCustomOrder);
                             }));
                           },
                           child: Card(
                             elevation: 1.5,
-                            color: Colors.grey.withOpacity(0.2),
-                            shadowColor: Colors.blue.withOpacity(0.15),
+                            color: Color(0xffD0D7D4),
+                            shadowColor: Colors.indigo.withOpacity(0.1),
                             margin: EdgeInsets.only(bottom: 5, top: 5),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
@@ -129,7 +117,7 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                                                         .customerOrderId)
                                                 .toString(),
                                             12,
-                                            Colors.brown,
+                                            kNew4,
                                             2),
                                       ],
                                     ),
@@ -152,14 +140,14 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                                                 ? customOrder.customerContact
                                                 : stockOrder.customerContact),
                                             12,
-                                            kThirdColor.withOpacity(0.8)),
+                                            kPrimeColor),
                                         SizedBox(height: 4),
                                         kTitleText(
                                             (isCustomOrder
                                                 ? customOrder.customerAddress
                                                 : stockOrder.customerAddress),
                                             11,
-                                            kTitle2)
+                                            kNew6.withOpacity(0.7))
                                       ],
                                     ),
                                   ),
@@ -175,7 +163,7 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                                                 color: Colors.black
                                                     .withOpacity(0.4),
                                                 fontFamily: 'Iowan',
-                                                fontSize: 12)),
+                                                fontSize: 10)),
                                         SizedBox(height: 4),
                                         kTitleText(
                                             'Rs. ${(isCustomOrder ? (customOrder.totalAmount - customOrder.paidAmount) : (stockOrder.totalAmount - stockOrder.paidAmount))}',
@@ -193,7 +181,7 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                                               color:
                                                   Colors.black.withOpacity(0.4),
                                               fontFamily: 'Iowan',
-                                              fontSize: 12)),
+                                              fontSize: 10)),
                                       SizedBox(height: 5),
                                       getStatusIcon(isCustomOrder
                                           ? (customOrder.orderStatus)

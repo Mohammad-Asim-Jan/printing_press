@@ -123,7 +123,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
         .set({
       'customerName': customerNameC.text.trim(),
       'businessTitle': businessTitleC.text.trim(),
-      'customerContact': int.tryParse(customerContactC.text.trim()),
+      'customerContact': customerContactC.text.trim(),
       'customerOrderId': newCustomerOrderId,
       'customerAddress': customerAddressC.text.trim(),
       'orderDateTime': Timestamp.now(),
@@ -132,6 +132,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       'totalAmount': totalAmount,
       'stockId': selectedStockModel.stockId,
       'stockName': selectedStockModel.stockName,
+      'stockColor': selectedStockModel.stockColor,
       'stockCategory': selectedStockModel.stockCategory,
       'stockUnitSellPrice': selectedStockModel.stockUnitSellPrice,
       'stockQuantity': stockQuantity,
@@ -223,7 +224,6 @@ class PlaceStockOrderViewModel with ChangeNotifier {
 
   addCustomerPaymentInCashbook() async {
     /// adding the payment history to cashbook
-
     await firestore
         .collection(uid)
         .doc('CashbookData')

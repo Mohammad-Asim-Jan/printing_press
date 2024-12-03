@@ -7,7 +7,7 @@ class SupplierDetailsViewModel with ChangeNotifier {
   late List allSupplierStockOrderHistoryList;
   late List<BankAccount> supplierBankAccounts;
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> geSupplierOrderHistoryData(
+  Stream<QuerySnapshot<Map<String, dynamic>>> getSupplierOrderHistoryData(
       int supplierId) {
     return FirebaseFirestore.instance
         .collection(FirebaseAuth.instance.currentUser!.uid)

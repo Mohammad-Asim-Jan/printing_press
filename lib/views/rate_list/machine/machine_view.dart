@@ -55,8 +55,8 @@ class _MachineViewState extends State<MachineView> {
                   itemBuilder: (BuildContext context, int index) {
                     return Card(
                         elevation: 1.5,
-                        shadowColor: Colors.blue.withOpacity(0.3),
-                        color: kSecColor,
+                        shadowColor: Colors.blue.withOpacity(0.1),
+                        color: Colors.blue.withOpacity(.15),
                         margin: EdgeInsets.only(
                             bottom: 10, top: 5),
                         shape: RoundedRectangleBorder(

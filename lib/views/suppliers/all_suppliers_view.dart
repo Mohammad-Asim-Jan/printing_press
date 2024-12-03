@@ -52,8 +52,8 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                     },
                     child: Card(
                       elevation: 1.5,
-                      color: Color(0xffcad6d2),
-                      shadowColor: Colors.blueGrey.withOpacity(0.23),
+                      color: Color(0xffcad6d2).withOpacity(0.5),
+                      shadowColor: Color(0xff4ab894).withOpacity(0.2),
                       margin: EdgeInsets.only(bottom: 10, top: 5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -77,9 +77,10 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                                       value.allSuppliersModel[index]
                                           .supplierPhoneNo,
                                       14,
-                                      kThirdColor.withOpacity(0.8))
+                                      kNew5)
                                 ],
                               ),
+                              // kThirdColor.withOpacity(0.8)
                             ),
                             SizedBox(width: 5),
                             Expanded(
@@ -87,13 +88,12 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Amount to Pay',
-                                      style: kDescriptionTextStyle),
+                                  Text('Bill', style: kDescriptionTextStyle),
                                   SizedBox(height: 4),
                                   kTitleText(
                                       'Rs. ${value.allSuppliersModel[index].amountRemaining}',
                                       null,
-                                      kNew8.withOpacity(0.75),
+                                      kNew8,
                                       2)
                                 ],
                               ),

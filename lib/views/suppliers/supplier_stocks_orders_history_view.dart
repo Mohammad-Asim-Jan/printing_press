@@ -26,11 +26,10 @@ class _SupplierStocksOrdersHistoryViewState
         builder: (BuildContext context, SupplierDetailsViewModel value,
                 Widget? child) =>
             StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: value.geSupplierOrderHistoryData(widget.supplierId),
+                stream: value.getSupplierOrderHistoryData(widget.supplierId),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                        snapshot)
-                {
+                        snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CustomCircularIndicator();
                   }
@@ -54,9 +53,9 @@ class _SupplierStocksOrdersHistoryViewState
                     }).toList();
 
                     if (value.allSupplierStockOrderHistoryList.isEmpty) {
-                      return const Center(
-                        child: Text('No entry found!'),
-                      );
+                      return Center(
+                          child: Text('No entry found',
+                              style: kDescriptionTextStyle));
                     }
                     return ListView.builder(
                       itemCount: value.allSupplierStockOrderHistoryList.length,

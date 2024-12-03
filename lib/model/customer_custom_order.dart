@@ -30,8 +30,7 @@ class CustomerCustomOrder {
   ///
   final String orderStatus;
   final Timestamp orderDateTime;
-  ///
-  final int advancePayment;
+  final int advancePayment; /// not necessarily important
   final int paidAmount;
   // final int remainingAmount;
   final int totalAmount;

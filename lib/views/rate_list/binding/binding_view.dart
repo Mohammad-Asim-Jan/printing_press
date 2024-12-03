@@ -57,8 +57,8 @@ class _BindingViewState extends State<BindingView> {
               itemBuilder: (BuildContext context, int index) {
                 return Card(
                   elevation: 1.5,
-                  color: kSecColor,
-                  shadowColor: Colors.blue.withOpacity(0.3),
+                  shadowColor: Colors.blue.withOpacity(0.1),
+                  color: Colors.blue.withOpacity(.15),
                   margin:
                       EdgeInsets.only(bottom: 10, top: 5),
                   shape: RoundedRectangleBorder(

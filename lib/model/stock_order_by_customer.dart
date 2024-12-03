@@ -7,18 +7,20 @@ class StockOrderByCustomer {
   final String customerContact;
   final String customerAddress;
   ///
-  final int stockId; // ref to the stock
+  final int stockId; /// TODO: This may not be anymore of use
   final String stockName;
   final String stockCategory; // this might not be essential
   final int stockUnitSellPrice;
   final int stockQuantity;
-  final String orderStatus;
-  final Timestamp orderDateTime;
+  final String? stockColor;
   // Timestamp? orderDueDateTime; /// todo: no due date for in-stock order
 
   // final List<Stock> itemOrdered; ///todo: either to add this or not!
   // final Timestamp stockDateAdded;
-  final int advancePayment;
+  ///
+  final String orderStatus;
+  final Timestamp orderDateTime;
+  final int advancePayment; /// not necessarily important
   final int paidAmount;
   final int totalAmount;
 
@@ -39,6 +41,7 @@ class StockOrderByCustomer {
     required this.stockCategory,
     required this.stockUnitSellPrice,
     required this.stockQuantity,
+    required this.stockColor,
     // required this.stockDateAdded,
   });
 
@@ -61,6 +64,7 @@ class StockOrderByCustomer {
       advancePayment: json['advancePayment']??0,
       paidAmount: json['paidAmount'],
       totalAmount: json['totalAmount'],
+      stockColor: json['stockColor'],
     );
   }
 }

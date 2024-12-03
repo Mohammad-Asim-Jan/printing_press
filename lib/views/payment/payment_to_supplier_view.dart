@@ -28,7 +28,8 @@ class _PaymentToSupplierViewState extends State<PaymentToSupplierView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    paymentViewModel = Provider.of<PaymentToSupplierViewModel>(context, listen: false);
+    paymentViewModel =
+        Provider.of<PaymentToSupplierViewModel>(context, listen: false);
     paymentViewModel.getSupplierPreviousRemainingAmount(widget.supplierId);
     paymentViewModel.getSupplierBankAccountNames(widget.supplierId);
   }
@@ -36,19 +37,18 @@ class _PaymentToSupplierViewState extends State<PaymentToSupplierView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffcad6d2),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: kNew9a,
-        title: Text('Payment',
-            style: TextStyle(
-                color: kNew9a,
-                fontSize: 21,
-                letterSpacing: 0,
-                fontWeight: FontWeight.w500)),
-      ),
-      body: Column(
-        children: [
+        backgroundColor: Color(0xffcad6d2),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          foregroundColor: kNew9a,
+          title: Text('Payment To Supplier',
+              style: TextStyle(
+                  color: kNew9a,
+                  fontSize: 21,
+                  letterSpacing: 0,
+                  fontWeight: FontWeight.w500)),
+        ),
+        body: Column(children: [
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -90,9 +90,10 @@ class _PaymentToSupplierViewState extends State<PaymentToSupplierView> {
                         Expanded(
                           child: Consumer<PaymentToSupplierViewModel>(
                             builder: (BuildContext context,
-                                    PaymentToSupplierViewModel value, Widget? child) =>
+                                    PaymentToSupplierViewModel value,
+                                    Widget? child) =>
                                 CustomDropDown(
-                                  prefixIconData: Icons.account_balance_outlined,
+                              prefixIconData: Icons.account_balance_outlined,
                               validator: null,
                               list: value.listOfSupplierAccounts,
                               value: value.selectedBankAcc,
@@ -111,25 +112,19 @@ class _PaymentToSupplierViewState extends State<PaymentToSupplierView> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: RoundButton(
-                loading: paymentViewModel.loading,
-                title: 'Payment',
-                onPress: () {
-                  debugPrint('\n\nSupplier Id: ${widget.supplierId}');
-                  if (widget.supplierId != 0) {
-                    paymentViewModel.addPaymentInFirestore(
-                        widget.supplierId, 0);
-                  } else {
-                    debugPrint('No supplier id found>>>>>>>>>>>');
-
-                    /// todo: add order payment
-                    // val4.addPaymentInFirestore(0, widget.orderId!);
-                  }
-                }),
-          ),
-        ],
-      ),
-    );
+              padding: const EdgeInsets.all(8.0),
+              child: RoundButton(
+                  loading: paymentViewModel.loading,
+                  title: 'Confirm',
+                  onPress: () {
+                    debugPrint('\n\nSupplier Id: ${widget.supplierId}');
+                    if (widget.supplierId != 0) {
+                      paymentViewModel.addPaymentInFirestore(widget.supplierId);
+                      Navigator.of(context).pop();
+                    } else {
+                      Navigator.of(context).pop();
+                    }
+                  }))
+        ]));
   }
 }

@@ -58,7 +58,6 @@ class _CashbookViewState extends State<CashbookView> {
               if (cashbookEntry.supplierId != null) {
                 source = 'Supplier';
                 // title = await value.getSupplierName(cashbookEntry.supplierId);
-                /// todo: get the name of the supplier and customer business title as well
               } else if (cashbookEntry.customerOrderId != null) {
                 source = 'Customer';
                 // title = value.;
@@ -88,7 +87,7 @@ class _CashbookViewState extends State<CashbookView> {
                         child: Table(
                           border: TableBorder(
                               horizontalInside: BorderSide(
-                                  width: 0.5,
+                                  width: 0.25,
                                   color:Colors.black.withOpacity(0.5))),
                           textBaseline: TextBaseline.alphabetic,
                           defaultVerticalAlignment:

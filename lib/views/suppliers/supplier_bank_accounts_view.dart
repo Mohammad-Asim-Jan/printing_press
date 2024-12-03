@@ -39,8 +39,8 @@ class _SupplierBankAccountsViewState extends State<SupplierBankAccountsView> {
               value.supplierBankAccounts =
                   bankAccounts.map((e) => BankAccount.fromJson(e)).toList();
               if (value.supplierBankAccounts.isEmpty) {
-                return const Center(
-                  child: Text('No entry found!'),
+                return Center(
+                  child: Text('No entry found', style: kDescriptionTextStyle),
                 );
               }
 

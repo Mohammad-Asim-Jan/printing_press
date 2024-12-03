@@ -25,7 +25,7 @@ class PaymentToSupplierViewModel with ChangeNotifier {
 
   late int supplierPreviousAmountPaid;
 
-  getSupplierPreviousRemainingAmount(int? supplierId) async {
+  getSupplierPreviousRemainingAmount(int supplierId) async {
     DocumentReference supplierRef = firestore
         .collection(uid)
         .doc('SuppliersData')
@@ -40,7 +40,7 @@ class PaymentToSupplierViewModel with ChangeNotifier {
     amountC.text = supplierPreviousRemainingAmount.toString();
   }
 
-  addPaymentInFirestore(int? supplierId, int orderId) async {
+  addPaymentInFirestore(int supplierId) async {
       updateListener(true);
     if (_formKey.currentState != null) {
       debugPrint('Form key is not null\n');

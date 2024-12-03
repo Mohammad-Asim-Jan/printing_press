@@ -189,7 +189,7 @@ class _StockDetailsViewState extends State<StockDetailsView> {
                                         15,
                                         value.stock.availableStock < 10
                                             ? kNew8
-                                            : kNew4),
+                                            : kNew12),
                                   ],
                                 ),
                               ),
@@ -205,7 +205,7 @@ class _StockDetailsViewState extends State<StockDetailsView> {
                                         Colors.black.withOpacity(0.6)),
                                     SizedBox(height: 5),
                                     kTitleText('${value.stock.stockQuantity}',
-                                        15, kNew4),
+                                        15, kNew9a),
                                   ],
                                 ),
                               )

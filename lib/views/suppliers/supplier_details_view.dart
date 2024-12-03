@@ -182,7 +182,7 @@ class _SupplierDetailsViewState extends State<SupplierDetailsView> {
                                         child: kTitleText(
                                             supplier.totalAmount.toString(),
                                             13,
-                                            kTitle2, // kNew4
+                                            kNew9a, // kNew4
                                             2),
                                       ),
                                     ),
@@ -260,50 +260,3 @@ class _SupplierDetailsViewState extends State<SupplierDetailsView> {
     );
   }
 }
-// Consumer<SupplierDetailsViewModel>(
-//                         builder: (BuildContext context,
-//                                 SupplierDetailsViewModel value, Widget? child) =>
-//                             Padding(
-//                           padding: const EdgeInsets.all(8.0),
-//                           child: RoundButton(
-//                             title: 'Payment',
-//                             onPress: () {
-//                               /// todo: this button is disappear if the supplier has no orders
-//                               ///todo: this will add the payment in the stock order history + it will add in the cashbook as well
-//                               ///todo: reduce the amount from the supplier total amount, add it into the paid amount, calculate the remaining amount
-//                               ///todo: this payment has to be shown in the stock order history view as well, but in red color or any color other than the stock order history tile colors
-//                               Navigator.of(context).push(
-//                                 MaterialPageRoute(
-//                                   builder: (context) => PaymentView(
-//                                       supplierId: widget.supplier.supplierId),
-//                                 ),
-//                               );
-//                             },
-//                           ),
-//                         ),
-//                       ),
-///
-
-// Container(
-//   color: kSecColor,
-//   child: Column(
-//     children: [
-//       const Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Text('Total'),
-//           Text('Paid'),
-//           Text('Remaining'),
-//         ],
-//       ),
-//       // Row(
-//       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       //   children: [
-//       //     Text('${widget.totalAmount}'),
-//       //     Text('${widget.paidAmount}'),
-//       //     Text('${widget.remainingAmount}'),
-//       //   ],
-//       // ),
-//     ],
-//   ),
-// ),
