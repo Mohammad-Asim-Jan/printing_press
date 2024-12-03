@@ -38,7 +38,8 @@ import 'views/splash/splash_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseApp app = await Firebase.initializeApp(
+  // FirebaseApp app =
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   // final auth = FirebaseAuth.instanceFor(app: app);

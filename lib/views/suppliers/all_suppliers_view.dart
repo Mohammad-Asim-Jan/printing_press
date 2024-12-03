@@ -7,7 +7,6 @@ import 'package:printing_press/views/suppliers/supplier_details_view.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
 import '../../components/custom_circular_indicator.dart';
-import 'add_supplier_view.dart';
 
 class AllSuppliersView extends StatefulWidget {
   const AllSuppliersView({super.key});
@@ -17,16 +16,6 @@ class AllSuppliersView extends StatefulWidget {
 }
 
 class _AllSuppliersViewState extends State<AllSuppliersView> {
-  late AllSuppliersViewModel allSuppliersViewModel;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    allSuppliersViewModel =
-        Provider.of<AllSuppliersViewModel>(context, listen: false);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<AllSuppliersViewModel>(
@@ -43,11 +32,9 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
             }
 
             if (snapshot.hasData) {
-              value.allSuppliersModel = snapshot.data!.docs.skip(1).map(
-                (e) {
-                  return Supplier.fromJson(e.data());
-                },
-              ).toList();
+              value.allSuppliersModel = snapshot.data!.docs
+                  .map((e) => Supplier.fromJson(e.data()))
+                  .toList();
               if (value.allSuppliersModel.isEmpty) {
                 return const Center(
                   child: Text('No suppliers found!'),
@@ -60,14 +47,14 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => SupplierDetailsView(
-                              supplierId: value.allSuppliersModel[index].supplierId)));
+                              supplierId:
+                                  value.allSuppliersModel[index].supplierId)));
                     },
                     child: Card(
                       elevation: 1.5,
                       color: Color(0xffcad6d2),
                       shadowColor: Colors.blueGrey.withOpacity(0.23),
-                      margin: EdgeInsets.only(
-                          bottom: 10, top: 5, right: 10, left: 10),
+                      margin: EdgeInsets.only(bottom: 10, top: 5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -76,22 +63,6 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                         child: Row(
                           children: [
                             SizedBox(width: 5),
-                            // Expanded(
-                            //   flex: 1,
-                            //   child: Column(
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //     children: [
-                            //       kTitleText(
-                            //           value
-                            //               .allSuppliersModel[index].supplierId
-                            //               .toString(),
-                            //           12,
-                            //           kNew9a,
-                            //           2)
-                            //     ],
-                            //   ),
-                            // ),
-                            SizedBox(width: 10),
                             Expanded(
                               flex: 7,
                               child: Column(
@@ -101,12 +72,12 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                                       value.allSuppliersModel[index]
                                           .supplierName,
                                       18),
-                                  SizedBox(height: 8),
+                                  SizedBox(height: 4),
                                   kTitleText(
                                       value.allSuppliersModel[index]
                                           .supplierPhoneNo,
                                       14,
-                                      kOne)
+                                      kThirdColor.withOpacity(0.8))
                                 ],
                               ),
                             ),
@@ -134,6 +105,7 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                                 /// todo:
                               },
                             ),
+                            SizedBox(width: 5)
                           ],
                         ),
                       ),

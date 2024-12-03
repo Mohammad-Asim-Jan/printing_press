@@ -4,6 +4,7 @@ import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/components/custom_drop_down.dart';
 import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/components/round_button.dart';
+import 'package:printing_press/text_styles/custom_text_styles.dart';
 import 'package:printing_press/utils/validation_functions.dart';
 import 'package:printing_press/view_model/stock/add_stock_view_model.dart';
 import 'package:printing_press/views/suppliers/add_supplier_view.dart';
@@ -234,18 +235,16 @@ class _AddStockViewState extends State<AddStockView> {
                                       },
                                     ),
                                     const SizedBox(height: 6),
+
                                     Text('Stock Supplier',
-                                        style: TextStyle(
-                                            color: kThirdColor,
-                                            fontSize: 16,
-                                            fontFamily: 'Urbanist',
-                                            fontWeight: FontWeight.bold)),
+                                        style: kTitle2TextStyle),
                                     Consumer<AddStockViewModel>(
                                       builder: (context, val9, child) {
                                         return Row(
                                           children: [
                                             Expanded(
                                               child: CustomDropDown(
+                                                prefixIconData: Icons.person_2_outlined,
                                                 validator: null,
                                                 list: val9.suppliersNamesList,
                                                 value:

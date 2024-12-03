@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/view_model/auth/sign_out.dart';
-import '../../firebase_services/firebase_firestore_services.dart';
 import '../../utils/toast_message.dart';
 
 class SignUpViewModel with ChangeNotifier {

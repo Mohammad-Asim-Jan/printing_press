@@ -162,10 +162,10 @@ class _StockDetailsViewState extends State<StockDetailsView> {
                         Container(
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: kNew8.withOpacity(0.25),
+                            // color: kNew8.withOpacity(0.25),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.brown.withOpacity(0.3),
+                                color: Colors.black.withOpacity(0.3),
                                 blurStyle: BlurStyle.outer,
                                 blurRadius: 7,
                               )

@@ -4,7 +4,6 @@ import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/model/rate_list/numbering.dart';
 import 'package:printing_press/text_styles/custom_text_styles.dart';
 import 'package:printing_press/view_model/rate_list/numbering/numbering_view_model.dart';
-import 'package:printing_press/views/rate_list/numbering/add_numbering_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../components/custom_circular_indicator.dart';
@@ -59,7 +58,7 @@ class _NumberingViewState extends State<NumberingView> {
                     shadowColor: Colors.blue.withOpacity(0.3),
                     color: kSecColor,
                     margin: EdgeInsets.only(
-                        bottom: 10, top: 5, right: 10, left: 10),
+                        bottom: 10, top: 5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -67,30 +66,6 @@ class _NumberingViewState extends State<NumberingView> {
                       padding: EdgeInsets.all(8),
                       child: Row(
                         children: [
-                          // Expanded(
-                          //   flex: 4,
-                          //   child: Column(
-                          //     crossAxisAlignment: CrossAxisAlignment.center,
-                          //     children: [
-                          //       Text(
-                          //         'ID',
-                          //         style: TextStyle(
-                          //           fontFamily: 'Iowan',
-                          //           color: kNew9a,
-                          //         ),
-                          //       ),
-                          //       SizedBox(height: 4),
-                          //       Text(
-                          //           '${value.numberingList[index].numberingId}',
-                          //           maxLines: 1,
-                          //           style: TextStyle(
-                          //               overflow: TextOverflow.ellipsis,
-                          //               color: kThirdColor,
-                          //               fontSize: 16,
-                          //               fontWeight: FontWeight.w500))
-                          //     ],
-                          //   ),
-                          // ),
                           SizedBox(width: 5),
                           Expanded(
                             flex: 7,
@@ -146,86 +121,3 @@ class _NumberingViewState extends State<NumberingView> {
     });
   }
 }
-
-// ListTile(
-//                     trailing: SizedBox(
-//                       width: 100,
-//                       child: Row(
-//                         children: [
-//                           IconButton(
-//                             icon: const Icon(Icons.edit),
-//                             onPressed: () =>
-//                                 value.editNumbering(context, index),
-//                           ),
-//                           IconButton(
-//                             icon: const Icon(Icons.delete),
-//                             onPressed: () =>
-//                                 value.confirmDelete(context, index),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                     shape: Border.all(width: 2, color: kPrimeColor),
-//                     // titleAlignment: ListTileTitleAlignment.threeLine,
-//                     titleTextStyle: TextStyle(
-//                         color: kThirdColor,
-//                         fontSize: 18,
-//                         fontWeight: FontWeight.w500),
-//                     title: Text(value.numberingList[index].name),
-//                     tileColor: kTwo,
-//                     subtitleTextStyle: const TextStyle(
-//                         color: Colors.black, fontStyle: FontStyle.italic),
-//                     subtitle: Text(
-//                       'Rate: ${value.numberingList[index].rate}',
-//                     ),
-//                     leading:
-//                         Text(value.numberingList[index].numberingId.toString()),
-//                   );
-
-// value.dataFetched
-//     ? value.numberingList.isEmpty
-//     ? const Center(
-//   child: Text('No record found!'),
-// )
-//
-// ///todo: change listview.builder to streams builder or future builder
-//     : ListView.builder(
-//   itemCount: value.numberingList.length,
-//   itemBuilder: (BuildContext context, int index) {
-//     /// todo: change the list tile to custom design
-//     return ListTile(
-//       trailing: SizedBox(
-//         width: 100,
-//         child: Row(
-//           children: [
-//             IconButton(
-//               icon: const Icon(Icons.edit),
-//               onPressed: () {},
-//             ),
-//             IconButton(
-//               icon: const Icon(Icons.delete),
-//               onPressed: () {},
-//             ),
-//           ],
-//         ),
-//       ),
-//       shape: Border.all(width: 2, color: kPrimeColor),
-//       // titleAlignment: ListTileTitleAlignment.threeLine,
-//       titleTextStyle: TextStyle(
-//           color: kThirdColor,
-//           fontSize: 18,
-//           fontWeight: FontWeight.w500),
-//       title: Text(value.numberingList[index].name),
-//       tileColor: kTwo,
-//       subtitleTextStyle: const TextStyle(
-//           color: Colors.black, fontStyle: FontStyle.italic),
-//       subtitle: Text(
-//         'Rate: ${value.numberingList[index].rate}',
-//       ),
-//       leading: Text(value.numberingList[index].numberingId
-//           .toString()),
-//     );
-//   },
-// )
-//     : const Center(child: CircularProgressIndicator())
-// ,

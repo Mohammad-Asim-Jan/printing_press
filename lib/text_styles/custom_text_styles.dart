@@ -6,6 +6,12 @@ final TextStyle kDescriptionTextStyle = TextStyle(
   fontFamily: 'Iowan',
 );
 
+final TextStyle kTitle2TextStyle = TextStyle(
+    color: kPrimeColor,
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Urbanist');
+
 Text kTitleText(String text, [double? size, Color? color, int? maxLines]) {
   return Text(
     text,

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:printing_press/model/stock_order_history_by_customer.dart';
 import 'package:printing_press/model/stock_order_history_to_supplier.dart';
 import 'package:printing_press/text_styles/custom_text_styles.dart';

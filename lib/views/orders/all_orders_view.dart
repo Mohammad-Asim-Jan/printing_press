@@ -6,8 +6,8 @@ import 'package:printing_press/model/stock_order_by_customer.dart';
 import 'package:printing_press/view_model/orders/all_orders_view_model.dart';
 import 'package:printing_press/views/orders/customer_order_detail_view.dart';
 import 'package:provider/provider.dart';
-
 import '../../components/custom_circular_indicator.dart';
+import '../../text_styles/custom_text_styles.dart';
 
 class AllOrdersView extends StatefulWidget {
   const AllOrdersView({super.key});
@@ -17,14 +17,10 @@ class AllOrdersView extends StatefulWidget {
 }
 
 class _AllOrdersViewState extends State<AllOrdersView> {
-  late AllOrdersViewModel allOrdersViewModel;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    allOrdersViewModel =
-        Provider.of<AllOrdersViewModel>(context, listen: false);
   }
 
   @override
@@ -58,205 +54,262 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                   }).toList();
 
                   if (value.allCustomerOrdersList.isEmpty) {
-                    return const Center(
-                      child: Text('No order found!'),
-                    );
+                    return const Center(child: Text('No order found!'));
                   }
-                  return Flexible(
+
+                  /// todo: Searching
+                  /// todo: Filtering unpaid, incomplete orders
+                  /// todo: Set new placed order status as 'New order'
+                  /// todo: Order tracking
+                  return Expanded(
                     child: ListView.builder(
                       itemCount: value.allCustomerOrdersList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        if (value.allCustomerOrdersList[index]
-                            is CustomerCustomOrder) {
-                          CustomerCustomOrder customerCustomerOrder =
-                              value.allCustomerOrdersList[index];
-                          return ListTile(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return CustomerOrderDetailView(
-                                    customerCustomOrder: customerCustomerOrder);
-                              }));
-                            },
-                            shape: Border.all(width: 2, color: kPrimeColor),
-                            titleTextStyle: TextStyle(
-                                color: kThirdColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                            title: Text(customerCustomerOrder.businessTitle),
-                            tileColor: kSecColor,
-                            subtitleTextStyle: const TextStyle(
-                                color: Colors.black,
-                                fontStyle: FontStyle.italic),
-                            subtitle: Text(
-                                'Customer Name: ${customerCustomerOrder.customerName}\nContact: ${customerCustomerOrder.customerContact}'),
-                            leading: Text(customerCustomerOrder.customerOrderId
-                                .toString()),
-                            trailing: Text(
-                                customerCustomerOrder.totalAmount.toString()),
-                          );
-                        } else if (value.allCustomerOrdersList[index]
-                            is StockOrderByCustomer) {
-                          StockOrderByCustomer stockOrderByCustomer =
-                              value.allCustomerOrdersList[index];
-                          return ListTile(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return CustomerOrderDetailView(
-                                    stockOrderByCustomer: stockOrderByCustomer);
-                              }));
-                            },
-                            shape: Border.all(width: 2, color: kPrimeColor),
-                            // titleAlignment: ListTileTitleAlignment.threeLine,
-                            titleTextStyle: TextStyle(
-                                color: kThirdColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500),
-                            title: Text(stockOrderByCustomer.businessTitle),
-                            tileColor: kTwo,
-                            subtitleTextStyle: const TextStyle(
-                                color: Colors.black,
-                                fontStyle: FontStyle.italic),
-                            subtitle: Text(
-                                'Customer Name: ${stockOrderByCustomer.customerName}\nContact: ${stockOrderByCustomer.customerContact}'),
-                            leading: Text(stockOrderByCustomer.customerOrderId
-                                .toString()),
-                            trailing: Text(
-                                stockOrderByCustomer.totalAmount.toString()),
-                          );
+                        bool isCustomOrder = value.allCustomerOrdersList[index]
+                            is CustomerCustomOrder;
+
+                        late CustomerCustomOrder customOrder;
+                        late StockOrderByCustomer stockOrder;
+
+                        if (isCustomOrder) {
+                          customOrder = value.allCustomerOrdersList[index];
                         } else {
-                          return const Center(child: Text('Some error !'));
+                          stockOrder = value.allCustomerOrdersList[index];
                         }
+
+                        return GestureDetector(
+                          onTap: () {
+                            print('is custom order $isCustomOrder');
+                            isCustomOrder
+                                ? print(
+                                    'Custom order: ${customOrder.customerName}')
+                                : print(
+                                    'Stock order: ${stockOrder.customerName}');
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return CustomerOrderDetailView(
+                                  customerCustomOrder:
+                                      isCustomOrder ? customOrder : null,
+                                  stockOrderByCustomer:
+                                      isCustomOrder ? null : stockOrder);
+                            }));
+                          },
+                          child: Card(
+                            elevation: 1.5,
+                            color: Colors.grey.withOpacity(0.2),
+                            shadowColor: Colors.blue.withOpacity(0.15),
+                            margin: EdgeInsets.only(bottom: 5, top: 5),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Row(
+                                textBaseline: TextBaseline.alphabetic,
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                children: [
+                                  SizedBox(width: 5),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Order no.',
+                                            style: TextStyle(
+                                                color: Colors.black
+                                                    .withOpacity(0.4),
+                                                fontFamily: 'Iowan',
+                                                fontSize: 10)),
+                                        SizedBox(height: 4),
+                                        kTitleText(
+                                            (isCustomOrder
+                                                    ? customOrder
+                                                        .customerOrderId
+                                                    : stockOrder
+                                                        .customerOrderId)
+                                                .toString(),
+                                            12,
+                                            Colors.brown,
+                                            2),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(width: 7),
+                                  Expanded(
+                                    flex: 7,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        kTitleText(
+                                            (isCustomOrder
+                                                ? customOrder.businessTitle
+                                                : stockOrder.businessTitle),
+                                            16),
+                                        SizedBox(height: 4),
+                                        kTitleText(
+                                            (isCustomOrder
+                                                ? customOrder.customerContact
+                                                : stockOrder.customerContact),
+                                            12,
+                                            kThirdColor.withOpacity(0.8)),
+                                        SizedBox(height: 4),
+                                        kTitleText(
+                                            (isCustomOrder
+                                                ? customOrder.customerAddress
+                                                : stockOrder.customerAddress),
+                                            11,
+                                            kTitle2)
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Expanded(
+                                    flex: 6,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Balance',
+                                            style: TextStyle(
+                                                color: Colors.black
+                                                    .withOpacity(0.4),
+                                                fontFamily: 'Iowan',
+                                                fontSize: 12)),
+                                        SizedBox(height: 4),
+                                        kTitleText(
+                                            'Rs. ${(isCustomOrder ? (customOrder.totalAmount - customOrder.paidAmount) : (stockOrder.totalAmount - stockOrder.paidAmount))}',
+                                            14,
+                                            kNew8.withOpacity(0.75),
+                                            2)
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Column(
+                                    children: [
+                                      Text('Status',
+                                          style: TextStyle(
+                                              color:
+                                                  Colors.black.withOpacity(0.4),
+                                              fontFamily: 'Iowan',
+                                              fontSize: 12)),
+                                      SizedBox(height: 5),
+                                      getStatusIcon(isCustomOrder
+                                          ? (customOrder.orderStatus)
+                                          : (stockOrder.orderStatus)),
+                                    ],
+                                  ),
+                                  SizedBox(width: 5),
+                                  // IconButton(
+                                  //   icon: Icon(Icons.delete, color: kNew4),
+                                  //   onPressed: () {
+                                  //     /// todo:
+                                  //   },
+                                  // ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
                       },
                     ),
                   );
                 }
                 return const Text('No data!');
               });
-
-          // value.dataFetched
-          //     ? value.allStockOrderHistoryList.isEmpty
-          //         ? const Center(
-          //             child: Text('No record found!'),
-          //           )
-          //
-          //         ///todo: change listview.builder to streams builder, add a button to add the payment transaction
-          //         : Padding(
-          //             padding: const EdgeInsets.all(8.0),
-          //             child: Column(
-          //               children: [
-          //                 Container(
-          //                   color: kSecColor,
-          //                   child: Column(
-          //                     children: [
-          //                       const Row(
-          //                         mainAxisAlignment:
-          //                             MainAxisAlignment.spaceBetween,
-          //                         children: [
-          //                           Text('Available Stock'),
-          //                           Text('Name'),
-          //                           Text('Total'),
-          //                         ],
-          //                       ),
-          //                       Row(
-          //                         mainAxisAlignment:
-          //                             MainAxisAlignment.spaceBetween,
-          //                         children: [
-          //                           Text('${widget.availableStock}'),
-          //                           Text(widget.stockName),
-          //                           Text('${widget.stockQuantity}'),
-          //                         ],
-          //                       ),
-          //                     ],
-          //                   ),
-          //                 ),
-          //                 const SizedBox(
-          //                   height: 15,
-          //                 ),
-          //                 Expanded(
-          //                   child: ListView.builder(
-          //                     itemCount: value.allStockOrderHistoryList.length,
-          //                     itemBuilder: (BuildContext context, int index) {
-          //                       if (value.allStockOrderHistoryList[index]
-          //                           is StockOrderHistoryByCustomer) {
-          //                         StockOrderHistoryByCustomer
-          //                             stockOrderHistoryByCustomer =
-          //                             value.allStockOrderHistoryList[index];
-          //                         return ListTile(
-          //                           shape:
-          //                               Border.all(width: 2, color: kPrimeColor),
-          //                           titleTextStyle: TextStyle(
-          //                               color: kThirdColor,
-          //                               fontSize: 18,
-          //                               fontWeight: FontWeight.w500),
-          //                           title: const Text('Customer Order'),
-          //                           tileColor: kSecColor,
-          //                           subtitleTextStyle: const TextStyle(
-          //                               color: Colors.black,
-          //                               fontStyle: FontStyle.italic),
-          //                           subtitle: Text(
-          //                             'Quantity: ${stockOrderHistoryByCustomer.stockQuantity}\nAmount: ${stockOrderHistoryByCustomer.totalAmount}',
-          //                           ),
-          //                           leading: Text(stockOrderHistoryByCustomer
-          //                               .customerOrderId
-          //                               .toString()),
-          //                         );
-          //                       } else if (value.allStockOrderHistoryList[index]
-          //                           is StockOrderHistoryToSupplier) {
-          //                         StockOrderHistoryToSupplier
-          //                             stockOrderHistoryToSupplier =
-          //                             value.allStockOrderHistoryList[index];
-          //                         return ListTile(
-          //                           shape:
-          //                               Border.all(width: 2, color: kPrimeColor),
-          //                           // titleAlignment: ListTileTitleAlignment.threeLine,
-          //                           titleTextStyle: TextStyle(
-          //                               color: kThirdColor,
-          //                               fontSize: 18,
-          //                               fontWeight: FontWeight.w500),
-          //                           title: const Text('Supplier Order'),
-          //                           tileColor: kTwo,
-          //                           subtitleTextStyle: const TextStyle(
-          //                               color: Colors.black,
-          //                               fontStyle: FontStyle.italic),
-          //                           subtitle: Text(
-          //                             'Quantity: ${stockOrderHistoryToSupplier.stockQuantity}\nAmount: ${stockOrderHistoryToSupplier.totalAmount}',
-          //                           ),
-          //                           leading: Text(stockOrderHistoryToSupplier
-          //                               .supplierId
-          //                               .toString()),
-          //                         );
-          //                       } else {
-          //                         return const Center(
-          //                           child: Text('Some error !'),
-          //                         );
-          //                       }
-          //                     },
-          //                   ),
-          //                 ),
-          //               ],
-          //             ),
-          //           )
-          //     : const Center(child: CircularProgressIndicator()),
-          //
         }),
       ],
     );
   }
+
+  Widget getStatusIcon(String status) {
+    switch (status) {
+      case 'New Order':
+        return Icon(Icons.fiber_new, color: Colors.blue);
+      case 'In Progress':
+        return Icon(Icons.autorenew, color: Colors.amber);
+      case 'Pending':
+        return Icon(Icons.hourglass_top, color: Colors.orange);
+      case 'Cancelled':
+        return Icon(Icons.cancel, color: Colors.red);
+      case 'Completed':
+        return Icon(Icons.check_circle, color: Colors.green);
+      case 'Handed Over':
+        return Icon(Icons.inventory_2, color: Colors.purple.withOpacity(0.5));
+      default:
+        return Icon(Icons.help_outline, color: Colors.grey); // Unknown status
+    }
+  }
 }
-
-// Searching
-// Filtering unpaid, incomplete orders
-
-// Go to that specific order on click
-// Receipt or invoice
-
-// One or multiple orders
-
-// Order number
-// Customer name
-// Product or services
-// Total amount
-// Amount paid
-// remaining amount
+// ListView.builder(
+//                   //   itemCount: value.allCustomerOrdersList.length,
+//                   //   itemBuilder: (BuildContext context, int index) {
+//                   //     if (value.allCustomerOrdersList[index]
+//                   //     is CustomerCustomOrder) {
+//                   //       CustomerCustomOrder customerCustomerOrder =
+//                   //       value.allCustomerOrdersList[index];
+//                   //       return ListTile(
+//                   //         onTap: () {
+//                   //           Navigator.of(context)
+//                   //               .push(MaterialPageRoute(builder: (context) {
+//                   //             return CustomerOrderDetailView(
+//                   //                 customerCustomOrder: customerCustomerOrder);
+//                   //           }));
+//                   //         },
+//                   //         shape: Border.all(width: 2, color: kPrimeColor),
+//                   //         titleTextStyle: TextStyle(
+//                   //             color: kThirdColor,
+//                   //             fontSize: 18,
+//                   //             fontWeight: FontWeight.w500),
+//                   //         title: Text(customerCustomerOrder.businessTitle),
+//                   //         tileColor: kSecColor,
+//                   //         subtitleTextStyle: const TextStyle(
+//                   //             color: Colors.black,
+//                   //             fontStyle: FontStyle.italic),
+//                   //         subtitle: Text(
+//                   //             'Customer Name: ${customerCustomerOrder
+//                   //                 .customerName}\nContact: ${customerCustomerOrder
+//                   //                 .customerContact}'),
+//                   //         leading: Text(customerCustomerOrder.customerOrderId
+//                   //             .toString()),
+//                   //         trailing: Text(
+//                   //             customerCustomerOrder.totalAmount.toString()),
+//                   //       );
+//                   //     } else if (value.allCustomerOrdersList[index]
+//                   //     is StockOrderByCustomer) {
+//                   //       StockOrderByCustomer stockOrderByCustomer =
+//                   //       value.allCustomerOrdersList[index];
+//                   //       return ListTile(
+//                   //         onTap: () {
+//                   //           Navigator.of(context)
+//                   //               .push(MaterialPageRoute(builder: (context) {
+//                   //             return CustomerOrderDetailView(
+//                   //                 stockOrderByCustomer: stockOrderByCustomer);
+//                   //           }));
+//                   //         },
+//                   //         shape: Border.all(width: 2, color: kPrimeColor),
+//                   //         // titleAlignment: ListTileTitleAlignment.threeLine,
+//                   //         titleTextStyle: TextStyle(
+//                   //             color: kThirdColor,
+//                   //             fontSize: 18,
+//                   //             fontWeight: FontWeight.w500),
+//                   //         title: Text(stockOrderByCustomer.businessTitle),
+//                   //         tileColor: kTwo,
+//                   //         subtitleTextStyle: const TextStyle(
+//                   //             color: Colors.black,
+//                   //             fontStyle: FontStyle.italic),
+//                   //         subtitle: Text(
+//                   //             'Customer Name: ${stockOrderByCustomer
+//                   //                 .customerName}\nContact: ${stockOrderByCustomer
+//                   //                 .customerContact}'),
+//                   //         leading: Text(stockOrderByCustomer.customerOrderId
+//                   //             .toString()),
+//                   //         trailing: Text(
+//                   //             stockOrderByCustomer.totalAmount.toString()),
+//                   //       );
+//                   //     } else {
+//                   //       return const Center(child: Text('Some error !'));
+//                   //     }
+//                   //   },
+//                   // );

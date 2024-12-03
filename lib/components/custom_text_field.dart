@@ -46,6 +46,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: TextFormField(
+        style: TextStyle(fontSize: 12, color: kPrimeColor),
+
+        ///todo: do this in other text field other than custom
         maxLength: widget.maxLength,
         controller: widget.controller,
         keyboardType: widget.textInputType,
@@ -57,18 +60,25 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ],
         decoration: InputDecoration(
             labelText: widget.hint,
-            prefixIcon: Icon(
-              widget.iconData,
-              size: 24,
-            ),
+            prefixIcon: widget.iconData == null
+                ? null
+                : Icon(widget.iconData, size: 16
+
+                    ///todo: do this in other text field other than custom
+                    ),
+            prefixIconColor: kPrimeColor,
             hintText: widget.hint,
-            labelStyle: TextStyle(color: kPrimeColor),
-            hintStyle: TextStyle(color: kNew9a),
+            labelStyle: TextStyle(fontSize: 12, color: kPrimeColor),
+
+            ///todo: do this in other text field other than custom
+            hintStyle: TextStyle(fontSize: 12, color: kNew9a),
+
+            ///todo: do this in other text field other than custom
             filled: true,
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(
-                width: 2,
+                width: 1.5,
                 // color: kNew9a,
                 color: kPrimeColor,
               ),
@@ -82,12 +92,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5),
               borderSide: BorderSide(
+                width: 1.5,
                 color: kNew8,
               ),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(
+                width: 1.5,
                 color: kNew8,
               ),
             )),

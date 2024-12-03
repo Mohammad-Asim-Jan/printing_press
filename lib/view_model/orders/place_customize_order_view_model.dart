@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:ffi';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -589,7 +588,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
   late int selectedMachineIndex;
   late String customerName;
   late String businessTitle;
-  late int customerContactNo;
+  late String customerContactNo;
   late String customerAddress;
   late Timestamp timestamp;
 
@@ -640,7 +639,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
 
           customerName = customerNameC.text.trim();
           businessTitle = businessTitleC.text.trim();
-          customerContactNo = int.tryParse(customerContactC.text.trim())!;
+          customerContactNo = customerContactC.text.trim();
           customerAddress = customerAddressC.text.trim();
 
           cuttingUnit = basicCuttingUnits[selectedBasicCuttingUnitIndex];

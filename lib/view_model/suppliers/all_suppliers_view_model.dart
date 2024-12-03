@@ -11,6 +11,8 @@ class AllSuppliersViewModel with ChangeNotifier {
         .collection(FirebaseAuth.instance.currentUser!.uid)
         .doc('SuppliersData')
         .collection('Suppliers')
+        .where('supplierId', isNotEqualTo: null)
+        .orderBy('supplierId', descending: true)
         .snapshots();
   }
 }

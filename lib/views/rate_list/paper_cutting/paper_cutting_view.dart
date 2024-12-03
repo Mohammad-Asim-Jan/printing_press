@@ -55,7 +55,7 @@ class _PaperCuttingViewState extends State<PaperCuttingView> {
                   shadowColor: Colors.blue.withOpacity(0.3),
                   color: kSecColor,
                   margin:
-                      EdgeInsets.only(bottom: 10, top: 5, right: 10, left: 10),
+                      EdgeInsets.only(bottom: 10, top: 5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -63,32 +63,6 @@ class _PaperCuttingViewState extends State<PaperCuttingView> {
                     padding: EdgeInsets.all(8),
                     child: Row(
                       children: [
-                        // Expanded(
-                        //   flex: 4,
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.center,
-                        //     children: [
-                        //       Text(
-                        //         'ID',
-                        //         style: TextStyle(
-                        //           fontFamily: 'Iowan',
-                        //           color: kNew9a,
-                        //         ),
-                        //       ),
-                        //       SizedBox(height: 4),
-                        //       Text(
-                        //         '${value.paperCuttingList[index].paperCuttingId}',
-                        //         maxLines: 1,
-                        //         style: TextStyle(
-                        //           overflow: TextOverflow.ellipsis,
-                        //           color: kThirdColor,
-                        //           fontSize: 16,
-                        //           fontWeight: FontWeight.w500,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         SizedBox(width: 5),
                         Expanded(
                           flex: 7,
@@ -146,84 +120,3 @@ class _PaperCuttingViewState extends State<PaperCuttingView> {
     });
   }
 }
-
-// return ListTile(
-//   trailing: SizedBox(
-//     width: 100,
-//     child: Row(
-//       children: [
-//         IconButton(
-//           icon: const Icon(Icons.edit),
-//           onPressed: () => value.editPaperCutting(context, index),
-//         ),
-//         IconButton(
-//           icon: const Icon(Icons.delete),
-//           onPressed: () => value.confirmDelete(context, index),
-//         ),
-//       ],
-//     ),
-//   ),
-//   shape: Border.all(width: 2, color: kPrimeColor),
-//   // titleAlignment: ListTileTitleAlignment.threeLine,
-//   titleTextStyle: TextStyle(
-//       color: kThirdColor,
-//       fontSize: 18,
-//       fontWeight: FontWeight.w500),
-//   title: Text(value.paperCuttingList[index].name),
-//   tileColor: kTwo,
-//   subtitleTextStyle: const TextStyle(
-//       color: Colors.black, fontStyle: FontStyle.italic),
-//   subtitle: Text(
-//     'Rate: ${value.paperCuttingList[index].rate}',
-//   ),
-//   leading: Text(value
-//       .paperCuttingList[index].paperCuttingId
-//       .toString()),
-// );
-
-// value.dataFetched
-//     ? value.paperCuttingList.isEmpty
-//     ? const Center(
-//   child: Text('No record found!'),
-// )
-//
-//     : ListView.builder(
-//   itemCount: value.paperCuttingList.length,
-//   itemBuilder: (BuildContext context, int index) {
-//     return ListTile(
-//       trailing: SizedBox(
-//         width: 100,
-//         child: Row(
-//           children: [
-//             IconButton(
-//               icon: const Icon(Icons.edit),
-//               onPressed: () {},
-//             ),
-//             IconButton(
-//               icon: const Icon(Icons.delete),
-//               onPressed: () {},
-//             ),
-//           ],
-//         ),
-//       ),
-//       shape: Border.all(width: 2, color: kPrimeColor),
-//       // titleAlignment: ListTileTitleAlignment.threeLine,
-//       titleTextStyle: TextStyle(
-//           color: kThirdColor,
-//           fontSize: 18,
-//           fontWeight: FontWeight.w500),
-//       title: Text(value.paperCuttingList[index].name),
-//       tileColor: kTwo,
-//       subtitleTextStyle: const TextStyle(
-//           color: Colors.black, fontStyle: FontStyle.italic),
-//       subtitle: Text(
-//         'Rate: ${value.paperCuttingList[index].rate}',
-//       ),
-//       leading: Text(value
-//           .paperCuttingList[index].paperCuttingId
-//           .toString()),
-//     );
-//   },
-// )
-//     : const Center(child: CircularProgressIndicator())
-// ,

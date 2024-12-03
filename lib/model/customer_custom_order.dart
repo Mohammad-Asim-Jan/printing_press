@@ -4,7 +4,7 @@ class CustomerCustomOrder {
   final int customerOrderId;
   final String customerName;
   final String businessTitle;
-  final int customerContact;
+  final String customerContact;
   final String customerAddress;
   ///
   final int? designRate;

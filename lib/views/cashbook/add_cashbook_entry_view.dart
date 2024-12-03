@@ -96,6 +96,7 @@ class _AddCashbookEntryViewState extends State<AddCashbookEntryView> {
                                 builder: (context, val4, child) {
                               return Expanded(
                                 child: CustomDropDown(
+                                  prefixIconData: Icons.account_balance_wallet_outlined,
                                   validator: null,
                                   list: const ['CASH-OUT', 'CASH-IN'],
                                   value: val4.selectedPaymentType,

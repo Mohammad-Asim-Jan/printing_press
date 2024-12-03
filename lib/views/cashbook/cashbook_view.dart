@@ -86,6 +86,13 @@ class _CashbookViewState extends State<CashbookView> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Table(
+                          border: TableBorder(
+                              horizontalInside: BorderSide(
+                                  width: 0.5,
+                                  color:Colors.black.withOpacity(0.5))),
+                          textBaseline: TextBaseline.alphabetic,
+                          defaultVerticalAlignment:
+                              TableCellVerticalAlignment.baseline,
                           columnWidths: {
                             0: FractionColumnWidth(0.2),
                             1: FractionColumnWidth(0.2),
@@ -100,7 +107,7 @@ class _CashbookViewState extends State<CashbookView> {
                                   padding: EdgeInsets.all(4.0),
                                   child: kTitleText(
                                       source == 'Random' ? 'Source' : source,
-                                      10,
+                                      9,
                                       Colors.black.withOpacity(0.6),
                                       2),
                                 ),
@@ -129,7 +136,10 @@ class _CashbookViewState extends State<CashbookView> {
                             TableRow(
                               children: [
                                 source == 'Random'
-                                    ? kTitleText(title, 12, null, 2)
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: kTitleText(title, 12, null, 2),
+                                      )
                                     : StreamBuilder<
                                         DocumentSnapshot<Map<String, dynamic>>>(
                                         stream: source == 'Supplier'

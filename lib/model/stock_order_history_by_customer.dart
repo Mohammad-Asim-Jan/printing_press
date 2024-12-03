@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StockOrderHistoryByCustomer {
   final int stockOrderId;

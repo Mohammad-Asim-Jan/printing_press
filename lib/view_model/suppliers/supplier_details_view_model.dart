@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:printing_press/model/bank_account.dart';
 
-import '../../model/supplier.dart';
-
 class SupplierDetailsViewModel with ChangeNotifier {
   late List allSupplierStockOrderHistoryList;
   late List<BankAccount> supplierBankAccounts;

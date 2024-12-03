@@ -147,7 +147,7 @@ class _HomeViewState extends State<HomeView> {
               builder: (context, value, child) =>
                   Text(homeViewModel.getAppBarText()))),
       body: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Consumer<HomeViewModel>(
               builder: (context, value, child) => value.getMainView())),
     );

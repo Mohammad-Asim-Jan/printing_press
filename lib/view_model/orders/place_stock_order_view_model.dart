@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
   bool _loading = false;
 
   get loading => _loading;
-  late bool _inStockOrderDataFetched;
+  bool _inStockOrderDataFetched = false;
 
   get inStockOrderDataFetched => _inStockOrderDataFetched;
 
@@ -135,13 +136,13 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       'stockUnitSellPrice': selectedStockModel.stockUnitSellPrice,
       'stockQuantity': stockQuantity,
     }).then(
-      (value) {
+          (value) {
         Utils.showMessage('Order added!');
         debugPrint('Customer order added');
         updateListener(false);
       },
     ).onError(
-      (error, stackTrace) {
+          (error, stackTrace) {
         Utils.showMessage('Error: $error');
         debugPrint('Customer order error....$error');
         updateListener(false);
@@ -181,13 +182,13 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       'customerOrderId': newCustomerOrderId,
       'stockDateOrdered': Timestamp.now(),
     }).then(
-      (value) {
+          (value) {
         Utils.showMessage('Order history has been added!');
         debugPrint('\n\n\nCustomer stock order history  added\n\n\n');
         updateListener(false);
       },
     ).onError(
-      (error, stackTrace) {
+          (error, stackTrace) {
         Utils.showMessage('Error: $error');
         debugPrint('\n\n\nCustomer stock order history error.....$error\n\n\n');
 
@@ -236,13 +237,13 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       'description': 'Advance Payment',
       'paymentType': 'CASH-IN',
     }).then(
-      (value) {
+          (value) {
         Utils.showMessage('Cashbook entry added!');
         debugPrint('\n\n\nCashbook entry added\n\n\n');
         updateListener(false);
       },
     ).onError(
-      (error, stackTrace) {
+          (error, stackTrace) {
         Utils.showMessage('Error: $error');
         debugPrint('\n\n\nCashbook entry error.... $error\n\n\n');
 
@@ -265,14 +266,14 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       'availableStock': previousAvailableStockQuantity -
           (int.tryParse(stockQuantityC.text.trim()))!,
     }).then(
-      (value) {
+          (value) {
         Utils.showMessage('Stock Updated!');
         debugPrint('Stock updated successfully');
 
         updateListener(false);
       },
     ).onError(
-      (error, stackTrace) {
+          (error, stackTrace) {
         Utils.showMessage('Error: $error');
         debugPrint('Stock update failed error....$error');
         updateListener(false);
@@ -285,22 +286,8 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     allStockList = [];
     stockList = [];
     debugPrint('Get all stock called!');
-    // allStockList.add('None');
-    // stockList.add(Stock(
-    //     stockId: 0,
-    //     stockName: 'None',
-    //     stockQuantity: 0,
-    //     stockDescription: 'None',
-    //     stockCategory: 'None',
-    //     stockUnitBuyPrice: 0,
-    //     stockUnitSellPrice: 0,
-    //     availableStock: 0,
-    //     stockColor: 'None',
-    //     manufacturedBy: 'None',
-    //     supplierId: 0,
-    //     stockDateAdded: Timestamp.now()));
     var querySnapshot = await firestore
-        .collection(FirebaseAuth.instance.currentUser!.uid)
+        .collection(auth.currentUser!.uid)
         .doc('StockData')
         .collection('AvailableStock')
         .get();

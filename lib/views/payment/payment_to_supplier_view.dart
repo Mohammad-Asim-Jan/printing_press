@@ -92,6 +92,7 @@ class _PaymentToSupplierViewState extends State<PaymentToSupplierView> {
                             builder: (BuildContext context,
                                     PaymentToSupplierViewModel value, Widget? child) =>
                                 CustomDropDown(
+                                  prefixIconData: Icons.account_balance_outlined,
                               validator: null,
                               list: value.listOfSupplierAccounts,
                               value: value.selectedBankAcc,

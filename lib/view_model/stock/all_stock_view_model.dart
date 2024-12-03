@@ -31,7 +31,7 @@ class AllStockViewModel with ChangeNotifier {
       } else {
         return false;
       }
-    } catch (e, s) {
+    } catch (e) {
       Utils.showMessage('Error: $e');
       debugPrint("Error $e");
       return false;

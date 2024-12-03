@@ -74,7 +74,7 @@ class _AllStockViewState extends State<AllStockView> {
                     color: kNew1a,
                     shadowColor: Colors.green.withOpacity(0.3),
                     margin: EdgeInsets.only(
-                        bottom: 10, top: 5, right: 10, left: 10),
+                        bottom: 10, top: 5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
