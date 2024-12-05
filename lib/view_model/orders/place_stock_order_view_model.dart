@@ -127,7 +127,7 @@ class PlaceStockOrderViewModel with ChangeNotifier {
       'customerOrderId': newCustomerOrderId,
       'customerAddress': customerAddressC.text.trim(),
       'orderDateTime': Timestamp.now(),
-      'orderStatus': 'Pending',
+      'orderStatus': 'Completed',
       'paidAmount': int.tryParse(advancePaymentC.text.trim()),
       'totalAmount': totalAmount,
       'stockId': selectedStockModel.stockId,

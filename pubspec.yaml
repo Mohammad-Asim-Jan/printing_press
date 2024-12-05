@@ -40,6 +40,7 @@ dependencies:
   fluttertoast: ^8.2.5
   provider: ^6.1.2
   intl: ^0.20.0
+  timelines: ^0.1.0
 
 dev_dependencies:
   flutter_test:

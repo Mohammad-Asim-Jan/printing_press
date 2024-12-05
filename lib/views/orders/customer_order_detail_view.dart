@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:printing_press/model/customer_custom_order.dart';
 import 'package:printing_press/model/stock_order_by_customer.dart';
 import 'package:printing_press/view_model/orders/customer_order_detail_view_model.dart';
+import 'package:printing_press/views/orders/track_customer_order.dart';
 import 'package:printing_press/views/payment/payment_from_customer_view.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
@@ -28,6 +29,15 @@ class CustomerOrderDetailView extends StatefulWidget {
 
 class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    debugPrint('Is Custom Order: ${widget.isCustomOrder}');
+  }
+
+  int index = 0;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffD0D7D4),
@@ -37,7 +47,7 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
         title: Text('Order Details',
             style: TextStyle(
                 color: kNew9a,
-                fontSize: 21,
+                fontSize: 20,
                 letterSpacing: 0,
                 fontWeight: FontWeight.w500)),
       ),
@@ -78,11 +88,21 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           kTitleText(
-                              widget.isCustomOrder
-                                  ? customOrderModel.businessTitle
-                                  : stockOrderByCustomer.businessTitle,
-                              28,
-                              kThirdColor),
+                              "Order No. ${widget.isCustomOrder ? customOrderModel.customerOrderId : stockOrderByCustomer.customerOrderId}",
+                              10,
+                              kThirdColor,
+                              2),
+                          Row(
+                            children: [
+                              kTitleText(
+                                  widget.isCustomOrder
+                                      ? customOrderModel.businessTitle
+                                      : stockOrderByCustomer.businessTitle,
+                                  24,
+                                  kThirdColor,
+                                  2),
+                            ],
+                          ),
                           Row(
                             textBaseline: TextBaseline.alphabetic,
                             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -239,19 +259,576 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                             ),
                           ),
                           SizedBox(height: 10),
-                          Center(
-                              child: kTitleText('Payment History', 14,
-                                  Colors.black.withOpacity(0.6))),
+                          widget.isCustomOrder
+                              ? SizedBox.shrink()
+                              : kTitleText('Stock Details', 14,
+                                  Colors.black.withOpacity(0.6)),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Table(
+                                    border: TableBorder(
+                                        horizontalInside: BorderSide(
+                                            width: 0.5,
+                                            color:
+                                                Colors.black.withOpacity(0.5))),
+                                    textBaseline: TextBaseline.alphabetic,
+                                    defaultVerticalAlignment:
+                                        TableCellVerticalAlignment.baseline,
+                                    columnWidths: {
+                                      0: FractionColumnWidth(0.22),
+                                      1: FractionColumnWidth(0.2),
+                                      2: FractionColumnWidth(0.2),
+                                      3: FractionColumnWidth(0.18),
+                                      4: FractionColumnWidth(0.2),
+                                    },
+                                    children: [
+                                      TableRow(
+                                        children: [
+                                          Padding(
+                                              padding: EdgeInsets.all(4.0),
+                                              child: kTitleText(
+                                                  widget.isCustomOrder
+                                                      ? 'Machine'
+                                                      : 'Name',
+                                                  10,
+                                                  Colors.black.withOpacity(0.6),
+                                                  2)),
+                                          Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: kTitleText(
+                                                widget.isCustomOrder
+                                                    ? 'Copy Variant'
+                                                    : 'Category',
+                                                10,
+                                                Colors.black.withOpacity(0.6),
+                                                2),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: kTitleText(
+                                                widget.isCustomOrder
+                                                    ? 'Size'
+                                                    : 'Color',
+                                                10,
+                                                Colors.black.withOpacity(0.6),
+                                                2),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: kTitleText(
+                                                'Quantity',
+                                                10,
+                                                Colors.black.withOpacity(0.6),
+                                                2),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: kTitleText(
+                                                widget.isCustomOrder
+                                                    ? 'Pages/book'
+                                                    : 'Price',
+                                                10,
+                                                Colors.black.withOpacity(0.6),
+                                                2),
+                                          ),
+                                        ],
+                                      ),
+                                      TableRow(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: kTitleText(
+                                                widget.isCustomOrder
+                                                    ? customOrderModel
+                                                        .machineName
+                                                    : stockOrderByCustomer
+                                                        .stockName,
+                                                10,
+                                                null,
+                                                2),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: kTitleText(
+                                                widget.isCustomOrder
+                                                    ? customOrderModel
+                                                            .copyVariant ??
+                                                        'None'
+                                                    : stockOrderByCustomer
+                                                        .stockCategory,
+                                                10,
+                                                null,
+                                                2),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: kTitleText(
+                                                widget.isCustomOrder
+                                                    ? customOrderModel.paperSize
+                                                    : stockOrderByCustomer
+                                                            .stockColor ??
+                                                        'Nil',
+                                                10,
+                                                null,
+                                                2),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: kTitleText(
+                                                widget.isCustomOrder
+                                                    ? customOrderModel
+                                                        .bookQuantity
+                                                        .toString()
+                                                    : stockOrderByCustomer
+                                                        .stockQuantity
+                                                        .toString(),
+                                                12,
+                                                kNew4,
+                                                2),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(4.0),
+                                            child: kTitleText(
+                                                widget.isCustomOrder
+                                                    ? customOrderModel
+                                                        .pagesPerBook
+                                                        .toString()
+                                                    : stockOrderByCustomer
+                                                        .stockUnitSellPrice
+                                                        .toString(),
+                                                12,
+                                                kNew8,
+                                                2),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          widget.isCustomOrder
+                              ? Expanded(
+                                  flex: 5,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 8),
+                                        kTitleText('Color', 14,
+                                            Colors.black.withOpacity(0.6)),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.baseline,
+                                          textBaseline: TextBaseline.alphabetic,
+                                          children: [
+                                            Expanded(
+                                                child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.baseline,
+                                              textBaseline:
+                                                  TextBaseline.alphabetic,
+                                              children: [
+                                                Expanded(
+                                                  child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(4.0),
+                                                      child: kTitleText(
+                                                          'Front Print Type',
+                                                          10,
+                                                          Colors.black
+                                                              .withOpacity(0.6),
+                                                          2)),
+                                                ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: kTitleText(
+                                                        '${customOrderModel.frontPrintType} Color',
+                                                        10,
+                                                        null,
+                                                        2),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                            Expanded(
+                                                child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.baseline,
+                                              textBaseline:
+                                                  TextBaseline.alphabetic,
+                                              children: [
+                                                Expanded(
+                                                  child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(4.0),
+                                                      child: kTitleText(
+                                                          'Backside Print Type',
+                                                          10,
+                                                          Colors.black
+                                                              .withOpacity(0.6),
+                                                          2)),
+                                                ),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: kTitleText(
+                                                        (customOrderModel
+                                                                    .backPrintType ==
+                                                                -1)
+                                                            ? 'No backside'
+                                                            : '${customOrderModel.backPrintType} Color',
+                                                        10,
+                                                        null,
+                                                        2),
+                                                  ),
+                                                ),
+                                              ],
+                                            )),
+                                          ],
+                                        ),
+                                        SizedBox(height: 8),
+                                        kTitleText('Expenses', 14,
+                                            Colors.black.withOpacity(0.6)),
+                                        SizedBox(height: 8),
+                                        Table(
+                                          border: TableBorder.all(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            width: 0.5,
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                          ),
+                                          textBaseline: TextBaseline.alphabetic,
+                                          defaultVerticalAlignment:
+                                              TableCellVerticalAlignment
+                                                  .baseline,
+                                          columnWidths: {
+                                            0: FractionColumnWidth(0.25),
+                                            1: FractionColumnWidth(0.25),
+                                            2: FractionColumnWidth(0.25),
+                                            3: FractionColumnWidth(0.25),
+                                          },
+                                          children: [
+                                            TableRow(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.blueGrey
+                                                      .withOpacity(0.4)),
+                                              children: [
+                                                Padding(
+                                                    padding:
+                                                        EdgeInsets.all(4.0),
+                                                    child: kTitleText(
+                                                        'Name',
+                                                        10,
+                                                        Colors.black
+                                                            .withOpacity(0.6),
+                                                        2)),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Expenses',
+                                                      10,
+                                                      Colors.black
+                                                          .withOpacity(0.6),
+                                                      2),
+                                                ),
+                                                Padding(
+                                                    padding:
+                                                        EdgeInsets.all(4.0),
+                                                    child: kTitleText(
+                                                        'Name',
+                                                        10,
+                                                        Colors.black
+                                                            .withOpacity(0.6),
+                                                        2)),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Expenses',
+                                                      10,
+                                                      Colors.black
+                                                          .withOpacity(0.6),
+                                                      2),
+                                                ),
+                                              ],
+                                            ),
+                                            TableRow(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Design', 10, null, 2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      customOrderModel
+                                                                  .designRate ==
+                                                              null
+                                                          ? 'None'
+                                                          : customOrderModel
+                                                              .designRate
+                                                              .toString(),
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Paper', 10, null, 2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      customOrderModel
+                                                          .paperExpenses
+                                                          .toString(),
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                              ],
+                                            ),
+                                            TableRow(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Printing', 10, null, 2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      customOrderModel
+                                                          .printingExpense
+                                                          .toString(),
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Plates', 10, null, 2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      customOrderModel
+                                                          .plateExpense
+                                                          .toString(),
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                              ],
+                                            ),
+                                            TableRow(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Binding', 10, null, 2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      customOrderModel
+                                                                  .bindingExpenses ==
+                                                              null
+                                                          ? 'None'
+                                                          : customOrderModel
+                                                              .bindingExpenses
+                                                              .toString(),
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Cutting', 10, null, 2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      customOrderModel
+                                                                  .paperCuttingExpenses ==
+                                                              null
+                                                          ? 'None'
+                                                          : customOrderModel
+                                                              .paperCuttingExpenses
+                                                              .toString(),
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                              ],
+                                            ),
+                                            TableRow(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Numbering', 10, null, 2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      customOrderModel
+                                                                  .numberingExpenses ==
+                                                              null
+                                                          ? 'None'
+                                                          : customOrderModel
+                                                              .numberingExpenses
+                                                              .toString(),
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Other Expenses',
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      customOrderModel
+                                                                  .otherExpenses ==
+                                                              null
+                                                          ? 'None'
+                                                          : customOrderModel
+                                                              .otherExpenses
+                                                              .toString(),
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                              ],
+                                            ),
+                                            TableRow(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      'Copy Variant',
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      (customOrderModel
+                                                                  .carbonExpenses ??
+                                                              customOrderModel
+                                                                  .carbonLessExpenses ??
+                                                              customOrderModel
+                                                                  .newsPaperExpenses ??
+                                                              'None')
+                                                          .toString(),
+                                                      10,
+                                                      null,
+                                                      2),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      '', 10, null, 2),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: kTitleText(
+                                                      '', 10, null, 2),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ))
+                              : SizedBox.shrink(),
                           SizedBox(height: 8),
-                          Flexible(
+                          kTitleText('Payment History', 14,
+                              Colors.black.withOpacity(0.6)),
+                          SizedBox(height: 8),
+                          Expanded(
+                            flex: 3,
                             child: CustomerPaymentHistory(
                                 customerOrderId: widget.isCustomOrder
                                     ? customOrderModel.customerOrderId
                                     : stockOrderByCustomer.customerOrderId),
                           ),
+                          SizedBox(height: 8),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Spacer(),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TrackCustomerOrder(
+                                                    currentStatus:
+                                                        'Completed')));
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    foregroundColor: kPrimeColor,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 2, vertical: 1),
+                                    backgroundColor: Color(0xffD0D7D4),
+                                    shape: RoundedRectangleBorder(
+                                        side: BorderSide(color: kPrimeColor),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                  ),
+                                  child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0, horizontal: 12),
+                                      child: Text('Track Order',
+                                          style: TextStyle(fontSize: 14)))),
+                              Row(children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: getStatusIcon(widget.isCustomOrder
+                                      ? customOrderModel.orderStatus
+                                      : stockOrderByCustomer.orderStatus),
+                                ),
+                                kTitleText(
+                                    widget.isCustomOrder
+                                        ? customOrderModel.orderStatus
+                                        : stockOrderByCustomer.orderStatus,
+                                    16,
+                                    statusColor[index])
+                              ]),
                               ElevatedButton(
                                   onPressed: () {
                                     if ((widget.isCustomOrder
@@ -314,7 +891,8 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                                         : kNew9a,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0, horizontal: 12),
                                     child: Text(
                                       'Payment',
                                       style: TextStyle(fontSize: 14),
@@ -334,268 +912,39 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
     );
   }
 
-  ///
-// @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     backgroundColor: Color(0xffD0D7D4),
-//     appBar: AppBar(title: const Text('Order details'), backgroundColor: Colors.transparent, foregroundColor: kNew9a,),
-//     body: Padding(
-//       padding: const EdgeInsets.all(8),
-//       child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.center,
-//           children: widget.customerCustomOrder != null
-//               ? [
-//                   Container(
-//                       padding: EdgeInsets.all(6),
-//                       color: Colors.white60,
-//                       margin: EdgeInsets.all(5),
-//                       child: Column(
-//                         children: [
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                             children: [
-//                               Text(
-//                                 'Paid Amount',
-//                                 style: Theme.of(context).textTheme.labelLarge,
-//                               ),
-//                               Text(
-//                                 'Total Amount',
-//                                 style: Theme.of(context).textTheme.labelLarge,
-//                               ),
-//                             ],
-//                           ),
-//                           SizedBox(
-//                             height: 6,
-//                           ),
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                             children: [
-//                               Text(widget.customerCustomOrder!.paidAmount
-//                                   .toString()),
-//                               Text(widget.customerCustomOrder!.totalAmount
-//                                   .toString()),
-//                             ],
-//                           ),
-//                         ],
-//                       )),
-//                   Text(
-//                       'Order Id: ${widget.customerCustomOrder!.customerOrderId.toString()}'),
-//                   Row(
-//                     children: [
-//                       const Text('Customer Name'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.customerCustomOrder!.customerName),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Business Title'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.customerCustomOrder!.businessTitle),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Contact No.'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.customerCustomOrder!.customerContact
-//                           .toString()),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Customer address'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.customerCustomOrder!.customerAddress),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Machine Name'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.customerCustomOrder!.machineName),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Book Quantity'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.customerCustomOrder!.bookQuantity
-//                           .toString()),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Pages per book'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.customerCustomOrder!.bookQuantity
-//                           .toString()),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Order Status'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.customerCustomOrder!.orderStatus),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Order time'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.customerCustomOrder!.orderDateTime
-//                           .toDate()
-//                           .toString()),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Order due time'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       widget.customerCustomOrder!.orderDueDateTime == null
-//                           ? const Text('Not set')
-//                           : Text(widget.customerCustomOrder!.orderDueDateTime!
-//                               .toDate()
-//                               .toString()),
-//                     ],
-//                   ),
-//                 ]
-//               : [
-//                   Container(
-//                       padding: const EdgeInsets.all(6),
-//                       color: Colors.white60,
-//                       margin: EdgeInsets.all(5),
-//                       child: Column(
-//                         children: [
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                             children: [
-//                               Text(
-//                                 'Paid Amount',
-//                                 style: Theme.of(context).textTheme.labelLarge,
-//                               ),
-//                               Text(
-//                                 'Total Amount',
-//                                 style: Theme.of(context).textTheme.labelLarge,
-//                               ),
-//                             ],
-//                           ),
-//                           SizedBox(
-//                             height: 6,
-//                           ),
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                             children: [
-//                               Text(widget.stockOrderByCustomer!.paidAmount
-//                                   .toString()),
-//                               Text(widget.stockOrderByCustomer!.totalAmount
-//                                   .toString()),
-//                             ],
-//                           ),
-//                         ],
-//                       )),
-//                   Text(
-//                       'Order Id: ${widget.stockOrderByCustomer!.customerOrderId.toString()}'),
-//                   Row(
-//                     children: [
-//                       const Text('Customer Name'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.stockOrderByCustomer!.customerName),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Business Title'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.stockOrderByCustomer!.businessTitle),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Contact No.'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.stockOrderByCustomer!.customerContact
-//                           .toString()),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Customer address'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.stockOrderByCustomer!.customerAddress),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Stock Ordered'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.stockOrderByCustomer!.stockName),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Stock Price'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.stockOrderByCustomer!.stockUnitSellPrice
-//                           .toString()),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Order Status'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.stockOrderByCustomer!.orderStatus),
-//                     ],
-//                   ),
-//                   Row(
-//                     children: [
-//                       const Text('Order time'),
-//                       const SizedBox(
-//                         width: 50,
-//                       ),
-//                       Text(widget.stockOrderByCustomer!.orderDateTime
-//                           .toDate()
-//                           .toString()),
-//                     ],
-//                   ),
-//                 ]
-//       ),
-//     ),
-//   );
-// }
+  List<Color> statusColor = [
+    Colors.blue,
+    Colors.amber,
+    Colors.orange,
+    Colors.red,
+    Colors.green,
+    Colors.purple.withOpacity(0.5),
+    Colors.grey,
+  ];
+
+  Widget getStatusIcon(String status) {
+    switch (status) {
+      case 'New Order':
+        index = 0;
+        return Icon(Icons.fiber_new, color: Colors.blue);
+      case 'In Progress':
+        index = 1;
+        return Icon(Icons.autorenew, color: Colors.amber);
+      case 'Pending':
+        index = 2;
+        return Icon(Icons.hourglass_top, color: Colors.orange);
+      case 'Cancelled':
+        index = 3;
+        return Icon(Icons.cancel, color: Colors.red);
+      case 'Completed':
+        index = 4;
+        return Icon(Icons.check_circle, color: Colors.green);
+      case 'Handed Over':
+        index = 5;
+        return Icon(Icons.inventory_2, color: Colors.purple.withOpacity(0.5));
+      default:
+        index = 6;
+        return Icon(Icons.help_outline, color: Colors.grey); // Unknown status
+    }
+  }
 }

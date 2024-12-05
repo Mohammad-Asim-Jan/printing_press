@@ -826,9 +826,10 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
               debugPrint('Total Expenses: $totalExpenses');
 
               addCustomerCustomOrder(CustomerCustomOrder(
+                orderResumedDateTime: timestamp,
                 customerOrderId: newCustomerOrderId,
                 orderDateTime: timestamp,
-                orderStatus: 'Pending',
+                orderStatus: 'New Order',
                 customerName: customerName,
                 businessTitle: businessTitle,
                 customerContact: customerContactNo,
@@ -889,9 +890,10 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
               debugPrint('Total Expenses: $totalExpenses');
 
               addCustomerCustomOrder(CustomerCustomOrder(
+                orderResumedDateTime: timestamp,
                   customerOrderId: newCustomerOrderId,
                   orderDateTime: timestamp,
-                  orderStatus: 'Pending',
+                  orderStatus: 'New Order',
                   customerName: customerName,
                   businessTitle: businessTitle,
                   customerContact: customerContactNo,
@@ -984,9 +986,10 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
               debugPrint('Total Expenses: $totalExpenses');
 
               addCustomerCustomOrder(CustomerCustomOrder(
+                  orderResumedDateTime: timestamp,
                   customerOrderId: newCustomerOrderId,
                   orderDateTime: timestamp,
-                  orderStatus: 'Pending',
+                  orderStatus: 'New Order',
                   customerName: customerName,
                   businessTitle: businessTitle,
                   customerContact: customerContactNo,
@@ -1075,9 +1078,10 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
               debugPrint('Total Expenses: $totalExpenses');
 
               addCustomerCustomOrder(CustomerCustomOrder(
+                orderResumedDateTime: timestamp,
                   customerOrderId: newCustomerOrderId,
                   orderDateTime: timestamp,
-                  orderStatus: 'Pending',
+                  orderStatus: 'New Order',
                   customerName: customerName,
                   businessTitle: businessTitle,
                   customerContact: customerContactNo,

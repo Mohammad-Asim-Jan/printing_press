@@ -6,6 +6,7 @@ class CustomerCustomOrder {
   final String businessTitle;
   final String customerContact;
   final String customerAddress;
+
   ///
   final int? designRate;
   final String paperSize;
@@ -24,14 +25,21 @@ class CustomerCustomOrder {
   final int? numberingExpenses;
   final int frontPrintType;
   final int? backPrintType;
+
+  /// todo: we should have the variant print type as well
   final int profitPercent;
   final int? otherExpenses;
-  final Timestamp? orderDueDateTime;
+  final Timestamp orderResumedDateTime;
+
+  /// change this to non nullable
   ///
   final String orderStatus;
   final Timestamp orderDateTime;
-  final int advancePayment; /// not necessarily important
+  final int advancePayment;
+
+  /// not necessarily important
   final int paidAmount;
+
   // final int remainingAmount;
   final int totalAmount;
 
@@ -64,7 +72,7 @@ class CustomerCustomOrder {
     this.otherExpenses,
     required this.advancePayment,
     required this.paidAmount,
-    this.orderDueDateTime,
+    required this.orderResumedDateTime,
     // required this.remainingAmount,
     required this.totalAmount,
   });
@@ -101,7 +109,8 @@ class CustomerCustomOrder {
       customerOrderId: json['customerOrderId'],
       orderStatus: json['orderStatus'],
       orderDateTime: json['orderDateTime'],
-      orderDueDateTime: json['orderDueDateTime'],
+      orderResumedDateTime:
+          json['orderResumedDateTime'] ?? json['orderDateTime'],
     );
   }
 
@@ -133,7 +142,7 @@ class CustomerCustomOrder {
       'otherExpenses': otherExpenses,
       'orderStatus': orderStatus,
       'orderDateTime': orderDateTime,
-      'orderDueDateTime': orderDueDateTime,
+      'orderResumedDateTime': orderResumedDateTime,
       'advancePayment': advancePayment,
       'paidAmount': paidAmount,
       'totalAmount': totalAmount,

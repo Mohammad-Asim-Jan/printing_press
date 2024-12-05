@@ -9,6 +9,7 @@ import 'package:printing_press/view_model/auth/sign_up_view_model.dart';
 import 'package:printing_press/view_model/orders/all_orders_view_model.dart';
 import 'package:printing_press/view_model/orders/customer_order_detail_view_model.dart';
 import 'package:printing_press/view_model/orders/place_customize_order_view_model.dart';
+import 'package:printing_press/view_model/payment/payment_from_customer_view_model.dart';
 import 'package:printing_press/view_model/payment/payment_to_supplier_view_model.dart';
 import 'package:printing_press/view_model/rate_list/binding/binding_view_model.dart';
 import 'package:printing_press/view_model/rate_list/machine/add_machine_view_model.dart';
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => StockDetailsViewModel()),
         ChangeNotifierProvider(create: (_) => SupplierDetailsViewModel()),
         ChangeNotifierProvider(create: (_) => PaymentToSupplierViewModel()),
+        ChangeNotifierProvider(create: (_) => PaymentFromCustomerViewModel()),
         ChangeNotifierProvider(create: (_) => CashbookViewModel()),
         ChangeNotifierProvider(create: (_) => AddBindingViewModel()),
         ChangeNotifierProvider(create: (_) => BindingViewModel()),
