@@ -27,9 +27,9 @@ class _SupplierDetailsViewState extends State<SupplierDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffcad6d2),
+      // backgroundColor: Color(0xffcad6d2),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.transparent,
         foregroundColor: kNew9a,
         title: Text('Supplier Details',
             style: TextStyle(

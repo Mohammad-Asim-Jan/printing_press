@@ -8,16 +8,20 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final IconData? iconData;
   final String hint;
+  bool? obscureText;
   final TextInputType textInputType;
   final List<ValidatorFunction>? validators;
   final int? maxLength;
+  final Widget? suffixIcon;
   final TextInputFormatter? inputFormatter;
 
-  const CustomTextField({
+  CustomTextField({
     super.key,
     required this.controller,
-    required this.iconData,
+    this.iconData,
     this.maxLength,
+    this.obscureText,
+    this.suffixIcon,
     required this.hint,
     this.textInputType = TextInputType.text,
     this.inputFormatter,
@@ -46,6 +50,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: TextFormField(
+        obscureText: widget.obscureText ?? false,
+        textAlignVertical: TextAlignVertical.center,
         style: TextStyle(fontSize: 12, color: kPrimeColor),
 
         ///todo: do this in other text field other than custom
@@ -59,7 +65,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 widget.inputFormatter!,
               ],
         decoration: InputDecoration(
+            // fillColor: kPrimeColor.withOpacity(0.1),
             labelText: widget.hint,
+            suffixIcon: widget.suffixIcon,
             prefixIcon: widget.iconData == null
                 ? null
                 : Icon(widget.iconData, size: 16
@@ -74,7 +82,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             hintStyle: TextStyle(fontSize: 12, color: kNew9a),
 
             ///todo: do this in other text field other than custom
-            filled: true,
+            // filled: true,
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(18),
               borderSide: BorderSide(

@@ -19,17 +19,18 @@ class AddBindingViewModel with ChangeNotifier {
 
   late String bindingName;
   late int bindingRate;
+
   addBindingInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
     if (_formKey.currentState != null) {
       updateListeners(true);
 
       if (_formKey.currentState!.validate()) {
-        ///todo: check if the quantity is null or zero, then don't update
         /// check if binding is already available
         bindingName = bindingNameC.text.trim();
-        bindingRate =int.tryParse(bindingRateC.text.trim())!;
-        QuerySnapshot bindingQuerySnapshot = await fireStore
+        bindingRate = int.tryParse(bindingRateC.text.trim())!;
+
+        QuerySnapshot bindingNameQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Binding')
@@ -37,39 +38,8 @@ class AddBindingViewModel with ChangeNotifier {
             .limit(1)
             .get();
 
-        if (bindingQuerySnapshot.docs.isNotEmpty) {
-          debugPrint('\n\n\n\n\n\n\n\n\n\nIt means binding exists.'
-              '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
-
-          /// no need to update
-          /// just show a message that the binding is already available
-
-          // /// update the binding
-          // DocumentSnapshot bindingDocumentSnapshot =
-          //     bindingQuerySnapshot.docs.first;
-          //
-          // newBindingId = bindingDocumentSnapshot.get('bindingId');
-          // debugPrint('Binding id found is : $newBindingId');
-          // // try {
-          // DocumentReference bindingDocRef = fireStore
-          //     .collection(uid)
-          //     .doc('RateList')
-          //     .collection('Binding')
-          //     .doc('BIND-$newBindingId');
-          //
-          // await bindingDocRef.update({
-          //   'rate': int.tryParse(rateC.text.trim()) ?? 0,
-          // }).then((value) async {
-          //   debugPrint('\n\n\n\n\n\n\n\n binding data updated !!\n\n\n\n\n\n');
-          //   Utils.showMessage('binding data updated !!');
-          //
-          //   updateListeners(false);
-          // }).onError((error, stackTrace) {
-          //   debugPrint(
-          //       '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
-          //   Utils.showMessage(error.toString());
-          //   updateListeners(false);
-          // });
+        if (bindingNameQuerySnapshot.docs.isNotEmpty) {
+          Utils.showMessage('Try with a different name');
           updateListeners(false);
         } else {
           /// binding doesn't exist
@@ -87,8 +57,6 @@ class AddBindingViewModel with ChangeNotifier {
             'rate': bindingRate,
           }).then((value) async {
             Utils.showMessage('New Binding added');
-            debugPrint('New binding added!!!!!!!!!!!!!!!!!');
-
             updateListeners(false);
           }).onError((error, stackTrace) {
             Utils.showMessage(error.toString());
@@ -107,8 +75,9 @@ class AddBindingViewModel with ChangeNotifier {
         .collection(uid)
         .doc('RateList')
         .collection('Binding')
-    /// 0 is added so that the last binding id document appears to the top
-    /// because when we are getting the data, we ignore the first doc because it is always of id
+
+        /// 0 is added so that the last binding id document appears to the top
+        /// because when we are getting the data, we ignore the first doc because it is always of id
         .doc('0LastBindingId');
 
     final documentSnapshot = await documentRef.get();
@@ -117,7 +86,8 @@ class AddBindingViewModel with ChangeNotifier {
 
     if (data?['lastBindingId'] == null) {
       newBindingId = 1;
-      debugPrint('Binding id found to be null --------- ${data?['lastBindingId']}');
+      debugPrint(
+          'Binding id found to be null --------- ${data?['lastBindingId']}');
       await documentRef.set({'lastBindingId': newBindingId});
     } else {
       debugPrint(

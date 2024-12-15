@@ -5,7 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:printing_press/model/rate_list/machine.dart';
 
 import '../../../colors/color_palette.dart';
+import '../../../components/custom_text_field.dart';
+import '../../../text_styles/custom_text_styles.dart';
 import '../../../utils/toast_message.dart';
+import '../../../utils/validation_functions.dart';
 
 class MachineViewModel with ChangeNotifier {
   // late bool dataFetched;
@@ -23,23 +26,22 @@ class MachineViewModel with ChangeNotifier {
         .snapshots();
   }
 
-
   void editMachine(BuildContext context, int index) {
     final nameController = TextEditingController(text: machineList[index].name);
     final widthController =
-    TextEditingController(text: machineList[index].size.width.toString());
+        TextEditingController(text: machineList[index].size.width.toString());
     final heightController =
-    TextEditingController(text: machineList[index].size.height.toString());
-    final plateRateController = TextEditingController(text: machineList[index].plateRate.toString());
-    final printingRateController = TextEditingController(text: machineList[index].printingRate.toString());
-
-
+        TextEditingController(text: machineList[index].size.height.toString());
+    final plateRateController =
+        TextEditingController(text: machineList[index].plateRate.toString());
+    final printingRateController =
+        TextEditingController(text: machineList[index].printingRate.toString());
 
     showDialog(
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: kTwo,
+          backgroundColor: Colors.white,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
@@ -51,145 +53,104 @@ class MachineViewModel with ChangeNotifier {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      "Edit Machine",
-                      style: Theme.of(context)
-                          .appBarTheme
-                          .titleTextStyle
-                          ?.copyWith(color: kOne),
-                    ),
+                    kTitleText("Edit Machine"),
                     const SizedBox(height: 20),
-                    TextFormField(
-                      controller: nameController,
-                      decoration:
-                      const InputDecoration(labelText: 'Machine Name'),
-                      validator: (value) {
-                        if (value == '' || value == null) {
-                          return 'Provide machine name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
+                        controller: nameController,
+                        iconData: null,
+                        hint: 'Machine Name',
+                        validators: [isNotEmpty]),
+                    CustomTextField(
                       controller: widthController,
-                      decoration:
-                      const InputDecoration(labelText: 'Machine Width'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide machine width';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'Machine Width',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-
-                    TextFormField(
+                    CustomTextField(
                       controller: heightController,
-                      decoration:
-                      const InputDecoration(labelText: 'Machine Height'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide machine height';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'Machine Height',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
                       controller: plateRateController,
-                      decoration:
-                      const InputDecoration(labelText: 'Machine Plate Rate'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide machine plate rate';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'Plate Rate',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
                       controller: printingRateController,
-                      decoration:
-                      const InputDecoration(labelText: 'Machine Printing Rate'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide machine printing rate';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'Printing Rate',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-
+                    const SizedBox(height: 10),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text("Cancel"),
+                            child: kTitleText("Cancel", 12),
                           ),
                           TextButton(
                             onPressed: () async {
                               if (_formKey.currentState != null &&
                                   _formKey.currentState!.validate()) {
-                                await FirebaseFirestore.instance
-                                    .collection(uid)
-                                    .doc('RateList')
-                                    .collection('Machine')
-                                    .doc('MAC-${machineList[index].machineId}')
-                                    .update({
-                                  'name': nameController.text.trim(),
-                                  'size': {
-                                    'width': int.parse(widthController.text.trim()),
-                                    'height': int.parse(heightController.text.trim()),
-                                  },
-                                  'plateRate': int.parse(plateRateController.text.trim()),
-                                  'printingRate': int.parse(printingRateController.text.trim()),
-                                }).then(
-                                      (value) {
+                                String machineName = nameController.text.trim();
+                                int plateRate = int.tryParse(
+                                    plateRateController.text.trim())!;
+                                int machineWidth =
+                                    int.parse(widthController.text.trim());
+                                int machineHeight =
+                                    int.parse(heightController.text.trim());
+                                int printingRate = int.parse(
+                                    printingRateController.text.trim());
+
+                                /// check if machine is already available
+                                QuerySnapshot machineNameQuerySnapshot =
+                                    await FirebaseFirestore.instance
+                                        .collection(uid)
+                                        .doc('RateList')
+                                        .collection('Machine')
+                                        .where('machineId',
+                                            isNotEqualTo:
+                                                machineList[index].machineId)
+                                        .where('name', isEqualTo: machineName)
+                                        .limit(1)
+                                        .get();
+
+                                if (machineNameQuerySnapshot.docs.isEmpty) {
+                                  await FirebaseFirestore.instance
+                                      .collection(uid)
+                                      .doc('RateList')
+                                      .collection('Machine')
+                                      .doc(
+                                          'MAC-${machineList[index].machineId}')
+                                      .update({
+                                    'name': machineName,
+                                    'size': {
+                                      'width': machineWidth,
+                                      'height': machineHeight
+                                    },
+                                    'plateRate': plateRate,
+                                    'printingRate': printingRate
+                                  }).then((value) {
                                     Utils.showMessage('Machine Updated!');
-                                  },
-                                ).onError(
-                                      (error, stackTrace) {
+                                  }).onError((error, stackTrace) {
                                     Utils.showMessage('Error Occurred!');
-                                  },
-                                );
+                                  });
+                                } else {
+                                  Utils.showMessage(
+                                      'Try with a different name');
+                                }
                                 Navigator.pop(context);
                               }
                             },
-                            child: const Text("Update"),
+                            child: kTitleText("Update", 12),
                           ),
                         ])
                   ],
@@ -197,38 +158,6 @@ class MachineViewModel with ChangeNotifier {
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void confirmDelete(BuildContext context, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: kTwo,
-          titleTextStyle: Theme.of(context)
-              .appBarTheme
-              .titleTextStyle
-              ?.copyWith(color: kOne),
-          title: const Text("Confirm Delete"),
-          content: const Text("Are you sure you want to delete this item?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("No"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await deleteMachine(machineList[index].machineId);
-                Navigator.pop(context);
-              },
-              child: const Text("Yes"),
-            ),
-          ],
         );
       },
     );
@@ -242,47 +171,14 @@ class MachineViewModel with ChangeNotifier {
         .doc('MAC-$machineId')
         .delete()
         .then(
-          (value) {
+      (value) {
         Utils.showMessage('Machine deleted!');
       },
     ).onError(
-          (error, stackTrace) {
+      (error, stackTrace) {
         Utils.showMessage('Error occurred!');
       },
     );
   }
 
-//
-// void fetchMachineData() async {
-//   dataFetched = false;
-//   machineList = [];
-//
-//   final collectionReference = FirebaseFirestore.instance
-//       .collection(FirebaseAuth.instance.currentUser!.uid)
-//       .doc('RateList')
-//       .collection('Machine');
-//
-//   final querySnapshot = await collectionReference.get();
-//
-//   final listQueryDocumentSnapshot = querySnapshot.docs;
-//
-//   if (listQueryDocumentSnapshot.length <= 1) {
-//     debugPrint('No records found !');
-//     dataFetched = true;
-//     updateListener();
-//   } else {
-//     for (int i = 1; i < listQueryDocumentSnapshot.length; i++) {
-//       var data = listQueryDocumentSnapshot[i].data();
-//       debugPrint('hello        ${data.toString()}');
-//       machineList.add(Machine.fromJson(data));
-//     }
-//
-//     dataFetched = true;
-//     updateListener();
-//   }
-// }
-//
-// updateListener() {
-//   notifyListeners();
-// }
 }

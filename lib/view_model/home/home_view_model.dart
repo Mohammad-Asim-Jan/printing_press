@@ -53,8 +53,8 @@ class HomeViewModel with ChangeNotifier {
     List<String> mainViewsTitles = [
       'Customer Orders',
       'Cashbook',
-      'Suppliers',
       'Stock',
+      'Suppliers',
       rateListViewTitle[rateListIndex]
     ];
     return mainViewsTitles[index];
@@ -64,8 +64,8 @@ class HomeViewModel with ChangeNotifier {
     List views = [
       const AllOrdersView(),
       const CashbookView(),
-      const AllSuppliersView(),
       const AllStockView(),
+      const AllSuppliersView(),
       getRateListView()
     ];
     return views[index];
@@ -74,8 +74,8 @@ class HomeViewModel with ChangeNotifier {
   List<String> floatingButtonLabel = [
     'Place Order',
     'Add/Pay Amount',
-    'Register a Supplier',
     'Order Stock',
+    'Register a Supplier',
     'Add +'
   ];
 
@@ -85,8 +85,8 @@ class HomeViewModel with ChangeNotifier {
     List floatingButtonViews = [
       const PlaceOrderView(),
       const AddCashbookEntryView(),
-      const AddSupplierView(),
       const AddStockView(),
+      const AddSupplierView(),
       rateListFloatingBtnView[rateListIndex]
     ];
     return floatingButtonViews[index];

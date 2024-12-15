@@ -33,9 +33,7 @@ class AddMachineViewModel with ChangeNotifier {
       updateListeners(true);
 
       if (_formKey.currentState!.validate()) {
-        ///todo: check if the quantity is null or zero, then don't update
         /// check if machine is already available
-
         machineName = machineNameC.text.trim();
         sizeWidth = int.tryParse(sizeWidthC.text.trim())!;
         sizeHeight = int.tryParse(sizeHeightC.text.trim())!;
@@ -43,7 +41,7 @@ class AddMachineViewModel with ChangeNotifier {
         printingRate = int.tryParse(printingRateC.text.trim())!;
 
 
-        QuerySnapshot machineQuerySnapshot = await fireStore
+        QuerySnapshot machineNameQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Machine')
@@ -51,10 +49,8 @@ class AddMachineViewModel with ChangeNotifier {
             .limit(1)
             .get();
 
-        if (machineQuerySnapshot.docs.isNotEmpty) {
-          debugPrint('\n\n\n\n\n\n\n\n\n\nIt means machine exist.'
-              '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
-          Utils.showMessage('Machine already exists!!');
+        if (machineNameQuerySnapshot.docs.isNotEmpty) {
+          Utils.showMessage('Try with a different name');
           updateListeners(false);
         } else {
           /// Machine doesn't exist
@@ -77,7 +73,6 @@ class AddMachineViewModel with ChangeNotifier {
             'printingRate': printingRate
           }).then((value) async {
             Utils.showMessage('New Machine added');
-            debugPrint('New Machine added!!!!!!!!!!!!!!!!!');
             updateListeners(false);
           }).onError((error, stackTrace) {
             Utils.showMessage(error.toString());

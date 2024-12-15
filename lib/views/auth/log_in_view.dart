@@ -49,83 +49,42 @@ class _LogInViewState extends State<LogInView> {
                 // fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(
-              height: 70,
-            ),
-            SizedBox(
-              height: 155,
-              child: Form(
-                key: logInViewModel.formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomTextField(
-                        controller: logInViewModel.emailC,
+            const SizedBox(height: 70),
+            Form(
+              key: logInViewModel.formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CustomTextField(
+                      controller: logInViewModel.emailC,
+                      textInputType: TextInputType.emailAddress,
+                      iconData: Icons.email,
+                      hint: 'Email',
+                      validators: [isEmailValid, isNotEmpty]),
+                  Consumer<LogInViewModel>(
+                    builder: (context, value, child) {
+                      return CustomTextField(
+                        obscureText: value.obscureText,
+                        controller: logInViewModel.passwordC,
+                        iconData: Icons.lock,
                         textInputType: TextInputType.emailAddress,
-                        iconData: Icons.email,
-                        hint: 'Email',
-                        validators: [isEmailValid, isNotEmpty]),
-                    Consumer<LogInViewModel>(
-                      builder: (context, value, child) {
-                        return TextFormField(
-                          controller: logInViewModel.passwordC,
-                          cursorColor: kPrimeColor,
-                          obscureText: value.obscureText,
-                          keyboardType: TextInputType.emailAddress,
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  value.swap();
-                                },
-                                icon: Icon(value.obscureText
-                                    ? Icons.visibility_off_rounded
-                                    : Icons.visibility_rounded),
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.lock,
-                                size: 24,
-                              ),
-                              hintText: 'Password',
-                              filled: true,
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: kPrimeColor,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: kSecColor,
-                                ),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                  color: kNew8,
-                                ),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(18),
-                                borderSide: BorderSide(
-                                  color: kNew8,
-                                ),
-                              )),
-                          validator: (text) {
-                            if (text == '' || text == null) {
-                              return 'Please provide password';
-                            } else if (text.length < 6) {
-                              return 'Password minimum length is 6';
-                            }
-                            return null;
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            value.swap();
                           },
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                          icon: Icon(value.obscureText
+                              ? Icons.visibility_off_rounded
+                              : Icons.visibility_rounded),
+                        ),
+                        hint: 'Password',
+                        validators: [
+                          isNotEmpty,
+                          (value) => hasMinLength(value),
+                        ],
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
             const Spacer(),
@@ -138,9 +97,7 @@ class _LogInViewState extends State<LogInView> {
                 },
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -150,7 +107,7 @@ class _LogInViewState extends State<LogInView> {
                     fontFamily: 'Urbanist',
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
-                    color: kOne,
+                    color: kNew9a,
                   ),
                 ),
                 InkWell(
@@ -168,18 +125,13 @@ class _LogInViewState extends State<LogInView> {
                     child: Text(
                       'Sign Up',
                       style: TextStyle(
-                        color: kNew9a,
-                        fontFamily: 'FredokaOne',
-                        fontSize: 18,
-                      ),
+                          color: kNew4, fontFamily: 'FredokaOne', fontSize: 18),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
           ],
         ),
       ),

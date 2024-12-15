@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:printing_press/colors/color_palette.dart';
-
+import '../../../components/custom_text_field.dart';
 import '../../../model/rate_list/paper_cutting.dart';
+import '../../../text_styles/custom_text_styles.dart';
 import '../../../utils/toast_message.dart';
+import '../../../utils/validation_functions.dart';
 
 class PaperCuttingViewModel with ChangeNotifier {
   late List<PaperCutting> paperCuttingList;
@@ -32,7 +33,7 @@ class PaperCuttingViewModel with ChangeNotifier {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: kTwo,
+          backgroundColor: Colors.white,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
@@ -43,118 +44,83 @@ class PaperCuttingViewModel with ChangeNotifier {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    "Edit Paper Cutting",
-                    style: Theme.of(context)
-                        .appBarTheme
-                        .titleTextStyle
-                        ?.copyWith(color: kOne),
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: nameController,
-                    decoration:
-                        const InputDecoration(labelText: 'Paper Cutting Name'),
-                    validator: (value) {
-                      if (value == '' || value == null) {
-                        return 'Provide paper cutting name';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
+                  kTitleText("Edit Paper Cutting"),
+                  const SizedBox(height: 10),
+                  CustomTextField(
+                      controller: nameController,
+                      iconData: null,
+                      hint: 'Paper Cutting Name',
+                      validators: [isNotEmpty]),
+                  CustomTextField(
                     controller: rateController,
-                    decoration:
-                        const InputDecoration(labelText: 'Paper Cutting Rate'),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    validator: (value) {
-                      if (value == null || value == '') {
-                        return 'Provide paper cutting rate';
-                      } else if (int.tryParse(value) == null) {
-                        return 'Provide valid value';
-                      } else if (int.tryParse(value) == 0) {
-                        return 'Must be greater than 0';
-                      }
-                      return null;
-                    },
+                    hint: 'Paper Cutting Rate',
+                    textInputType: TextInputType.number,
+                    inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                    validators: [isNotEmpty, isNotZero],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text("Cancel"),
+                          child: kTitleText("Cancel", 12),
                         ),
                         TextButton(
                           onPressed: () async {
                             if (_formKey.currentState != null &&
                                 _formKey.currentState!.validate()) {
-                              await FirebaseFirestore.instance
-                                  .collection(uid)
-                                  .doc('RateList')
-                                  .collection('PaperCutting')
-                                  .doc(
-                                      'PAP-CUT-${paperCuttingList[index].paperCuttingId}')
-                                  .update({
-                                'name': nameController.text.trim(),
-                                'rate': int.parse(rateController.text.trim()),
-                              }).then(
-                                (value) {
-                                  Utils.showMessage('Paper Cutting Updated!');
-                                },
-                              ).onError(
-                                (error, stackTrace) {
-                                  Utils.showMessage('Error Occurred!');
-                                },
-                              );
+                              String paperCuttingName =
+                                  nameController.text.trim();
+                              int paperCuttingRate =
+                                  int.tryParse(rateController.text.trim())!;
+
+                              /// check if paperCutting is already available
+                              QuerySnapshot paperCuttingNameQuerySnapshot =
+                                  await FirebaseFirestore.instance
+                                      .collection(uid)
+                                      .doc('RateList')
+                                      .collection('PaperCutting')
+                                      .where('paperCuttingId',
+                                          isNotEqualTo: paperCuttingList[index]
+                                              .paperCuttingId)
+                                      .where('name',
+                                          isEqualTo: paperCuttingName)
+                                      .limit(1)
+                                      .get();
+
+                              if (paperCuttingNameQuerySnapshot.docs.isEmpty) {
+                                await FirebaseFirestore.instance
+                                    .collection(uid)
+                                    .doc('RateList')
+                                    .collection('PaperCutting')
+                                    .doc(
+                                        'PAP-CUT-${paperCuttingList[index].paperCuttingId}')
+                                    .update({
+                                  'name': paperCuttingName,
+                                  'rate': paperCuttingRate,
+                                }).then(
+                                  (value) {
+                                    Utils.showMessage('Paper Cutting Updated!');
+                                  },
+                                ).onError(
+                                  (error, stackTrace) {
+                                    Utils.showMessage('Error Occurred!');
+                                  },
+                                );
+                              } else {
+                                Utils.showMessage('Try with a different name');
+                              }
                               Navigator.pop(context);
                             }
                           },
-                          child: const Text("Update"),
+                          child: kTitleText("Update", 12),
                         ),
                       ])
                 ],
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void confirmDelete(BuildContext context, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: kTwo,
-          titleTextStyle: Theme.of(context)
-              .appBarTheme
-              .titleTextStyle
-              ?.copyWith(color: kOne),
-          title: const Text("Confirm Delete"),
-          content: const Text("Are you sure you want to delete this item?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("No"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await deletePaperCutting(
-                    paperCuttingList[index].paperCuttingId);
-                Navigator.pop(context);
-              },
-              child: const Text("Yes"),
-            ),
-          ],
         );
       },
     );
@@ -177,38 +143,4 @@ class PaperCuttingViewModel with ChangeNotifier {
       },
     );
   }
-
-//
-// void fetchPaperCuttingData() async {
-//   dataFetched = false;
-//   paperCuttingList = [];
-//
-//   final collectionReference = FirebaseFirestore.instance
-//       .collection(FirebaseAuth.instance.currentUser!.uid)
-//       .doc('RateList')
-//       .collection('PaperCutting');
-//
-//   final querySnapshot = await collectionReference.get();
-//
-//   final listQueryDocumentSnapshot = querySnapshot.docs;
-//
-//   if (listQueryDocumentSnapshot.length <= 1) {
-//     debugPrint('No records found !');
-//     dataFetched = true;
-//     updateListener();
-//   } else {
-//     for (int i = 1; i < listQueryDocumentSnapshot.length; i++) {
-//       var data = listQueryDocumentSnapshot[i].data();
-//       debugPrint('hello        ${data.toString()}');
-//       paperCuttingList.add(PaperCutting.fromJson(data));
-//     }
-//
-//     dataFetched = true;
-//     updateListener();
-//   }
-// }
-//
-// updateListener() {
-//   notifyListeners();
-// }
 }

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../colors/color_palette.dart';
 import '../../../components/custom_circular_indicator.dart';
+import '../../../view_model/delete_alert_dialogue.dart';
 
 class ProfitView extends StatefulWidget {
   const ProfitView({super.key});
@@ -53,29 +54,28 @@ class _ProfitViewState extends State<ProfitView> {
                     elevation: 1.5,
                     shadowColor: Colors.blue.withOpacity(0.1),
                     color: Colors.blue.withOpacity(.15),
-                    margin: EdgeInsets.only(bottom: 10, top: 5),
+                    margin: EdgeInsets.only(bottom: 10),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                        borderRadius: BorderRadius.circular(12)),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Row(
                         children: [
                           SizedBox(width: 5),
                           Expanded(
-                            flex: 7,
+                            flex: 8,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Name', style: kDescriptionTextStyle),
                                 SizedBox(height: 4),
-                                kTitleText(value.profitList[index].name)
+                                kTitleText(value.profitList[index].name, 14)
                               ],
                             ),
                           ),
                           SizedBox(width: 5),
                           Expanded(
-                            flex: 6,
+                            flex: 7,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -83,7 +83,8 @@ class _ProfitViewState extends State<ProfitView> {
                                     style: kDescriptionTextStyle),
                                 SizedBox(height: 4),
                                 kDescriptionText(
-                                    '${value.profitList[index].percentage} %')
+                                    '${value.profitList[index].percentage} %',
+                                    14)
                               ],
                             ),
                           ),
@@ -95,12 +96,19 @@ class _ProfitViewState extends State<ProfitView> {
                               children: [
                                 GestureDetector(
                                   onTap: () => value.editProfit(context, index),
-                                  child: Icon(Icons.edit, color: kNew4),
+                                  child:
+                                      Icon(Icons.edit, size: 20, color: kNew4),
                                 ),
                                 GestureDetector(
-                                    child: Icon(Icons.delete, color: kNew4),
+                                    child: Icon(Icons.delete,
+                                        size: 20, color: kNew4),
                                     onTap: () =>
-                                        value.confirmDelete(context, index)),
+                                        DeleteAlertDialogue.confirmDelete(
+                                            context, () {
+                                          value.deleteProfit(
+                                              value.profitList[index].profitId);
+                                          Navigator.pop(context);
+                                        })),
                               ],
                             ),
                           ),

@@ -18,7 +18,7 @@ class AddDesignViewModel with ChangeNotifier {
   TextEditingController rateC = TextEditingController();
 
   late String designName;
-  late int rate;
+  late int designRate;
 
   addDesignInFirebase() async {
     // two scenarios: 1. already exists 2. Not exists
@@ -26,13 +26,11 @@ class AddDesignViewModel with ChangeNotifier {
       updateListeners(true);
 
       if (_formKey.currentState!.validate()) {
-        ///todo: check if the quantity is null or zero, then don't update
         /// check if design is already available
-
         designName = designNameC.text.trim();
-        rate = int.tryParse(rateC.text.trim())!;
+        designRate = int.tryParse(rateC.text.trim())!;
 
-        QuerySnapshot designQuerySnapshot = await fireStore
+        QuerySnapshot designNameQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Design')
@@ -40,36 +38,8 @@ class AddDesignViewModel with ChangeNotifier {
             .limit(1)
             .get();
 
-        if (designQuerySnapshot.docs.isNotEmpty) {
-          debugPrint('\n\n\n\n\n\n\n\n\n\nIt means design exist.'
-              '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
-
-          // /// update the design
-          // DocumentSnapshot designDocumentSnapshot =
-          //     designQuerySnapshot.docs.first;
-          //
-          // newDesignId = designDocumentSnapshot.get('designId');
-          // debugPrint('Design id found is : $newDesignId');
-          // // try {
-          // DocumentReference designDocRef = fireStore
-          //     .collection(uid)
-          //     .doc('RateList')
-          //     .collection('Design')
-          //     .doc('DES-$newDesignId');
-          //
-          // await designDocRef.update({
-          //   'rate': int.tryParse(rateC.text.trim()) ?? 0,
-          // }).then((value) async {
-          //   debugPrint('\n\n\n\n\n\n\n\n Design data updated !!\n\n\n\n\n\n');
-          //   Utils.showMessage('Design data updated !!');
-          //
-          //   updateListeners(false);
-          // }).onError((error, stackTrace) {
-          //   debugPrint(
-          //       '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
-          //   Utils.showMessage(error.toString());
-          //   updateListeners(false);
-          // });
+        if (designNameQuerySnapshot.docs.isNotEmpty) {
+          Utils.showMessage('Try with a different name');
           updateListeners(false);
         } else {
           /// design doesn't exist
@@ -84,11 +54,9 @@ class AddDesignViewModel with ChangeNotifier {
               .set({
             'designId': newDesignId,
             'name': designName,
-            'rate': rate,
+            'rate': designRate,
           }).then((value) async {
             Utils.showMessage('New Design added');
-            debugPrint('New Design added!!!!!!!!!!!!!!!!!');
-
             updateListeners(false);
           }).onError((error, stackTrace) {
             Utils.showMessage(error.toString());
@@ -107,8 +75,9 @@ class AddDesignViewModel with ChangeNotifier {
         .collection(uid)
         .doc('RateList')
         .collection('Design')
-    /// 0 is added so that the last design id document appears to the top
-    /// because when we are getting the data, we ignore the first doc because it is always of id
+
+        /// 0 is added so that the last design id document appears to the top
+        /// because when we are getting the data, we ignore the first doc because it is always of id
         .doc('0LastDesignId');
 
     final documentSnapshot = await documentRef.get();
@@ -117,7 +86,8 @@ class AddDesignViewModel with ChangeNotifier {
 
     if (data?['lastDesignId'] == null) {
       newDesignId = 1;
-      debugPrint('Design id found to be null --------- ${data?['lastDesignId']}');
+      debugPrint(
+          'Design id found to be null --------- ${data?['lastDesignId']}');
       await documentRef.set({'lastDesignId': newDesignId});
     } else {
       debugPrint(

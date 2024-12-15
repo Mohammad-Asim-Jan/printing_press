@@ -161,31 +161,56 @@ class PaperViewModel with ChangeNotifier {
                             onPressed: () async {
                               if (_formKey.currentState != null &&
                                   _formKey.currentState!.validate()) {
-                                await FirebaseFirestore.instance
-                                    .collection(uid)
-                                    .doc('RateList')
-                                    .collection('Paper')
-                                    .doc('PAPER-${paperList[index].paperId}')
-                                    .update({
-                                  'name': nameController.text.trim(),
-                                  'size': {
-                                    'width':
-                                        int.parse(widthController.text.trim()),
-                                    'height':
-                                        int.parse(heightController.text.trim()),
-                                  },
-                                  'quality':
-                                      int.parse(qualityController.text.trim()),
-                                  'rate': int.parse(rateController.text.trim()),
-                                }).then(
-                                  (value) {
-                                    Utils.showMessage('Paper Updated!');
-                                  },
-                                ).onError(
-                                  (error, stackTrace) {
-                                    Utils.showMessage('Error Occurred!');
-                                  },
-                                );
+                                String paperName = nameController.text.trim();
+                                int paperQuality =
+                                    int.parse(qualityController.text.trim());
+                                int rate =
+                                    int.parse(rateController.text.trim());
+                                int paperWidth =
+                                    int.parse(widthController.text.trim());
+                                int paperHeight =
+                                    int.parse(heightController.text.trim());
+
+                                /// check if Paper is already available
+                                QuerySnapshot paperNameQuerySnapshot =
+                                    await FirebaseFirestore.instance
+                                        .collection(uid)
+                                        .doc('RateList')
+                                        .collection('Paper')
+                                        .where('paperId',
+                                            isNotEqualTo:
+                                                paperList[index].paperId)
+                                        .where('name', isEqualTo: paperName)
+                                        .limit(1)
+                                        .get();
+
+                                if (paperNameQuerySnapshot.docs.isEmpty) {
+                                  await FirebaseFirestore.instance
+                                      .collection(uid)
+                                      .doc('RateList')
+                                      .collection('Paper')
+                                      .doc('PAPER-${paperList[index].paperId}')
+                                      .update({
+                                    'name': paperName,
+                                    'size': {
+                                      'width': paperWidth,
+                                      'height': paperHeight,
+                                    },
+                                    'quality': paperQuality,
+                                    'rate': rate,
+                                  }).then(
+                                    (value) {
+                                      Utils.showMessage('Paper Updated!');
+                                    },
+                                  ).onError(
+                                    (error, stackTrace) {
+                                      Utils.showMessage('Error Occurred!');
+                                    },
+                                  );
+                                } else {
+                                  Utils.showMessage(
+                                      'Try with a different name');
+                                }
                                 Navigator.pop(context);
                               }
                             },
@@ -197,38 +222,6 @@ class PaperViewModel with ChangeNotifier {
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void confirmDelete(BuildContext context, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: kTwo,
-          titleTextStyle: Theme.of(context)
-              .appBarTheme
-              .titleTextStyle
-              ?.copyWith(color: kOne),
-          title: const Text("Confirm Delete"),
-          content: const Text("Are you sure you want to delete this item?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("No"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await deletePaper(paperList[index].paperId);
-                Navigator.pop(context);
-              },
-              child: const Text("Yes"),
-            ),
-          ],
         );
       },
     );

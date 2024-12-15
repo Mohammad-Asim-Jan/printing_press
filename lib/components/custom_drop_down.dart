@@ -31,7 +31,7 @@ class CustomDropDown extends StatelessWidget {
             child: DropdownButtonFormField<String>(
                 icon: Icon(Icons.expand_more_rounded, size: 15),
                 validator: validator,
-                dropdownColor: kTwo,
+                dropdownColor: Colors.blueGrey.shade50,
                 style: TextStyle(
                     fontSize: 12,
                     color: kNew12,
@@ -40,7 +40,6 @@ class CustomDropDown extends StatelessWidget {
                 decoration: InputDecoration(
                     prefixIcon:
                         prefixIconData == null ? null : Icon(prefixIconData, size: 16,),
-                    filled: true,
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(width: 2, color: kPrimeColor)),

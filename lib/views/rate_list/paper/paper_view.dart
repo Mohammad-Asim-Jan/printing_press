@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../colors/color_palette.dart';
 import '../../../components/custom_circular_indicator.dart';
 import '../../../model/rate_list/paper.dart';
+import '../../../view_model/delete_alert_dialogue.dart';
 import '../../../view_model/rate_list/paper/paper_view_model.dart';
 
 class PaperView extends StatefulWidget {
@@ -54,68 +55,72 @@ class _PaperViewState extends State<PaperView> {
                       elevation: 1.5,
                       shadowColor: Colors.blue.withOpacity(0.1),
                       color: Colors.blue.withOpacity(.15),
-                      margin: EdgeInsets.only(
-                          bottom: 10, top: 5),
+                      margin: EdgeInsets.only(bottom: 10),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                          borderRadius: BorderRadius.circular(12)),
                       child: Padding(
                           padding: EdgeInsets.all(8),
                           child: Row(children: [
                             SizedBox(width: 5),
                             Expanded(
-                              flex: 6,
+                              flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Name', style: kDescriptionTextStyle),
                                   SizedBox(height: 4),
-                                  kTitleText(value.paperList[index].name),
+                                  kTitleText(value.paperList[index].name, 14),
                                   SizedBox(height: 8),
                                   Text('Size', style: kDescriptionTextStyle),
                                   SizedBox(height: 4),
-                                  kDescription2Text(
-                                      '${value.paperList[index].size.width} x ${value.paperList[index].size.height}')
+                                  kDescriptionText(
+                                      '${value.paperList[index].size.width} x ${value.paperList[index].size.height}',
+                                      14)
                                 ],
                               ),
                             ),
                             SizedBox(width: 5),
                             Expanded(
-                              flex: 6,
+                              flex: 3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('Quality', style: kDescriptionTextStyle),
                                   SizedBox(height: 4),
                                   kDescriptionText(
-                                      '${value.paperList[index].quality}'),
+                                      '${value.paperList[index].quality}', 14),
                                   SizedBox(height: 8),
                                   Text('Rate', style: kDescriptionTextStyle),
                                   SizedBox(height: 4),
-                                  kDescriptionText(                                    'Rs. ${value.paperList[index].rate}'
-                                  )
+                                  kDescriptionText(
+                                      'Rs. ${value.paperList[index].rate}', 14)
                                 ],
                               ),
                             ),
                             SizedBox(width: 5),
                             Expanded(
-                                flex: 2,
                                 child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      GestureDetector(
-                                        onTap: () =>
-                                            value.editPaper(context, index),
-                                        child: Icon(Icons.edit, color: kNew4),
-                                      ),
-                                      SizedBox(height: 30),
-                                      GestureDetector(
-                                          onTap: () => value.confirmDelete(
-                                              context, index),
-                                          child:
-                                              Icon(Icons.delete, color: kNew4))
-                                    ])),
+                                  GestureDetector(
+                                    onTap: () =>
+                                        value.editPaper(context, index),
+                                    child: Icon(Icons.edit,
+                                        size: 20, color: kNew4),
+                                  ),
+                                  SizedBox(height: 30),
+                                  GestureDetector(
+                                      onTap: () =>
+                                          DeleteAlertDialogue.confirmDelete(
+                                              context, () {
+                                            value.deletePaper(
+                                                value.paperList[index].paperId);
+                                            Navigator.pop(context);
+                                          }),
+                                      child: Icon(Icons.delete,
+                                          size: 20, color: kNew4))
+                                ])),
                             SizedBox(width: 5),
                           ])));
                 },

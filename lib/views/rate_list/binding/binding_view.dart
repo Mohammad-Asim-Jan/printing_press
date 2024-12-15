@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/model/rate_list/binding.dart';
 import 'package:printing_press/text_styles/custom_text_styles.dart';
+import 'package:printing_press/view_model/delete_alert_dialogue.dart';
 import 'package:printing_press/view_model/rate_list/binding/binding_view_model.dart';
 import 'package:provider/provider.dart';
 import '../../../components/custom_circular_indicator.dart';
@@ -59,8 +60,7 @@ class _BindingViewState extends State<BindingView> {
                   elevation: 1.5,
                   shadowColor: Colors.blue.withOpacity(0.1),
                   color: Colors.blue.withOpacity(.15),
-                  margin:
-                      EdgeInsets.only(bottom: 10, top: 5),
+                  margin: EdgeInsets.only(bottom: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -70,32 +70,26 @@ class _BindingViewState extends State<BindingView> {
                       children: [
                         SizedBox(width: 5),
                         Expanded(
-                          flex: 7,
+                          flex: 8,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Name',
-                                style: kDescriptionTextStyle,
-                              ),
+                              Text('Name', style: kDescriptionTextStyle),
                               SizedBox(height: 4),
-                              kTitleText(value.bindingList[index].name),
+                              kTitleText(value.bindingList[index].name, 14),
                             ],
                           ),
                         ),
                         SizedBox(width: 5),
                         Expanded(
-                          flex: 5,
+                          flex: 6,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Rate',
-                                style: kDescriptionTextStyle,
-                              ),
+                              Text('Rate', style: kDescriptionTextStyle),
                               SizedBox(height: 4),
                               kDescriptionText(
-                                  'Rs. ${value.bindingList[index].rate}')
+                                  'Rs. ${value.bindingList[index].rate}', 14)
                             ],
                           ),
                         ),
@@ -107,12 +101,25 @@ class _BindingViewState extends State<BindingView> {
                             children: [
                               GestureDetector(
                                 onTap: () => value.editBinding(context, index),
-                                child: Icon(Icons.edit, color: kNew4),
+                                child: Icon(
+                                  Icons.edit,
+                                  color: kNew4,
+                                  size: 20,
+                                ),
                               ),
                               GestureDetector(
-                                  child: Icon(Icons.delete, color: kNew4),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: kNew4,
+                                    size: 20,
+                                  ),
                                   onTap: () =>
-                                      value.confirmDelete(context, index)),
+                                      DeleteAlertDialogue.confirmDelete(context,
+                                          () {
+                                        value.deleteBinding(
+                                            value.bindingList[index].bindingId);
+                                        Navigator.pop(context);
+                                      })),
                             ],
                           ),
                         ),

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:printing_press/colors/color_palette.dart';
 import 'package:printing_press/model/customer_custom_order.dart';
 import 'package:printing_press/model/stock_order_by_customer.dart';
 import 'package:printing_press/view_model/orders/all_orders_view_model.dart';
@@ -58,8 +57,8 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                         itemCount: value.allCustomerOrdersList.length,
                         itemBuilder: (BuildContext context, int index) {
                           bool isCustomOrder =
-                          value.allCustomerOrdersList[index]
-                          is CustomerCustomOrder;
+                              value.allCustomerOrdersList[index]
+                                  is CustomerCustomOrder;
 
                           late CustomerCustomOrder customOrder;
                           late StockOrderByCustomer stockOrder;
@@ -87,12 +86,14 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                                 }));
                               },
                               child: Card(
+                                  // color: isCustomOrder
+                                  //     ? Color(0xffD0D7D4)
+                                  //     : Color(0xffdbdee4),
+                                  // shadowColor: Colors.indigo.withOpacity(0.1),
+                                  margin: EdgeInsets.only(bottom: 10),
                                   elevation: 1.5,
-                                  color: isCustomOrder
-                                      ? Color(0xffD0D7D4)
-                                      : Color(0xffdbdee4),
-                                  shadowColor: Colors.indigo.withOpacity(0.1),
-                                  margin: EdgeInsets.only(bottom: 5, top: 5),
+                                  shadowColor: Colors.blue.withOpacity(0.1),
+                                  color: Colors.blue.withOpacity(.15),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)),
                                   child: Padding(
@@ -100,69 +101,64 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                                       child: Row(
                                           textBaseline: TextBaseline.alphabetic,
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.baseline,
+                                              CrossAxisAlignment.baseline,
                                           children: [
                                             SizedBox(width: 5),
                                             Expanded(
                                               flex: 3,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Text('Order no.',
-                                                      style: TextStyle(
-                                                          color: Colors.black
-                                                              .withOpacity(0.4),
-                                                          fontFamily: 'Iowan',
-                                                          fontSize: 10)),
+                                                      style:
+                                                          kDescriptionTextStyle
+                                                              .copyWith(
+                                                                  fontSize: 9)),
                                                   SizedBox(height: 4),
-                                                  kTitleText(
+                                                  kDescriptionText(
                                                       (isCustomOrder
-                                                          ? customOrder
-                                                          .customerOrderId
-                                                          : stockOrder
-                                                          .customerOrderId)
+                                                              ? customOrder
+                                                                  .customerOrderId
+                                                              : stockOrder
+                                                                  .customerOrderId)
                                                           .toString(),
-                                                      12,
-                                                      kNew4,
-                                                      2),
+                                                      10),
                                                 ],
                                               ),
                                             ),
-                                            SizedBox(width: 7),
+                                            SizedBox(width: 4),
                                             Expanded(
                                               flex: 7,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   kTitleText(
                                                       (isCustomOrder
                                                           ? customOrder
-                                                          .businessTitle
+                                                              .businessTitle
                                                           : stockOrder
-                                                          .businessTitle),
-                                                      16),
+                                                              .businessTitle),
+                                                      12),
                                                   SizedBox(height: 4),
                                                   kTitleText(
                                                       (isCustomOrder
                                                           ? customOrder
-                                                          .customerContact
+                                                              .customerAddress
                                                           : stockOrder
-                                                          .customerContact),
-                                                      12,
-                                                      Colors.grey
-                                                          .withOpacity(0.6)),
+                                                              .customerAddress),
+                                                      10,
+                                                      Colors.blueGrey.shade600),
                                                   SizedBox(height: 4),
                                                   kTitleText(
                                                       (isCustomOrder
                                                           ? customOrder
-                                                          .customerAddress
+                                                              .customerContact
                                                           : stockOrder
-                                                          .customerAddress),
-                                                      11,
-                                                      Colors.indigo
-                                                          .withOpacity(0.3))
+                                                              .customerContact),
+                                                      10,
+                                                      Colors.blueGrey.shade600),
                                                 ],
                                               ),
                                             ),
@@ -171,28 +167,17 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                                               flex: 6,
                                               child: Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Text('Balance',
-                                                      style: TextStyle(
-                                                          color: Colors.black
-                                                              .withOpacity(0.4),
-                                                          fontFamily: 'Iowan',
-                                                          fontSize: 10)),
+                                                      style:
+                                                          kDescriptionTextStyle
+                                                              .copyWith(
+                                                                  fontSize: 9)),
                                                   SizedBox(height: 4),
-                                                  kTitleText(
-                                                      'Rs. ${(isCustomOrder
-                                                          ? (customOrder
-                                                          .totalAmount -
-                                                          customOrder
-                                                              .paidAmount)
-                                                          : (stockOrder
-                                                          .totalAmount -
-                                                          stockOrder
-                                                              .paidAmount))}',
-                                                      14,
-                                                      kNew8.withOpacity(0.75),
-                                                      2)
+                                                  kDescriptionText(
+                                                      'Rs. ${(isCustomOrder ? (customOrder.totalAmount - customOrder.paidAmount) : (stockOrder.totalAmount - stockOrder.paidAmount))}',
+                                                      12),
                                                 ],
                                               ),
                                             ),
@@ -200,27 +185,18 @@ class _AllOrdersViewState extends State<AllOrdersView> {
                                             Column(
                                               children: [
                                                 Text('Status',
-                                                    style: TextStyle(
-                                                        color: Colors.black
-                                                            .withOpacity(0.4),
-                                                        fontFamily: 'Iowan',
-                                                        fontSize: 10)),
+                                                    style: kDescriptionTextStyle
+                                                        .copyWith(fontSize: 9)),
                                                 SizedBox(height: 5),
                                                 value.getStatusIcon(
                                                     isCustomOrder
                                                         ? (customOrder
-                                                        .orderStatus)
+                                                            .orderStatus)
                                                         : (stockOrder
-                                                        .orderStatus)),
+                                                            .orderStatus)),
                                               ],
                                             ),
                                             SizedBox(width: 5),
-                                            // IconButton(
-                                            //   icon: Icon(Icons.delete, color: kNew4),
-                                            //   onPressed: () {
-                                            //     /// todo:
-                                            //   },
-                                            // ),
                                           ]))));
                         }));
               }

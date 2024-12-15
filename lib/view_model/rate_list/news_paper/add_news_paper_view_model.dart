@@ -33,7 +33,6 @@ class AddNewsPaperViewModel with ChangeNotifier {
       updateListeners(true);
 
       if (_formKey.currentState!.validate()) {
-        ///todo: check if the quantity is null or zero, then don't update
         /// check if newsPaper is already available
 
         newsPaperName = newsPaperNameC.text.trim();
@@ -42,7 +41,7 @@ class AddNewsPaperViewModel with ChangeNotifier {
         quality = int.tryParse(qualityC.text.trim())!;
         rate = int.tryParse(rateC.text.trim())!;
 
-        QuerySnapshot newsPaperQuerySnapshot = await fireStore
+        QuerySnapshot newsPaperNameQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('NewsPaper')
@@ -50,10 +49,8 @@ class AddNewsPaperViewModel with ChangeNotifier {
             .limit(1)
             .get();
 
-        if (newsPaperQuerySnapshot.docs.isNotEmpty) {
-          debugPrint('\n\n\n\n\n\n\n\n\n\nIt means newsPaper exist.'
-              '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
-          Utils.showMessage('NewsPaper already exists!!');
+        if (newsPaperNameQuerySnapshot.docs.isNotEmpty) {
+          Utils.showMessage('Try with a different name');
           updateListeners(false);
         } else {
           /// NewsPaper doesn't exist
@@ -73,7 +70,6 @@ class AddNewsPaperViewModel with ChangeNotifier {
             'rate': rate
           }).then((value) async {
             Utils.showMessage('New NewsPaper added');
-            debugPrint('New NewsPaper added!!!!!!!!!!!!!!!!!');
             updateListeners(false);
           }).onError((error, stackTrace) {
             Utils.showMessage(error.toString());

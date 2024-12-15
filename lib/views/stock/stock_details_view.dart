@@ -59,10 +59,10 @@ class _StockDetailsViewState extends State<StockDetailsView> {
                 ),
               )),
         ),
-        backgroundColor: kNew1a,
+        // backgroundColor: kNew1a,
         appBar: AppBar(
           foregroundColor: kNew9a,
-          backgroundColor: Colors.transparent,
+          // backgroundColor: Colors.transparent,
           title: Text(
             'Stock Details',
             style: TextStyle(

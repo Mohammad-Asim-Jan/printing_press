@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../colors/color_palette.dart';
 
 final TextStyle kDescriptionTextStyle = TextStyle(
-  color: kNew9a,
+  color: Colors.blueGrey.shade600,
   fontFamily: 'Iowan',
+  fontSize: 12
 );
 
 final TextStyle kTitle2TextStyle = TextStyle(
@@ -15,43 +16,43 @@ final TextStyle kTitle2TextStyle = TextStyle(
 Text kTitleText(String text, [double? size, Color? color, int? maxLines]) {
   return Text(
     text,
-    maxLines: maxLines??1,
+    maxLines: maxLines ?? 1,
     textAlign: TextAlign.left,
     style: TextStyle(
-      fontFamily: 'Iowan',
+      fontFamily: 'Urbanist',
       overflow: TextOverflow.ellipsis,
       textBaseline: TextBaseline.alphabetic,
-      color: color ?? kThirdColor,
+      color: color ?? kPrimeColor,
       fontSize: size ?? 16,
-      fontWeight: FontWeight.bold,
+      fontWeight:FontWeight.bold ,
     ),
   );
 }
 
-Text kDescriptionText(String text) {
+Text kDescriptionText(String text, [double? size, Color? color]) {
   return Text(
     text,
     maxLines: 1,
     style: TextStyle(
-      color: kOne,
+      color: color?? kPrimeColor,
       overflow: TextOverflow.ellipsis,
-      fontSize: 16,
-      fontWeight: FontWeight.w600,
+      fontSize: size ?? 16,
+      fontWeight: FontWeight.w400,
     ),
   );
 }
 
-Text kDescription2Text(String text) {
-  return Text(
-    text,
-    maxLines: 1,
-    style: TextStyle(
-      color: kNew7,
-      overflow: TextOverflow.ellipsis,
-      fontSize: 16,
-    ),
-  );
-}
+// Text kDescription2Text(String text, [double? fontSize]) {
+//   return Text(
+//     text,
+//     maxLines: 1,
+//     style: TextStyle(
+//       color: kPrimeColor,
+//       overflow: TextOverflow.ellipsis,
+//       fontSize: fontSize ?? 16,
+//     ),
+//   );
+// }
 
 Text kDescription3Text(String text,
     [Color? color, int? maxLines, double? fontSize, double? height]) {

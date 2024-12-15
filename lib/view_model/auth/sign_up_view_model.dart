@@ -23,6 +23,7 @@ class SignUpViewModel with ChangeNotifier {
 
   TextEditingController emailC = TextEditingController();
   TextEditingController passwordC = TextEditingController();
+  TextEditingController confirmPasswordC = TextEditingController();
 
   late String email;
   late String password;

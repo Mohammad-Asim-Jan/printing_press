@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:printing_press/model/customer_custom_order.dart';
 import 'package:printing_press/model/stock_order_by_customer.dart';
 import 'package:printing_press/view_model/orders/customer_order_detail_view_model.dart';
-import 'package:printing_press/views/orders/track_customer_order.dart';
+import 'package:printing_press/views/orders/track_customer_order_view.dart';
 import 'package:printing_press/views/payment/payment_from_customer_view.dart';
 import 'package:provider/provider.dart';
 import '../../colors/color_palette.dart';
@@ -34,8 +34,6 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
     super.initState();
     debugPrint('Is Custom Order: ${widget.isCustomOrder}');
   }
-
-  int index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -87,20 +85,57 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          kTitleText(
-                              "Order No. ${widget.isCustomOrder ? customOrderModel.customerOrderId : stockOrderByCustomer.customerOrderId}",
-                              10,
-                              kThirdColor,
-                              2),
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
                             children: [
-                              kTitleText(
-                                  widget.isCustomOrder
-                                      ? customOrderModel.businessTitle
-                                      : stockOrderByCustomer.businessTitle,
-                                  24,
-                                  kThirdColor,
-                                  2),
+                              Expanded(
+                                flex: 5,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    kTitleText(
+                                        "Order No: ${widget.isCustomOrder ? customOrderModel.customerOrderId : stockOrderByCustomer.customerOrderId}",
+                                        12,
+                                        kThirdColor,
+                                        1),
+                                    kTitleText(
+                                        widget.isCustomOrder
+                                            ? customOrderModel.businessTitle
+                                            : stockOrderByCustomer
+                                                .businessTitle,
+                                        24,
+                                        kThirdColor,
+                                        2),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    kTitleText("Status", 12, kThirdColor, 1),
+                                    Consumer<CustomerOrderDetailViewModel>(
+                                        builder: (context, val, child) {
+                                      val.setStatusColor(widget.isCustomOrder
+                                          ? customOrderModel.orderStatus
+                                          : stockOrderByCustomer.orderStatus);
+                                      return kTitleText(
+                                          widget.isCustomOrder
+                                              ? customOrderModel.orderStatus
+                                              : stockOrderByCustomer
+                                                  .orderStatus,
+                                          14,
+                                          val.statusColor[val.index],
+                                          2);
+                                    }),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                           Row(
@@ -435,6 +470,7 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                                                   TextBaseline.alphabetic,
                                               children: [
                                                 Expanded(
+                                                  flex: 3,
                                                   child: Padding(
                                                       padding:
                                                           EdgeInsets.all(4.0),
@@ -446,6 +482,7 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                                                           2)),
                                                 ),
                                                 Expanded(
+                                                  flex: 2,
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
@@ -467,6 +504,7 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                                                   TextBaseline.alphabetic,
                                               children: [
                                                 Expanded(
+                                                  flex: 3,
                                                   child: Padding(
                                                       padding:
                                                           EdgeInsets.all(4.0),
@@ -478,6 +516,7 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                                                           2)),
                                                 ),
                                                 Expanded(
+                                                  flex: 2,
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.all(
@@ -790,14 +829,16 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ElevatedButton(
+                              widget.isCustomOrder
+                                  ?  ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                TrackCustomerOrder(
-                                                    currentStatus:
-                                                        'Completed')));
+                                                TrackCustomerOrderView(
+                                                    customerOrderId:
+                                                    customOrderModel
+                                                        .customerOrderId)));
                                   },
                                   style: ElevatedButton.styleFrom(
                                     elevation: 0,
@@ -806,29 +847,21 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
                                         horizontal: 2, vertical: 1),
                                     backgroundColor: Color(0xffD0D7D4),
                                     shape: RoundedRectangleBorder(
-                                        side: BorderSide(color: kPrimeColor),
+                                        side: BorderSide(
+                                            color: kPrimeColor),
                                         borderRadius:
-                                            BorderRadius.circular(10)),
+                                        BorderRadius.circular(10)),
                                   ),
                                   child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0, horizontal: 12),
+                                      padding:
+                                      const EdgeInsets.symmetric(
+                                          vertical: 8.0,
+                                          horizontal: 12),
                                       child: Text('Track Order',
-                                          style: TextStyle(fontSize: 14)))),
-                              Row(children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: getStatusIcon(widget.isCustomOrder
-                                      ? customOrderModel.orderStatus
-                                      : stockOrderByCustomer.orderStatus),
-                                ),
-                                kTitleText(
-                                    widget.isCustomOrder
-                                        ? customOrderModel.orderStatus
-                                        : stockOrderByCustomer.orderStatus,
-                                    16,
-                                    statusColor[index])
-                              ]),
+                                          style:
+                                          TextStyle(fontSize: 14))))
+                                  : SizedBox.shrink(),
+                              Spacer(),
                               ElevatedButton(
                                   onPressed: () {
                                     if ((widget.isCustomOrder
@@ -910,41 +943,5 @@ class _CustomerOrderDetailViewState extends State<CustomerOrderDetailView> {
         ),
       ),
     );
-  }
-
-  List<Color> statusColor = [
-    Colors.blue,
-    Colors.amber,
-    Colors.orange,
-    Colors.red,
-    Colors.green,
-    Colors.purple.withOpacity(0.5),
-    Colors.grey,
-  ];
-
-  Widget getStatusIcon(String status) {
-    switch (status) {
-      case 'New Order':
-        index = 0;
-        return Icon(Icons.fiber_new, color: Colors.blue);
-      case 'In Progress':
-        index = 1;
-        return Icon(Icons.autorenew, color: Colors.amber);
-      case 'Pending':
-        index = 2;
-        return Icon(Icons.hourglass_top, color: Colors.orange);
-      case 'Cancelled':
-        index = 3;
-        return Icon(Icons.cancel, color: Colors.red);
-      case 'Completed':
-        index = 4;
-        return Icon(Icons.check_circle, color: Colors.green);
-      case 'Handed Over':
-        index = 5;
-        return Icon(Icons.inventory_2, color: Colors.purple.withOpacity(0.5));
-      default:
-        index = 6;
-        return Icon(Icons.help_outline, color: Colors.grey); // Unknown status
-    }
   }
 }

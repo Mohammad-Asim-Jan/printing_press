@@ -890,7 +890,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
               debugPrint('Total Expenses: $totalExpenses');
 
               addCustomerCustomOrder(CustomerCustomOrder(
-                orderResumedDateTime: timestamp,
+                  orderResumedDateTime: timestamp,
                   customerOrderId: newCustomerOrderId,
                   orderDateTime: timestamp,
                   orderStatus: 'New Order',
@@ -1078,7 +1078,7 @@ class PlaceCustomizeOrderViewModel with ChangeNotifier {
               debugPrint('Total Expenses: $totalExpenses');
 
               addCustomerCustomOrder(CustomerCustomOrder(
-                orderResumedDateTime: timestamp,
+                  orderResumedDateTime: timestamp,
                   customerOrderId: newCustomerOrderId,
                   orderDateTime: timestamp,
                   orderStatus: 'New Order',

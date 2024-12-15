@@ -14,7 +14,9 @@ class AllOrdersViewModel with ChangeNotifier {
         .snapshots();
   }
 
-  checkStatus(DateTime placedOrderResumedTime, String orderStatus, int orderId) {
+  checkStatus(
+      DateTime placedOrderResumedTime, String orderStatus, int orderId) {
+
     Duration totalDuration = Duration(days: 3);
     DateTime currentTime = DateTime.now();
 
@@ -41,7 +43,7 @@ class AllOrdersViewModel with ChangeNotifier {
       case 'New Order':
         return Icon(Icons.fiber_new, color: Colors.blue);
       case 'In Progress':
-        return Icon(Icons.autorenew, color: Colors.amber);
+        return Icon(Icons.autorenew, color: Colors.lightGreen);
       case 'Pending':
         return Icon(Icons.hourglass_top, color: Colors.orange);
       case 'Cancelled':

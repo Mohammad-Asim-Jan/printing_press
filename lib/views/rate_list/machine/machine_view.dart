@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../colors/color_palette.dart';
 import '../../../components/custom_circular_indicator.dart';
+import '../../../view_model/delete_alert_dialogue.dart';
 
 class MachineView extends StatefulWidget {
   const MachineView({super.key});
@@ -57,8 +58,7 @@ class _MachineViewState extends State<MachineView> {
                         elevation: 1.5,
                         shadowColor: Colors.blue.withOpacity(0.1),
                         color: Colors.blue.withOpacity(.15),
-                        margin: EdgeInsets.only(
-                            bottom: 10, top: 5),
+                        margin: EdgeInsets.only(bottom: 10),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -67,7 +67,7 @@ class _MachineViewState extends State<MachineView> {
                             child: Row(children: [
                               SizedBox(width: 5),
                               Expanded(
-                                flex: 6,
+                                flex: 3,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -77,18 +77,19 @@ class _MachineViewState extends State<MachineView> {
                                     ),
                                     SizedBox(height: 4),
                                     kTitleText(
-                                        value.machineList[index].name),
+                                        value.machineList[index].name, 14),
                                     SizedBox(height: 8),
                                     Text('Size', style: kDescriptionTextStyle),
                                     SizedBox(height: 4),
-                                    kDescription2Text(
-                                        '${value.machineList[index].size.width} x ${value.machineList[index].size.height}'),
+                                    kDescriptionText(
+                                        '${value.machineList[index].size.width} x ${value.machineList[index].size.height}',
+                                        14),
                                   ],
                                 ),
                               ),
                               SizedBox(width: 5),
                               Expanded(
-                                flex: 6,
+                                flex: 3,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -96,37 +97,43 @@ class _MachineViewState extends State<MachineView> {
                                         style: kDescriptionTextStyle),
                                     SizedBox(height: 4),
                                     kDescriptionText(
-                                        'Rs. ${value.machineList[index].plateRate}'),
+                                        'Rs. ${value.machineList[index].plateRate}',
+                                        14),
                                     SizedBox(height: 8),
-                                    Text(
-                                      'Printing Rate',
-                                      style: kDescriptionTextStyle
-                                    ),
+                                    Text('Printing Rate',
+                                        style: kDescriptionTextStyle),
                                     SizedBox(height: 4),
-                                    kDescriptionText(                                      'Rs. ${value.machineList[index].printingRate}'
-                                    )
+                                    kDescriptionText(
+                                        'Rs. ${value.machineList[index].printingRate}',
+                                        14)
                                   ],
                                 ),
                               ),
                               SizedBox(width: 5),
                               Expanded(
-                                  flex: 2,
                                   child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        GestureDetector(
-                                          onTap: () =>
-                                              value.editMachine(context, index),
-                                          child: Icon(Icons.edit, color: kNew4),
-                                        ),
-                                        SizedBox(height: 30),
-                                        GestureDetector(
-                                            onTap: () => value.confirmDelete(
-                                                context, index),
-                                            child: Icon(Icons.delete,
-                                                color: kNew4))
-                                      ])),
+                                    GestureDetector(
+                                      onTap: () =>
+                                          value.editMachine(context, index),
+                                      child: Icon(Icons.edit,
+                                          color: kNew4, size: 20),
+                                    ),
+                                    SizedBox(height: 30),
+                                    GestureDetector(
+                                        onTap: () =>
+                                            DeleteAlertDialogue.confirmDelete(
+                                                context, () {
+                                              value.deleteMachine(value
+                                                  .machineList[index]
+                                                  .machineId);
+                                              Navigator.pop(context);
+                                            }),
+                                        child: Icon(Icons.delete,
+                                            color: kNew4, size: 20))
+                                  ])),
                               SizedBox(width: 5),
                             ])));
                   });

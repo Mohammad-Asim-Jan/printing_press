@@ -70,44 +70,42 @@ class _AllStockViewState extends State<AllStockView> {
                     });
                   },
                   child: Card(
+                    // color: kNew1a,
+                    // shadowColor: Colors.green.withOpacity(0.3),
+                    margin: EdgeInsets.only(bottom: 10),
                     elevation: 1.5,
-                    color: kNew1a,
-                    shadowColor: Colors.green.withOpacity(0.3),
-                    margin: EdgeInsets.only(
-                        bottom: 10, top: 5),
+                    shadowColor: Colors.blue.withOpacity(0.1),
+                    color: Colors.blue.withOpacity(.15),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                        borderRadius: BorderRadius.circular(12)),
                     child: Padding(
                       padding: EdgeInsets.all(8),
                       child: Row(
                         children: [
                           SizedBox(width: 5),
                           Expanded(
-                            flex: 7,
+                            flex: 8,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 kTitleText(
-                                    value.stockList[index].stockName, 18),
-                                SizedBox(height: 8),
+                                    value.stockList[index].stockName, 14),
+                                SizedBox(height: 4),
                                 kTitleText(value.stockList[index].stockCategory,
-                                    15, kNew2),
+                                    10),
                               ],
                             ),
                           ),
                           SizedBox(width: 5),
                           Expanded(
-                            flex: 5,
+                            flex: 6,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('Rate', style: kDescriptionTextStyle),
                                 SizedBox(height: 4),
-                                kTitleText(
-                                    'Rs. ${value.stockList[index].stockUnitSellPrice}',
-                                    null,
-                                    kOne)
+                                kDescriptionText(
+                                    'Rs. ${value.stockList[index].stockUnitSellPrice}', 14)
                               ],
                             ),
                           ),
@@ -121,13 +119,10 @@ class _AllStockViewState extends State<AllStockView> {
                                   style: kDescriptionTextStyle,
                                 ),
                                 SizedBox(height: 4),
-                                kTitleText(
-                                    value.stockList[index].availableStock
-                                        .toString(),
-                                    null,
-                                    value.stockList[index].availableStock < 10
-                                        ? kNew8
-                                        : kNew4)
+                                kDescriptionText(value.stockList[index].availableStock
+                                    .toString(),14, value.stockList[index].availableStock < 10
+                                    ? kNew8
+                                    : null)
                               ],
                             ),
                           ),

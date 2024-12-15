@@ -33,15 +33,16 @@ class _RoundButtonState extends State<RoundButton> {
             border: widget.unFill ? Border.all(width: 2, color: kNew7) : null),
         child: widget.loading
             ? CircularProgressIndicator(
+
                 color: widget.unFill ? kOne : kTwo,
                 backgroundColor: widget.unFill ? kTwo : kOne,
               )
             : Text(
                 widget.title,
                 style: TextStyle(
-                  color: widget.unFill ? kNew7 : kSecColor,
+                  color: widget.unFill ? kNew7 : Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 20,
+                  fontSize: 18,
                 ),
               ),
       ),

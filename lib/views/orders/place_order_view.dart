@@ -57,8 +57,8 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
         child: Scaffold(
             appBar: AppBar(
                 bottom: TabBar(
-                    indicatorColor: kPrimeColor.withOpacity(0.8),
-                    labelColor: kPrimeColor,
+                    indicatorColor: Colors.white,
+                    labelColor: Colors.white,
                     unselectedLabelColor: kNew9a,
                     tabs: [
                       Tab(
@@ -388,7 +388,6 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                     TextInputType.number,
                                                 hint: 'Advance payment',
                                                 validators: [
-                                                  isNotEmpty,
                                                   (value) => lessThan(
                                                       value, val5.totalAmount)
                                                 ]);

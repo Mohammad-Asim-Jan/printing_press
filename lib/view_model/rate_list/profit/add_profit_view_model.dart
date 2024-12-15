@@ -27,12 +27,11 @@ class AddProfitViewModel with ChangeNotifier {
       updateListeners(true);
 
       if (_formKey.currentState!.validate()) {
-        ///todo: check if the quantity is null or zero, then don't update
         /// check if profit is already available
 
         profitName = profitNameC.text.trim();
         percentage = int.tryParse(percentageC.text.trim())!;
-        QuerySnapshot profitQuerySnapshot = await fireStore
+        QuerySnapshot profitNameQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Profit')
@@ -40,36 +39,17 @@ class AddProfitViewModel with ChangeNotifier {
             .limit(1)
             .get();
 
-        if (profitQuerySnapshot.docs.isNotEmpty) {
-          debugPrint('\n\n\nIt means profit exist.'
-              '\n\n\n\n\n');
-          Utils.showMessage('Try another name!');
-          // /// update the profit
-          // DocumentSnapshot profitDocumentSnapshot =
-          //     profitQuerySnapshot.docs.first;
-          //
-          // newProfitId = profitDocumentSnapshot.get('profitId');
-          // debugPrint('Profit id found is : $newProfitId');
-          // // try {
-          // DocumentReference profitDocRef = fireStore
-          //     .collection(uid)
-          //     .doc('RateList')
-          //     .collection('Profit')
-          //     .doc('DES-$newProfitId');
-          //
-          // await profitDocRef.update({
-          //   'rate': int.tryParse(rateC.text.trim()) ?? 0,
-          // }).then((value) async {
-          //   debugPrint('\n\n\n\n\n\n\n\n Profit data updated !!\n\n\n\n\n\n');
-          //   Utils.showMessage('Profit data updated !!');
-          //
-          //   updateListeners(false);
-          // }).onError((error, stackTrace) {
-          //   debugPrint(
-          //       '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
-          //   Utils.showMessage(error.toString());
-          //   updateListeners(false);
-          // });
+        QuerySnapshot profitPercentageQuerySnapshot = await fireStore
+            .collection(uid)
+            .doc('RateList')
+            .collection('Profit')
+            .where('percentage', isEqualTo: percentage)
+            .limit(1)
+            .get();
+
+        if (profitNameQuerySnapshot.docs.isNotEmpty &&
+            profitPercentageQuerySnapshot.docs.isNotEmpty) {
+          Utils.showMessage('Try with a different name');
           updateListeners(false);
         } else {
           /// profit doesn't exist
@@ -87,8 +67,6 @@ class AddProfitViewModel with ChangeNotifier {
             'percentage': percentage,
           }).then((value) async {
             Utils.showMessage('New Profit added');
-            debugPrint('New Profit added!!!!!!!!!!!!!!!!!');
-
             updateListeners(false);
           }).onError((error, stackTrace) {
             Utils.showMessage(error.toString());
@@ -118,7 +96,8 @@ class AddProfitViewModel with ChangeNotifier {
 
     if (data?['lastProfitId'] == null) {
       newProfitId = 1;
-      debugPrint('Profit id found to be null --------- ${data?['lastProfitId']}');
+      debugPrint(
+          'Profit id found to be null --------- ${data?['lastProfitId']}');
       await documentRef.set({'lastProfitId': newProfitId});
     } else {
       debugPrint(

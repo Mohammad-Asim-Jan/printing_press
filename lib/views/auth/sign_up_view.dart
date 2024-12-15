@@ -40,142 +40,58 @@ class _SignUpViewState extends State<SignUpView> {
                 letterSpacing: 6,
                 // fontWeight: FontWeight.bold,
               ),
-              // style: TextStyle(
-              //     color: kNew4,
-              //     // color: kOne,
-              //     fontSize: 33,
-              //     wordSpacing: 2,
-              //     letterSpacing: 3,
-              //     fontWeight: FontWeight.bold)
             ),
-            const SizedBox(
-              height: 70,
-            ),
+            const SizedBox(height: 70),
             Consumer<SignUpViewModel>(
-              builder: (context, value, child) => SizedBox(
-                height: 230,
-                child: Form(
-                  key: value.formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      CustomTextField(
-                          controller: value.emailC,
-                          iconData: Icons.email,
-                          hint: 'Email',
-                          textInputType: TextInputType.emailAddress,
-                          validators: const [isEmailValid, isNotEmpty]),
-                      TextFormField(
-                        controller: value.passwordC,
-                        cursorColor: kPrimeColor,
-                        obscureText: value.obscureText1,
-                        keyboardType: TextInputType.emailAddress,
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              value.swap1();
-                            },
-                            icon: Icon(value.obscureText1
-                                ? Icons.visibility_off_rounded
-                                : Icons.visibility_rounded),
-                          ),
-                          prefixIcon: const Icon(
-                            Icons.lock,
-                            size: 24,
-                          ),
-                          hintText: 'Password',
-                          filled: true,
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: kPrimeColor,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: kSecColor,
-                            ),
-                          ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide(
-                                color: kNew8,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18),
-                              borderSide: BorderSide(
-                                color: kNew8,
-                              ),
-                            )
-                        ),
-                        validator: (text) {
-                          if (text == '' || text == null) {
-                            return 'Please provide password';
-                          } else if (text.length < 6) {
-                            return 'Password minimum length is 6';
-                          }
-                          return null;
+              builder: (context, val, child) => Form(
+                key: val.formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomTextField(
+                        controller: val.emailC,
+                        iconData: Icons.email,
+                        hint: 'Email',
+                        textInputType: TextInputType.emailAddress,
+                        validators: const [isEmailValid, isNotEmpty]),
+                    CustomTextField(
+                      controller: val.passwordC,
+                      obscureText: val.obscureText1,
+                      iconData: Icons.lock,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          val.swap1();
                         },
+                        icon: Icon(val.obscureText1
+                            ? Icons.visibility_off_rounded
+                            : Icons.visibility_rounded),
                       ),
-                      TextFormField(
-                        cursorColor: kPrimeColor,
-                        obscureText: value.obscureText2,
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(
-                            Icons.lock,
-                            size: 24,
-                          ),
-                          hintText: 'Confirm password',
-                          filled: true,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              value.swap2();
-                            },
-                            icon: Icon(value.obscureText2
-                                ? Icons.visibility_off_rounded
-                                : Icons.visibility_rounded),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              width: 2,
-                              color: kPrimeColor,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(
-                              color: kSecColor,
-                            ),
-                          ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: BorderSide(
-                                color: kNew8,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18),
-                              borderSide: BorderSide(
-                                color: kNew8,
-                              ),
-                            )
-                        ),
-                        validator: (text) {
-                          if (text == '' || text == null) {
-                            return 'Please provide password';
-                          } else if (value.passwordC.text != text) {
-                            return 'Passwords don\'t match';
-                          }
-                          return null;
+                      hint: 'Password',
+                      validators: [
+                        isNotEmpty,
+                        (value) => hasMinLength(value),
+                      ],
+                    ),
+                    CustomTextField(
+                      controller: val.confirmPasswordC,
+                      obscureText: val.obscureText2,
+                      iconData: Icons.lock,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          val.swap2();
                         },
+                        icon: Icon(val.obscureText2
+                            ? Icons.visibility_off_rounded
+                            : Icons.visibility_rounded),
                       ),
-                    ],
-                  ),
+                      hint: 'Confirm password',
+                      validators: [
+                        isNotEmpty,
+                        (value) => hasMinLength(value),
+                        (value) => isPasswordMatch(value, val.passwordC.text),
+                      ],
+                    )
+                  ],
                 ),
               ),
             ),
@@ -189,9 +105,7 @@ class _SignUpViewState extends State<SignUpView> {
                 },
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -201,7 +115,7 @@ class _SignUpViewState extends State<SignUpView> {
                     fontSize: 16,
                     fontFamily: 'Urbanist',
                     fontWeight: FontWeight.w600,
-                    color: kOne,
+                    color: kNew9a,
                   ),
                 ),
                 InkWell(
@@ -219,7 +133,7 @@ class _SignUpViewState extends State<SignUpView> {
                     child: Text(
                       'Login',
                       style: TextStyle(
-                        color: kNew9a,
+                        color: kNew4,
                         fontFamily: 'FredokaOne',
                         fontSize: 18,
                       ),

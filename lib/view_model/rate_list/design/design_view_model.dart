@@ -5,7 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:printing_press/utils/toast_message.dart';
 
 import '../../../colors/color_palette.dart';
+import '../../../components/custom_text_field.dart';
 import '../../../model/rate_list/design.dart';
+import '../../../text_styles/custom_text_styles.dart';
+import '../../../utils/validation_functions.dart';
 
 class DesignViewModel with ChangeNotifier {
   // late bool dataFetched;
@@ -32,7 +35,7 @@ class DesignViewModel with ChangeNotifier {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: kTwo,
+          backgroundColor: Colors.white,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
@@ -43,114 +46,80 @@ class DesignViewModel with ChangeNotifier {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    "Edit Design",
-                    style: Theme.of(context)
-                        .appBarTheme
-                        .titleTextStyle
-                        ?.copyWith(color: kOne),
-                  ),
+                  kTitleText( "Edit Design"),
                   const SizedBox(height: 20),
-                  TextFormField(
-                    controller: nameController,
-                    decoration: const InputDecoration(labelText: 'Design Name'),
-                    validator: (value) {
-                      if (value == '' || value == null) {
-                        return 'Provide design name';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
+                  CustomTextField(
+                      controller: nameController,
+                      iconData: null,
+                      hint: 'Design Name',
+                      validators: [isNotEmpty]),
+                  CustomTextField(
                     controller: rateController,
-                    decoration: const InputDecoration(labelText: 'Design Rate'),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    validator: (value) {
-                      if (value == null || value == '') {
-                        return 'Provide design rate';
-                      } else if (int.tryParse(value) == null) {
-                        return 'Provide valid value';
-                      } else if (int.tryParse(value) == 0) {
-                        return 'Must be greater than 0';
-                      }
-                      return null;
-                    },
+                    hint: 'Design Rate',
+                    textInputType: TextInputType.number,
+                    inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                    validators: [isNotEmpty, isNotZero],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text("Cancel"),
+                          child: kTitleText("Cancel", 12),
                         ),
                         TextButton(
                           onPressed: () async {
                             if (_formKey.currentState != null &&
                                 _formKey.currentState!.validate()) {
-                              await FirebaseFirestore.instance
-                                  .collection(uid)
-                                  .doc('RateList')
-                                  .collection('Design')
-                                  .doc('DES-${designList[index].designId}')
-                                  .update({
-                                'name': nameController.text.trim(),
-                                'rate': int.parse(rateController.text.trim()),
-                              }).then(
-                                (value) {
-                                  Utils.showMessage('Design Updated!');
-                                },
-                              ).onError(
-                                (error, stackTrace) {
-                                  Utils.showMessage('Error Occurred!');
-                                },
-                              );
+                              String designName = nameController.text.trim();
+                              int designRate =
+                                  int.tryParse(rateController.text.trim())!;
+
+                              /// check if design is already available
+                              QuerySnapshot designNameQuerySnapshot =
+                                  await FirebaseFirestore.instance
+                                      .collection(uid)
+                                      .doc('RateList')
+                                      .collection('Design')
+                                      .where('designId',
+                                          isNotEqualTo:
+                                              designList[index].designId)
+                                      .where('name', isEqualTo: designName)
+                                      .limit(1)
+                                      .get();
+
+                              if (designNameQuerySnapshot.docs.isEmpty) {
+                                await FirebaseFirestore.instance
+                                    .collection(uid)
+                                    .doc('RateList')
+                                    .collection('Design')
+                                    .doc('DES-${designList[index].designId}')
+                                    .update({
+                                  'name': designName,
+                                  'rate': designRate,
+                                }).then(
+                                  (value) {
+                                    Utils.showMessage('Design Updated!');
+                                  },
+                                ).onError(
+                                  (error, stackTrace) {
+                                    Utils.showMessage('Error Occurred!');
+                                  },
+                                );
+                              } else {
+                                Utils.showMessage('Try with a different name');
+                              }
                               Navigator.pop(context);
                             }
                           },
-                          child: const Text("Update"),
+                          child: kTitleText("Update", 12),
                         ),
                       ])
                 ],
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void confirmDelete(BuildContext context, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: kTwo,
-          titleTextStyle: Theme.of(context)
-              .appBarTheme
-              .titleTextStyle
-              ?.copyWith(color: kOne),
-          title: const Text("Confirm Delete"),
-          content: const Text("Are you sure you want to delete this item?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("No"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await deleteDesign(designList[index].designId);
-                Navigator.pop(context);
-              },
-              child: const Text("Yes"),
-            ),
-          ],
         );
       },
     );
@@ -174,37 +143,4 @@ class DesignViewModel with ChangeNotifier {
     );
   }
 
-//
-// void fetchDesignsData() async {
-//   dataFetched = false;
-//   designList = [];
-//
-//   final collectionReference = FirebaseFirestore.instance
-//       .collection(FirebaseAuth.instance.currentUser!.uid)
-//       .doc('RateList')
-//       .collection('Design');
-//
-//   final querySnapshot = await collectionReference.get();
-//
-//   final listQueryDocumentSnapshot = querySnapshot.docs;
-//
-//   if (listQueryDocumentSnapshot.length <= 1) {
-//     debugPrint('No records found !');
-//     dataFetched = true;
-//     updateListener();
-//   } else {
-//     for (int i = 1; i < listQueryDocumentSnapshot.length; i++) {
-//       var data = listQueryDocumentSnapshot[i].data();
-//       debugPrint('hello        ${data.toString()}');
-//       designList.add(Design.fromJson(data));
-//     }
-//
-//     dataFetched = true;
-//     updateListener();
-//   }
-// }
-//
-// updateListener() {
-//   notifyListeners();
-// }
 }

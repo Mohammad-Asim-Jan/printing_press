@@ -29,10 +29,16 @@ String? lessThan(String? value, int max) {
   return null;
 }
 
-
 String? moreThan(String? value, int min) {
   if (int.tryParse(value!)! < min) {
     return 'Minimum value is $min';
+  }
+  return null;
+}
+
+String? isPasswordMatch(String? value, String text) {
+  if (value != text) {
+    return 'Password does not match';
   }
   return null;
 }

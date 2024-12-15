@@ -26,8 +26,7 @@ class AddNumberingViewModel with ChangeNotifier {
       updateListeners(true);
 
       if (_formKey.currentState!.validate()) {
-        ///todo: check if the quantity is null or zero, then don't update
-        /// check if Numbering is already available
+       /// check if Numbering is already available
 
         numberingName = numberingNameC.text.trim();
         rate = int.tryParse(rateC.text.trim())!;
@@ -41,35 +40,7 @@ class AddNumberingViewModel with ChangeNotifier {
             .get();
 
         if (numberingQuerySnapshot.docs.isNotEmpty) {
-          debugPrint('\n\n\n\n\n\n\n\n\n\nIt means Numbering exist.'
-              '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
-
-          // /// update the Numbering
-          // DocumentSnapshot numberingDocumentSnapshot =
-          //     numberingQuerySnapshot.docs.first;
-          //
-          // newNumberingId = numberingDocumentSnapshot.get('numberingId');
-          // debugPrint('Numbering id found is : $newNumberingId');
-          // // try {
-          // DocumentReference numberingDocRef = fireStore
-          //     .collection(uid)
-          //     .doc('RateList')
-          //     .collection('Numbering')
-          //     .doc('NUM-$newNumberingId');
-          //
-          // await numberingDocRef.update({
-          //   'rate': int.tryParse(rateC.text.trim()) ?? 0,
-          // }).then((value) async {
-          //   debugPrint('\n\n\n\n\n\n\n\nNumbering data updated !!\n\n\n\n\n\n');
-          //   Utils.showMessage('Numbering data updated !!');
-          //
-          //   updateListeners(false);
-          // }).onError((error, stackTrace) {
-          //   debugPrint(
-          //       '\n\n\n\nNot updated error!!!!!!!!!!!!! ERROR : $error}\n\n\n');
-          //   Utils.showMessage(error.toString());
-          //   updateListeners(false);
-          // });
+          Utils.showMessage('Try with a different name');
           updateListeners(false);
         } else {
           /// Numbering doesn't exist
@@ -87,8 +58,6 @@ class AddNumberingViewModel with ChangeNotifier {
             'rate': rate,
           }).then((value) async {
             Utils.showMessage('New Numbering added');
-            debugPrint('New Numbering added!!!!!!!!!!!!!!!!!');
-
             updateListeners(false);
           }).onError((error, stackTrace) {
             Utils.showMessage(error.toString());

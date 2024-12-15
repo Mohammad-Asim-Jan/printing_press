@@ -33,7 +33,6 @@ class AddPaperViewModel with ChangeNotifier {
       updateListeners(true);
 
       if (_formKey.currentState!.validate()) {
-        ///todo: check if the quantity is null or zero, then don't update
         /// check if paper is already available
 
         paperName = paperNameC.text.trim();
@@ -42,7 +41,7 @@ class AddPaperViewModel with ChangeNotifier {
         quality = int.tryParse(qualityC.text.trim())!;
         rate = int.tryParse(rateC.text.trim())!;
 
-        QuerySnapshot paperQuerySnapshot = await fireStore
+        QuerySnapshot paperNameQuerySnapshot = await fireStore
             .collection(uid)
             .doc('RateList')
             .collection('Paper')
@@ -50,10 +49,8 @@ class AddPaperViewModel with ChangeNotifier {
             .limit(1)
             .get();
 
-        if (paperQuerySnapshot.docs.isNotEmpty) {
-          debugPrint('\n\n\n\n\n\nIt means paper exists.'
-              '\n\n\n\n\n\n\n');
-          Utils.showMessage('Paper already exists!!');
+        if (paperNameQuerySnapshot.docs.isNotEmpty) {
+          Utils.showMessage('Try with a different name');
           updateListeners(false);
         } else {
           /// Paper doesn't exist
@@ -73,7 +70,6 @@ class AddPaperViewModel with ChangeNotifier {
             'rate': rate
           }).then((value) async {
             Utils.showMessage('New paper added');
-            debugPrint('New paper added!!!!!!!!!!!!!!!!!');
             updateListeners(false);
           }).onError((error, stackTrace) {
             Utils.showMessage(error.toString());

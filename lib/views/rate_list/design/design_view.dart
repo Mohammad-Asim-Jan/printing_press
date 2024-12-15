@@ -7,6 +7,7 @@ import 'package:printing_press/view_model/rate_list/design/design_view_model.dar
 import 'package:provider/provider.dart';
 
 import '../../../components/custom_circular_indicator.dart';
+import '../../../view_model/delete_alert_dialogue.dart';
 
 class DesignView extends StatefulWidget {
   const DesignView({super.key});
@@ -56,8 +57,7 @@ class _DesignViewState extends State<DesignView> {
                   elevation: 1.5,
                   shadowColor: Colors.blue.withOpacity(0.1),
                   color: Colors.blue.withOpacity(.15),
-                  margin:
-                      EdgeInsets.only(bottom: 10, top: 5),
+                  margin: EdgeInsets.only(bottom: 10),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -67,27 +67,26 @@ class _DesignViewState extends State<DesignView> {
                       children: [
                         SizedBox(width: 5),
                         Expanded(
-                          flex: 7,
+                          flex: 8,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Name', style: kDescriptionTextStyle),
                               SizedBox(height: 4),
-                              kTitleText(value.designList[index].name),
+                              kTitleText(value.designList[index].name, 14),
                             ],
                           ),
                         ),
                         SizedBox(width: 5),
-                        // Spacer(),
                         Expanded(
-                          flex: 5,
+                          flex: 6,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Rate', style: kDescriptionTextStyle),
                               SizedBox(height: 4),
                               kDescriptionText(
-                                  'Rs. ${value.designList[index].rate}')
+                                  'Rs. ${value.designList[index].rate}', 14)
                             ],
                           ),
                         ),
@@ -99,11 +98,18 @@ class _DesignViewState extends State<DesignView> {
                             children: [
                               GestureDetector(
                                   onTap: () => value.editDesign(context, index),
-                                  child: Icon(Icons.edit, color: kNew4)),
+                                  child:
+                                      Icon(Icons.edit, color: kNew4, size: 20)),
                               GestureDetector(
-                                  child: Icon(Icons.delete, color: kNew4),
+                                  child: Icon(Icons.delete,
+                                      color: kNew4, size: 20),
                                   onTap: () =>
-                                      value.confirmDelete(context, index))
+                                      DeleteAlertDialogue.confirmDelete(context,
+                                          () {
+                                        value.deleteDesign(
+                                            value.designList[index].designId);
+                                        Navigator.pop(context);
+                                      }))
                             ],
                           ),
                         ),

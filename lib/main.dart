@@ -9,6 +9,7 @@ import 'package:printing_press/view_model/auth/sign_up_view_model.dart';
 import 'package:printing_press/view_model/orders/all_orders_view_model.dart';
 import 'package:printing_press/view_model/orders/customer_order_detail_view_model.dart';
 import 'package:printing_press/view_model/orders/place_customize_order_view_model.dart';
+import 'package:printing_press/view_model/orders/track_customer_order_view_model.dart';
 import 'package:printing_press/view_model/payment/payment_from_customer_view_model.dart';
 import 'package:printing_press/view_model/payment/payment_to_supplier_view_model.dart';
 import 'package:printing_press/view_model/rate_list/binding/binding_view_model.dart';
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => StockDetailsViewModel()),
         ChangeNotifierProvider(create: (_) => SupplierDetailsViewModel()),
         ChangeNotifierProvider(create: (_) => PaymentToSupplierViewModel()),
+        ChangeNotifierProvider(create: (_) => TrackCustomerOrderViewModel()),
         ChangeNotifierProvider(create: (_) => PaymentFromCustomerViewModel()),
         ChangeNotifierProvider(create: (_) => CashbookViewModel()),
         ChangeNotifierProvider(create: (_) => AddBindingViewModel()),
@@ -95,21 +97,21 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: kTwo),
           // primarySwatch: Colors.green,
           appBarTheme: AppBarTheme(
-            toolbarHeight: 45,
+            toolbarHeight: 40,
             titleTextStyle: TextStyle(
-              color: kNew4,
-              fontSize: 24,
-              // wordSpacing: 2,
+              color: Colors.white,
               letterSpacing: 1,
+              wordSpacing: 1,
+              fontSize: 18,
               fontFamily: 'Urbanist',
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w400,
             ),
             centerTitle: true,
             // backgroundColor: kPrimeColor,
-            backgroundColor: kTwo,
-            foregroundColor: kNew4,
+            backgroundColor: kThirdColor,
+            foregroundColor: Colors.white,
           ),
-          scaffoldBackgroundColor: kTwo,
+          scaffoldBackgroundColor: Colors.white,
           // useMaterial3: true,
         ),
         debugShowCheckedModeBanner: false,

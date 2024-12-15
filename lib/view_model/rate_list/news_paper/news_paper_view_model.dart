@@ -5,7 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:printing_press/model/rate_list/paper.dart';
 
 import '../../../colors/color_palette.dart';
+import '../../../components/custom_text_field.dart';
+import '../../../text_styles/custom_text_styles.dart';
 import '../../../utils/toast_message.dart';
+import '../../../utils/validation_functions.dart';
 
 class NewsPaperViewModel with ChangeNotifier {
   // late bool dataFetched;
@@ -39,7 +42,7 @@ class NewsPaperViewModel with ChangeNotifier {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: kTwo,
+          backgroundColor: Colors.white,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
@@ -51,146 +54,109 @@ class NewsPaperViewModel with ChangeNotifier {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      "Edit News-Paper",
-                      style: Theme.of(context)
-                          .appBarTheme
-                          .titleTextStyle
-                          ?.copyWith(color: kOne),
-                    ),
+                    kTitleText( "Edit News-Paper"),
                     const SizedBox(height: 20),
-                    TextFormField(
-                      controller: nameController,
-                      decoration:
-                          const InputDecoration(labelText: 'News-Paper Name'),
-                      validator: (value) {
-                        if (value == '' || value == null) {
-                          return 'Provide news-paper name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
+                        controller: nameController,
+                        iconData: null,
+                        hint: 'News-Paper Name',
+                        validators: [isNotEmpty]),
+                    CustomTextField(
                       controller: widthController,
-                      decoration:
-                          const InputDecoration(labelText: 'News-Paper Width'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide news-paper width';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'News-Paper width',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
                       controller: heightController,
-                      decoration:
-                          const InputDecoration(labelText: 'News-Paper Height'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide news-paper height';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'News-Paper Height',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
                       controller: qualityController,
-                      decoration: const InputDecoration(
-                          labelText: 'News-Paper Quality'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide news-paper quality';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'News-Paper Quality',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
                       controller: rateController,
-                      decoration:
-                          const InputDecoration(labelText: 'News-Paper Rate'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide news-paper rate';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'News-Paper Rate',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text("Cancel"),
+                            child: kTitleText("Cancel", 12),
                           ),
                           TextButton(
                             onPressed: () async {
                               if (_formKey.currentState != null &&
                                   _formKey.currentState!.validate()) {
-                                await FirebaseFirestore.instance
-                                    .collection(uid)
-                                    .doc('RateList')
-                                    .collection('NewsPaper')
-                                    .doc('NEWS-${newsPaperList[index].paperId}')
-                                    .update({
-                                  'name': nameController.text.trim(),
-                                  'size': {
-                                    'width':
-                                        int.parse(widthController.text.trim()),
-                                    'height':
-                                        int.parse(heightController.text.trim()),
-                                  },
-                                  'quality':
-                                      int.parse(qualityController.text.trim()),
-                                  'rate': int.parse(rateController.text.trim()),
-                                }).then(
-                                  (value) {
-                                    Utils.showMessage('News-Paper Updated!');
-                                  },
-                                ).onError(
-                                  (error, stackTrace) {
-                                    Utils.showMessage('Error Occurred!');
-                                  },
-                                );
+                                String paperName = nameController.text.trim();
+                                int quality =
+                                    int.parse(qualityController.text.trim());
+                                int rate =
+                                    int.parse(rateController.text.trim());
+                                int paperWidth =
+                                    int.parse(widthController.text.trim());
+                                int paperHeight =
+                                    int.parse(heightController.text.trim());
+
+                                /// check if newsPaper is already available
+                                QuerySnapshot newsPaperNameQuerySnapshot =
+                                    await FirebaseFirestore.instance
+                                        .collection(uid)
+                                        .doc('RateList')
+                                        .collection('NewsPaper')
+                                        .where('paperId',
+                                            isNotEqualTo:
+                                                newsPaperList[index].paperId)
+                                        .where('name', isEqualTo: paperName)
+                                        .limit(1)
+                                        .get();
+
+                                if (newsPaperNameQuerySnapshot.docs.isEmpty) {
+                                  await FirebaseFirestore.instance
+                                      .collection(uid)
+                                      .doc('RateList')
+                                      .collection('NewsPaper')
+                                      .doc(
+                                          'NEWS-${newsPaperList[index].paperId}')
+                                      .update({
+                                    'name': paperName,
+                                    'size': {
+                                      'width': paperWidth,
+                                      'height': paperHeight,
+                                    },
+                                    'quality': quality,
+                                    'rate': rate,
+                                  }).then(
+                                    (value) {
+                                      Utils.showMessage('News-Paper Updated!');
+                                    },
+                                  ).onError(
+                                    (error, stackTrace) {
+                                      Utils.showMessage('Error Occurred!');
+                                    },
+                                  );
+                                } else {
+                                  Utils.showMessage(
+                                      'Try with a different name');
+                                }
+
                                 Navigator.pop(context);
                               }
                             },
-                            child: const Text("Update"),
+                            child: kTitleText("Update", 12),
                           ),
                         ])
                   ],
@@ -198,38 +164,6 @@ class NewsPaperViewModel with ChangeNotifier {
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void confirmDelete(BuildContext context, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: kTwo,
-          titleTextStyle: Theme.of(context)
-              .appBarTheme
-              .titleTextStyle
-              ?.copyWith(color: kOne),
-          title: const Text("Confirm Delete"),
-          content: const Text("Are you sure you want to delete this item?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("No"),
-            ),
-            TextButton(
-              onPressed: () async {
-                await deleteNewsPaper(newsPaperList[index].paperId);
-                Navigator.pop(context);
-              },
-              child: const Text("Yes"),
-            ),
-          ],
         );
       },
     );
@@ -253,37 +187,4 @@ class NewsPaperViewModel with ChangeNotifier {
     );
   }
 
-//
-// void fetchNewsPaperData() async {
-//   dataFetched = false;
-//   newsPaperList = [];
-//
-//   final collectionReference = FirebaseFirestore.instance
-//       .collection(FirebaseAuth.instance.currentUser!.uid)
-//       .doc('RateList')
-//       .collection('NewsPaper');
-//
-//   final querySnapshot = await collectionReference.get();
-//
-//   final listQueryDocumentSnapshot = querySnapshot.docs;
-//
-//   if (listQueryDocumentSnapshot.length <= 1) {
-//     debugPrint('No records found !');
-//     dataFetched = true;
-//     updateListener();
-//   } else {
-//     for (int i = 1; i < listQueryDocumentSnapshot.length; i++) {
-//       var data = listQueryDocumentSnapshot[i].data();
-//       debugPrint('hello        ${data.toString()}');
-//       newsPaperList.add(Paper.fromJson(data));
-//     }
-//
-//     dataFetched = true;
-//     updateListener();
-//   }
-// }
-//
-// updateListener() {
-//   notifyListeners();
-// }
 }

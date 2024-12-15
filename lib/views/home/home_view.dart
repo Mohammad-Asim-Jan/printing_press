@@ -26,7 +26,7 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       endDrawer: context.watch<HomeViewModel>().index == 4
           ? Drawer(
-              backgroundColor: Colors.yellow.shade50,
+              // backgroundColor: Colors.yellow.shade50,
               width: 300,
               child: Padding(
                 padding: const EdgeInsets.all(10),
@@ -36,7 +36,17 @@ class _HomeViewState extends State<HomeView> {
                       child: ListTile(
                         titleTextStyle:
                             Theme.of(context).appBarTheme.titleTextStyle,
-                        title: const Center(child: Text('Rate List')),
+                        title: Center(
+                            child: Text(
+                          'RATE LIST',
+                          style: TextStyle(
+                              color: kNew4,
+                              fontFamily: 'Urbanist',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                              letterSpacing: 2,
+                              wordSpacing: 2),
+                        )),
                       ),
                     ),
                     Divider(
@@ -116,20 +126,23 @@ class _HomeViewState extends State<HomeView> {
                 label: 'CashBook'),
             BottomNavigationBarItem(
                 backgroundColor: kThirdColor,
-                activeIcon: const Icon(Icons.add_business),
-                icon: const Icon(Icons.add_business_outlined),
-                label: 'Suppliers'),
-            BottomNavigationBarItem(
-                backgroundColor: kThirdColor,
                 activeIcon: const Icon(Icons.inventory_2),
                 icon: const Icon(Icons.inventory_2_outlined),
                 label: 'Stock'),
+            BottomNavigationBarItem(
+                backgroundColor: kThirdColor,
+                activeIcon: const Icon(Icons.add_business),
+                icon: const Icon(Icons.add_business_outlined),
+                label: 'Suppliers'),
             BottomNavigationBarItem(
                 backgroundColor: kThirdColor,
                 activeIcon: const Icon(Icons.view_list),
                 icon: const Icon(Icons.view_list_outlined),
                 label: 'Rate-list'),
           ],
+          iconSize: 20,
+          selectedFontSize: 12,
+          unselectedFontSize: 8,
           showUnselectedLabels: true,
           unselectedItemColor: kNew9a,
           type: BottomNavigationBarType.shifting,
@@ -147,7 +160,7 @@ class _HomeViewState extends State<HomeView> {
               builder: (context, value, child) =>
                   Text(homeViewModel.getAppBarText()))),
       body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
           child: Consumer<HomeViewModel>(
               builder: (context, value, child) => value.getMainView())),
     );

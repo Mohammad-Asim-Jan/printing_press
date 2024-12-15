@@ -51,33 +51,32 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                                   value.allSuppliersModel[index].supplierId)));
                     },
                     child: Card(
+                      // elevation: 1.5,
+                      // color: Color(0xffcad6d2).withOpacity(0.5),
+                      // shadowColor: Color(0xff4ab894).withOpacity(0.2),
                       elevation: 1.5,
-                      color: Color(0xffcad6d2).withOpacity(0.5),
-                      shadowColor: Color(0xff4ab894).withOpacity(0.2),
-                      margin: EdgeInsets.only(bottom: 10, top: 5),
+                      shadowColor: Colors.blue.withOpacity(0.1),
+                      color: Colors.blue.withOpacity(.15),
+                      margin: EdgeInsets.only(bottom: 10),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                          borderRadius: BorderRadius.circular(12)),
                       child: Padding(
                         padding: EdgeInsets.all(8),
                         child: Row(
                           children: [
                             SizedBox(width: 5),
                             Expanded(
-                              flex: 7,
+                              flex: 8,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  kTitleText(
-                                      value.allSuppliersModel[index]
-                                          .supplierName,
-                                      18),
+                                  Text('Supplier Name',
+                                      style: kDescriptionTextStyle),
                                   SizedBox(height: 4),
                                   kTitleText(
                                       value.allSuppliersModel[index]
-                                          .supplierPhoneNo,
-                                      14,
-                                      kNew5)
+                                          .supplierName,
+                                      14),
                                 ],
                               ),
                               // kThirdColor.withOpacity(0.8)
@@ -90,18 +89,20 @@ class _AllSuppliersViewState extends State<AllSuppliersView> {
                                 children: [
                                   Text('Bill', style: kDescriptionTextStyle),
                                   SizedBox(height: 4),
-                                  kTitleText(
-                                      'Rs. ${value.allSuppliersModel[index].amountRemaining}',
-                                      null,
-                                      kNew8,
-                                      2)
+                                  kDescriptionText(
+                                      'Rs. ${value.allSuppliersModel[index].amountRemaining}', 14)
+                                  // kTitleText(
+                                  //     'Rs. ${value.allSuppliersModel[index].amountRemaining}',
+                                  //     null,
+                                  //     kNew8,
+                                  //     2)
                                 ],
                               ),
                             ),
                             SizedBox(width: 5),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: kNew4),
-                              onPressed: () {
+                            GestureDetector(
+                              child: Icon(Icons.delete, size: 20, color: kNew4),
+                              onTap: () {
                                 /// todo:
                               },
                             ),

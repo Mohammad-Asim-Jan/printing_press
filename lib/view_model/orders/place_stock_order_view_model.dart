@@ -294,8 +294,10 @@ class PlaceStockOrderViewModel with ChangeNotifier {
     var docs = querySnapshot.docs;
     if (docs.isNotEmpty) {
       for (int index = 1; index < docs.length; index++) {
+        if(docs[index].data()['availableStock'] != 0) {
         stockList.add(Stock.fromJson(docs[index].data()));
         allStockList.add(docs[index].get('stockName'));
+        }
       }
       selectedStockIndex = 0;
       selectedStock = allStockList[0];

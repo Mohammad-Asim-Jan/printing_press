@@ -7,6 +7,7 @@ import 'package:printing_press/view_model/rate_list/paper_cutting/paper_cutting_
 import 'package:provider/provider.dart';
 
 import '../../../components/custom_circular_indicator.dart';
+import '../../../view_model/delete_alert_dialogue.dart';
 
 class PaperCuttingView extends StatefulWidget {
   const PaperCuttingView({super.key});
@@ -54,37 +55,36 @@ class _PaperCuttingViewState extends State<PaperCuttingView> {
                   elevation: 1.5,
                   shadowColor: Colors.blue.withOpacity(0.1),
                   color: Colors.blue.withOpacity(.15),
-                  margin:
-                      EdgeInsets.only(bottom: 10, top: 5),
+                  margin: EdgeInsets.only(bottom: 10),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                      borderRadius: BorderRadius.circular(12)),
                   child: Padding(
                     padding: EdgeInsets.all(8),
                     child: Row(
                       children: [
                         SizedBox(width: 5),
                         Expanded(
-                          flex: 7,
+                          flex: 8,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Name', style: kDescriptionTextStyle),
                               SizedBox(height: 4),
-                              kTitleText(value.paperCuttingList[index].name)
+                              kTitleText(value.paperCuttingList[index].name, 14)
                             ],
                           ),
                         ),
                         SizedBox(width: 5),
                         Expanded(
-                          flex: 5,
+                          flex: 6,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Rate', style: kDescriptionTextStyle),
                               SizedBox(height: 4),
                               kDescriptionText(
-                                  'Rs. ${value.paperCuttingList[index].rate}')
+                                  'Rs. ${value.paperCuttingList[index].rate}',
+                                  14)
                             ],
                           ),
                         ),
@@ -97,12 +97,19 @@ class _PaperCuttingViewState extends State<PaperCuttingView> {
                               GestureDetector(
                                 onTap: () =>
                                     value.editPaperCutting(context, index),
-                                child: Icon(Icons.edit, color: kNew4),
+                                child: Icon(Icons.edit, size: 20, color: kNew4),
                               ),
                               GestureDetector(
-                                  child: Icon(Icons.delete, color: kNew4),
+                                  child: Icon(Icons.delete,
+                                      size: 20, color: kNew4),
                                   onTap: () =>
-                                      value.confirmDelete(context, index)),
+                                      DeleteAlertDialogue.confirmDelete(context,
+                                          () {
+                                        value.deletePaperCutting(value
+                                            .paperCuttingList[index]
+                                            .paperCuttingId);
+                                        Navigator.pop(context);
+                                      })),
                             ],
                           ),
                         ),

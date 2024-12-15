@@ -37,9 +37,9 @@ class _PaymentToSupplierViewState extends State<PaymentToSupplierView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xffcad6d2),
+        // backgroundColor: Color(0xffcad6d2),
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          // backgroundColor: Colors.transparent,
           foregroundColor: kNew9a,
           title: Text('Payment To Supplier',
               style: TextStyle(
