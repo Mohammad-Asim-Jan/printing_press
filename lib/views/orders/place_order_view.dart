@@ -64,41 +64,22 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                       Tab(
                           height: 50,
                           // remove the icons and let's see what happens
-                          // icon: Icon(Icons.inventory_2_outlined, size: 20),
-                          child:
-                              Text('In Stock', style: TextStyle(fontSize: 12))),
+                          icon: Icon(Icons.inventory_2_outlined, size: 20),
+                          child: Text('Stock', style: TextStyle(fontSize: 12))),
                       Tab(
                         height: 50,
-                        // icon: Icon(Icons.edit_calendar_outlined, size: 20),
+                        icon: Icon(Icons.edit_calendar_outlined, size: 20),
                         child:
                             Text('Customize', style: TextStyle(fontSize: 12)),
                       ),
                     ]),
-
-                ///todo: either business order or customer order
                 title: const Text('Customer Order')),
             body: TabBarView(children: [
               Consumer<PlaceStockOrderViewModel>(
                 builder: (context, val, child) {
                   return val.inStockOrderDataFetched
                       ? val.allStockList.isEmpty
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                kTitleText('You are out of stock!'),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const AddStockView(),
-                                      ),
-                                    );
-                                  },
-                                  child: kTitleText('Add a stock'),
-                                ),
-                              ],
-                            )
+                          ? Center(child: kTitleText('You are out of stock!'))
                           : Column(children: [
                               Expanded(
                                 child: SingleChildScrollView(
@@ -1212,8 +1193,6 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                                         TextInputType.number,
                                                     hint: 'Advance Payment',
                                                     validators: const [
-                                                      isNotEmpty,
-
                                                       /// todo: calculate the total amount and then let the user know so that the advance amount is not more than the total amount
                                                     ],
                                                   ))
@@ -1222,21 +1201,6 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                                 ),
                               ),
                             ),
-
-                            /// todo:
-                            // Row(
-                            //   children: [
-                            //     Expanded(
-                            //         child: TextButton(
-                            //             onPressed: () {},
-                            //             child: const Text(
-                            //               'Calculate',
-                            //               style: TextStyle(fontSize: 18),
-                            //             ))),
-                            //     const Expanded(
-                            //         child: Center(child: Text('000'))),
-                            //   ],
-                            // ),
                             const SizedBox(height: 10),
                             Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -1247,75 +1211,11 @@ class _PlaceOrderViewState extends State<PlaceOrderView> {
                           ])
                         : Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                      'You must have at least one rate of each service'),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const RateListView()));
-                                      },
-                                      child: const Text('Add service rate'))
-                                ]))
+                            child: Center(
+                                child: const Text(
+                                    'You must have at least one rate of each service')))
                     : const CustomCircularIndicator();
               })
             ])));
   }
 }
-// Row(
-//   children: [
-//     const Text('Copy Printing'),
-//     CustomDropDown(
-//         list: val8.copyPrint,
-//         value: val8
-//             .selectedCopyPrint,
-//         hint: val8
-//             .selectedCopyPrint,
-//         onChanged: (newVal) {
-//           val8.selectedCopyPrint =
-//               newVal!;
-//           val8.selectedCopyPrintIndex =
-//               val8.copyPrint
-//                   .indexOf(val8
-//                       .selectedCopyPrint);
-//         }),
-//   ],
-// ),
-
-///
-// Consumer<PlaceOrderViewModel>(
-//   builder: (context, val7, child) => Column(
-//     children: [
-//       CustomRadioListTile(
-//         title: 'News',
-//           value: 0,
-//           groupValue: val7.selectedValue,
-//           onChanged: (value) =>
-//               val7.onChanged(0)),
-//       CustomRadioListTile(
-//           title: 'None',
-//           value: 1,
-//           groupValue: val7.selectedValue,
-//           onChanged: (value) =>
-//               val7.onChanged(1)),
-//       CustomRadioListTile(
-//         title: 'Duplicate',
-//           value: 2,
-//           groupValue: val7.selectedValue,
-//           onChanged: (value) =>
-//               val7.onChanged(2)),
-//       CustomRadioListTile(
-//           title: 'Triplicate',
-//           value: 3,
-//           groupValue: val7.selectedValue,
-//           onChanged: (value) =>
-//               val7.onChanged(3)),
-//     ],
-//   ),
-// ),
-
-// const Spacer(),
