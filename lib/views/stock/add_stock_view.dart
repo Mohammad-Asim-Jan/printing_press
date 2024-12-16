@@ -123,75 +123,30 @@ class _AddStockViewState extends State<AddStockView> {
                                         return Padding(
                                           padding: EdgeInsets.symmetric(
                                               vertical: 10.0),
-                                          child: TextFormField(
-                                            controller:
-                                                val5.stockUnitSellPriceC,
-                                            keyboardType: TextInputType.number,
-                                            cursorColor: kPrimeColor,
-                                            inputFormatters: <TextInputFormatter>[
-                                              FilteringTextInputFormatter
-                                                  .digitsOnly,
+                                          child: Column(
+                                            children: [
+                                              CustomTextField(
+                                                controller:
+                                                    val5.stockUnitSellPriceC,
+                                                textInputType:
+                                                    TextInputType.number,
+                                                inputFormatter:
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                hint: 'Stock selling price',
+                                                iconData: Icons.monetization_on,
+                                                validators: [
+                                                  isNotEmpty,
+                                                  (value) => moreThan(
+                                                      value,
+                                                     ( int.tryParse(val5
+                                                              .stockUnitBuyPriceC
+                                                              .text
+                                                              .trim()) ??
+                                                          0) + 1)
+                                                ],
+                                              ),
                                             ],
-                                            decoration: InputDecoration(
-                                              labelText: 'Stock selling price',
-                                              prefixIcon: const Icon(
-                                                Icons.monetization_on,
-                                                size: 24,
-                                              ),
-                                              hintText: 'Stock selling price',
-                                              labelStyle:
-                                                  TextStyle(color: kPrimeColor),
-                                              hintStyle:
-                                                  TextStyle(color: kNew9a),
-                                              filled: true,
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                borderSide: BorderSide(
-                                                  width: 2,
-                                                  color: kPrimeColor,
-                                                ),
-                                              ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                                borderSide: BorderSide(
-                                                  color: kNew9a,
-                                                ),
-                                              ),
-                                              errorBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                borderSide: BorderSide(
-                                                  color: kNew8,
-                                                ),
-                                              ),
-                                              focusedErrorBorder:
-                                                  OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(18),
-                                                borderSide: BorderSide(
-                                                  color: kNew8,
-                                                ),
-                                              ),
-                                            ),
-                                            validator: (text) {
-                                              if (text == '' || text == null) {
-                                                return 'Provide stock selling price';
-                                              } else if (val5
-                                                      .stockUnitBuyPriceC.text
-                                                      .trim() ==
-                                                  '') {
-                                                return 'Provide stock buy price first';
-                                              } else if (int.tryParse(
-                                                      text.trim())! <=
-                                                  int.tryParse(val5
-                                                      .stockUnitBuyPriceC.text
-                                                      .trim())!) {
-                                                return 'Stock selling price must be greater than buying price';
-                                              }
-                                              return null;
-                                            },
                                           ),
                                         );
                                       },
@@ -235,7 +190,6 @@ class _AddStockViewState extends State<AddStockView> {
                                       },
                                     ),
                                     const SizedBox(height: 6),
-
                                     Text('Stock Supplier',
                                         style: kTitle2TextStyle),
                                     Consumer<AddStockViewModel>(
@@ -244,7 +198,8 @@ class _AddStockViewState extends State<AddStockView> {
                                           children: [
                                             Expanded(
                                               child: CustomDropDown(
-                                                prefixIconData: Icons.person_2_outlined,
+                                                prefixIconData:
+                                                    Icons.person_2_outlined,
                                                 validator: null,
                                                 list: val9.suppliersNamesList,
                                                 value:

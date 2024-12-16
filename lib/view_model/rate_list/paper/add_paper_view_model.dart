@@ -34,7 +34,6 @@ class AddPaperViewModel with ChangeNotifier {
 
       if (_formKey.currentState!.validate()) {
         /// check if paper is already available
-
         paperName = paperNameC.text.trim();
         sizeWidth = int.tryParse(sizeWidthC.text.trim())!;
         sizeHeight = int.tryParse(sizeHeightC.text.trim())!;
@@ -49,10 +48,29 @@ class AddPaperViewModel with ChangeNotifier {
             .limit(1)
             .get();
 
-        if (paperNameQuerySnapshot.docs.isNotEmpty) {
-          Utils.showMessage('Try with a different name');
-          updateListeners(false);
-        } else {
+        QuerySnapshot paperSizeQuerySnapshot = await fireStore
+            .collection(uid)
+            .doc('RateList')
+            .collection('Paper')
+            .where('size',
+                isEqualTo: {'height': sizeHeight, 'width': sizeWidth})
+            .where('quality', isEqualTo: quality)
+            .limit(1)
+            .get();
+
+        QuerySnapshot paperSizeOppositeQuerySnapshot = await fireStore
+            .collection(uid)
+            .doc('RateList')
+            .collection('Paper')
+            .where('size',
+                isEqualTo: {'height': sizeWidth, 'width': sizeHeight})
+            .where('quality', isEqualTo: quality)
+            .limit(1)
+            .get();
+
+        if (paperNameQuerySnapshot.docs.isEmpty &&
+            paperSizeQuerySnapshot.docs.isEmpty &&
+            paperSizeOppositeQuerySnapshot.docs.isEmpty) {
           /// Paper doesn't exist
           await setNewPaperId();
 
@@ -75,6 +93,14 @@ class AddPaperViewModel with ChangeNotifier {
             Utils.showMessage(error.toString());
             updateListeners(false);
           });
+        } else {
+          if(paperNameQuerySnapshot.docs.isNotEmpty) {
+            Utils.showMessage('Try a different name');
+            updateListeners(false);
+          } else {
+            Utils.showMessage('Paper already exists');
+            updateListeners(false);
+          }
         }
       }
       updateListeners(false);
@@ -88,9 +114,6 @@ class AddPaperViewModel with ChangeNotifier {
         .collection(uid)
         .doc('RateList')
         .collection('Paper')
-
-        /// 0 is added so that the last paper id document appears to the top
-        /// because when we are getting the data, we ignore the first doc because it is always of id
         .doc('0LastPaperId');
 
     final documentSnapshot = await documentRef.get();
@@ -104,8 +127,8 @@ class AddPaperViewModel with ChangeNotifier {
     } else {
       debugPrint(
           '\n\n\nPaper id is found to be available. \nPaper id: ${data?['lastPaperId']}');
-      newPaperId = data?['lastNewsPaperId'] + 1;
-      await documentRef.set({'lastNewsPaperId': newPaperId});
+      newPaperId = await data?['lastPaperId'] + 1;
+      await documentRef.set({'lastPaperId': newPaperId});
     }
   }
 

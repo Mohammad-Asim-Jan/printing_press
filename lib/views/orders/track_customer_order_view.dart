@@ -207,7 +207,7 @@ class _TrackCustomerOrderViewState extends State<TrackCustomerOrderView> {
                                                 color: Colors.white,
                                                 fontFamily: 'Urbanist',
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 16),
+                                                fontSize: 14),
                                           ))),
                                           Icon(Icons.inventory_2,
                                               color: Colors.white70)
@@ -253,7 +253,7 @@ class _TrackCustomerOrderViewState extends State<TrackCustomerOrderView> {
                                                               'Urbanist',
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          fontSize: 16),
+                                                          fontSize: 14),
                                                     ))),
                                                     Icon(Icons.cancel_rounded,
                                                         color: Colors.white70)
@@ -308,7 +308,7 @@ class _TrackCustomerOrderViewState extends State<TrackCustomerOrderView> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
-                                                                fontSize: 16),
+                                                                fontSize: 14),
                                                           ))),
                                                           Icon(
                                                               Icons
@@ -365,7 +365,7 @@ class _TrackCustomerOrderViewState extends State<TrackCustomerOrderView> {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold,
-                                                                fontSize: 16),
+                                                                fontSize: 14),
                                                           ))),
                                                           Icon(Icons.refresh,
                                                               color: Colors

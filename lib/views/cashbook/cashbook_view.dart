@@ -141,7 +141,8 @@ class _CashbookViewState extends State<CashbookView> {
                   newDate.isNotEmpty
                       ? Container(
                           margin: EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(color: kThirdColor.withOpacity(0.9)),
+                          decoration: BoxDecoration(
+                              color: kThirdColor.withOpacity(0.8)),
                           child: Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Row(

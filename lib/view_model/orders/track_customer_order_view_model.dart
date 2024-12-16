@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../colors/color_palette.dart';
+import '../../text_styles/custom_text_styles.dart';
 import '../../utils/toast_message.dart';
 
 class TrackCustomerOrderViewModel with ChangeNotifier {
@@ -19,13 +20,13 @@ class TrackCustomerOrderViewModel with ChangeNotifier {
   getTitleText(String buttonText) {
     switch (buttonText) {
       case 'Cancel':
-        return "Confirm Order Cancellation";
+        return "Order Cancellation";
       case 'Pending':
-        return "Confirm Pending Order";
+        return "Pending Order";
       case 'Hand Over':
-        return "Confirm Handover of Order";
+        return "Handover of Order";
       case 'Resume':
-        return "Confirm Resumption of Order";
+        return "Resumption of Order";
     }
   }
 
@@ -60,12 +61,8 @@ class TrackCustomerOrderViewModel with ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: kTwo,
-          titleTextStyle: Theme.of(context)
-              .appBarTheme
-              .titleTextStyle
-              ?.copyWith(fontSize: 20, color: getTitleColor(button)),
-          title: Text(getTitleText(button)),
+          backgroundColor: Colors.white,
+          title: kTitleText(getTitleText(button), null, getTitleColor(button)),
           content:
               Text("Are you sure you want to ${getDescriptionText(button)}?"),
           actions: [
@@ -73,10 +70,7 @@ class TrackCustomerOrderViewModel with ChangeNotifier {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text(
-                "No",
-                style: TextStyle(color: kNew9a),
-              ),
+              child: kTitleText("No", 12),
             ),
             TextButton(
               onPressed: () {
@@ -96,8 +90,7 @@ class TrackCustomerOrderViewModel with ChangeNotifier {
                 }
                 Navigator.pop(context);
               },
-              child: Text("Confirm",
-                  style: TextStyle(color: getTitleColor(button))),
+              child: kTitleText("Confirm", null, getTitleColor(button)),
             ),
           ],
         );

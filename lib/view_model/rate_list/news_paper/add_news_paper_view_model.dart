@@ -49,10 +49,29 @@ class AddNewsPaperViewModel with ChangeNotifier {
             .limit(1)
             .get();
 
-        if (newsPaperNameQuerySnapshot.docs.isNotEmpty) {
-          Utils.showMessage('Try with a different name');
-          updateListeners(false);
-        } else {
+        QuerySnapshot newsPaperSizeQuerySnapshot = await fireStore
+            .collection(uid)
+            .doc('RateList')
+            .collection('NewsPaper')
+            .where('size',
+                isEqualTo: {'height': sizeHeight, 'width': sizeWidth})
+            .where('quality', isEqualTo: quality)
+            .limit(1)
+            .get();
+
+        QuerySnapshot newsPaperSizeOppQuerySnapshot = await fireStore
+            .collection(uid)
+            .doc('RateList')
+            .collection('NewsPaper')
+            .where('size',
+                isEqualTo: {'height': sizeWidth, 'width': sizeHeight})
+            .where('quality', isEqualTo: quality)
+            .limit(1)
+            .get();
+
+        if (newsPaperNameQuerySnapshot.docs.isEmpty &&
+            newsPaperSizeQuerySnapshot.docs.isEmpty &&
+            newsPaperSizeOppQuerySnapshot.docs.isEmpty) {
           /// NewsPaper doesn't exist
           await setNewNewsPaperId();
 
@@ -69,12 +88,20 @@ class AddNewsPaperViewModel with ChangeNotifier {
             'quality': quality,
             'rate': rate
           }).then((value) async {
-            Utils.showMessage('New NewsPaper added');
+            Utils.showMessage('New News-Paper added');
             updateListeners(false);
           }).onError((error, stackTrace) {
             Utils.showMessage(error.toString());
             updateListeners(false);
           });
+        } else {
+          if (newsPaperNameQuerySnapshot.docs.isNotEmpty) {
+            Utils.showMessage('Try a different name');
+            updateListeners(false);
+          } else {
+            Utils.showMessage('News Paper already exists');
+            updateListeners(false);
+          }
         }
       }
       updateListeners(false);
@@ -88,9 +115,6 @@ class AddNewsPaperViewModel with ChangeNotifier {
         .collection(uid)
         .doc('RateList')
         .collection('NewsPaper')
-
-        /// 0 is added so that the last newsPaper id document appears to the top
-        /// because when we are getting the data, we ignore the first doc because it is always of id
         .doc('0LastNewsPaperId');
 
     final documentSnapshot = await documentRef.get();

@@ -5,7 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:printing_press/model/rate_list/paper.dart';
 
 import '../../../colors/color_palette.dart';
+import '../../../components/custom_text_field.dart';
+import '../../../text_styles/custom_text_styles.dart';
 import '../../../utils/toast_message.dart';
+import '../../../utils/validation_functions.dart';
 
 class PaperViewModel with ChangeNotifier {
   // late bool dataFetched;
@@ -38,7 +41,7 @@ class PaperViewModel with ChangeNotifier {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: kTwo,
+          backgroundColor: Colors.white,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
@@ -50,112 +53,48 @@ class PaperViewModel with ChangeNotifier {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      "Edit Paper",
-                      style: Theme.of(context)
-                          .appBarTheme
-                          .titleTextStyle
-                          ?.copyWith(color: kOne),
-                    ),
+                    kTitleText("Edit Paper"),
                     const SizedBox(height: 20),
-                    TextFormField(
-                      controller: nameController,
-                      decoration:
-                          const InputDecoration(labelText: 'Paper Name'),
-                      validator: (value) {
-                        if (value == '' || value == null) {
-                          return 'Provide paper name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
+                        controller: nameController,
+                        iconData: null,
+                        hint: 'Paper Name',
+                        validators: [isNotEmpty]),
+                    CustomTextField(
                       controller: widthController,
-                      decoration:
-                          const InputDecoration(labelText: 'Paper Width'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide paper width';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'Paper Width',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
                       controller: heightController,
-                      decoration:
-                          const InputDecoration(labelText: 'Paper Height'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide paper height';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'Paper Height',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
                       controller: qualityController,
-                      decoration:
-                          const InputDecoration(labelText: 'Paper Quality'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide paper quality';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'Paper Quality',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
-                    TextFormField(
+                    CustomTextField(
                       controller: rateController,
-                      decoration:
-                          const InputDecoration(labelText: 'Paper Rate'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
-                      validator: (value) {
-                        if (value == null || value == '') {
-                          return 'Provide paper rate';
-                        } else if (int.tryParse(value) == null) {
-                          return 'Provide valid value';
-                        } else if (int.tryParse(value) == 0) {
-                          return 'Must be greater than 0';
-                        }
-                        return null;
-                      },
+                      hint: 'Paper Rate',
+                      textInputType: TextInputType.number,
+                      inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                      validators: [isNotEmpty, isNotZero],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text("Cancel"),
+                            child: kTitleText("Cancel", 12),
                           ),
                           TextButton(
                             onPressed: () async {
@@ -214,7 +153,7 @@ class PaperViewModel with ChangeNotifier {
                                 Navigator.pop(context);
                               }
                             },
-                            child: const Text("Update"),
+                            child:kTitleText("Update", 12),
                           ),
                         ])
                   ],

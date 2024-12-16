@@ -3,8 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:printing_press/colors/color_palette.dart';
+import 'package:printing_press/components/custom_text_field.dart';
 import 'package:printing_press/utils/toast_message.dart';
+import 'package:printing_press/utils/validation_functions.dart';
 import '../../model/stock.dart';
+import '../../text_styles/custom_text_styles.dart';
 
 class StockDetailsViewModel with ChangeNotifier {
   late Stock stock;
@@ -49,7 +52,7 @@ class StockDetailsViewModel with ChangeNotifier {
       context: context,
       builder: (context) {
         return Dialog(
-          backgroundColor: kTwo,
+          backgroundColor: Colors.white,
           insetPadding: const EdgeInsets.all(12),
           child: Form(
             key: _formKey,
@@ -60,30 +63,14 @@ class StockDetailsViewModel with ChangeNotifier {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    "Add More Stock",
-                    style: Theme.of(context)
-                        .appBarTheme
-                        .titleTextStyle
-                        ?.copyWith(color: kOne),
-                  ),
+                  kTitleText("Add More Stock"),
                   const SizedBox(height: 20),
-                  TextFormField(
+                  CustomTextField(
                     controller: quantityC,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    decoration:
-                        const InputDecoration(labelText: 'Stock Quantity'),
-                    validator: (value) {
-                      if (value == '' || value == null) {
-                        return 'Provide Stock Quantity';
-                      } else if (int.tryParse(value)! <= 0) {
-                        return 'Field can not be empty';
-                      }
-                      return null;
-                    },
+                    hint: 'Stock Quantity',
+                    textInputType: TextInputType.number,
+                    inputFormatter: FilteringTextInputFormatter.digitsOnly,
+                    validators: [isNotEmpty, isNotZero],
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -91,14 +78,14 @@ class StockDetailsViewModel with ChangeNotifier {
                       children: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text("Cancel"),
+                          child: kTitleText("Cancel", 12),
                         ),
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                             addStockToFirebase();
                           },
-                          child: const Text("Add"),
+                          child: kTitleText("Add", 12),
                         ),
                       ])
                 ],
